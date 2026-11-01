@@ -1,0 +1,36 @@
+<resources>
+    <string name="app_name">SmartCare</string>
+
+    <!-- Shared -->
+    <string name="hint_email">Email</string>
+    <string name="hint_ic_number">IC Number (12 digits)</string>
+    <string name="hint_password">Password</string>
+
+    <!-- Login -->
+    <string name="login_title">Welcome back</string>
+    <string name="login_subtitle">Sign in to manage your clinic</string>
+    <string name="login_button">Login</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="no_account_register">Don\'t have an account? Register</string>
+
+    <!-- Register -->
+    <string name="register_title">Create account</string>
+    <string name="register_subtitle">Register to get started with SmartCare</string>
+    <string name="hint_full_name">Full name</string>
+    <string name="hint_phone">Phone number</string>
+    <string name="hint_confirm_password">Confirm password</string>
+    <string name="register_button">Register</string>
+    <string name="have_account_login">Already have an account? Login</string>
+
+    <!-- Validation / messages -->
+    <string name="error_required">This field is required</string>
+    <string name="error_invalid_email">Enter a valid email address</string>
+    <string name="error_invalid_ic">IC number must be exactly 12 digits</string>
+    <string name="error_invalid_phone">Enter a valid phone number</string>
+    <string name="error_password_short">Password must be at least 6 characters</string>
+    <string name="error_password_mismatch">Passwords do not match</string>
+    <string name="msg_login_success">Login validated (no backend yet)</string>
+    <string name="msg_register_success">Account created! Check your email to confirm, then log in.</string>
+    <string name="msg_register_failed">Registration failed: %1$s</string>
+    <string name="msg_forgot_password">Forgot password is not available yet</string>
+</resources>
