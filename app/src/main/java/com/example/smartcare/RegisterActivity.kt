@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.util.Patterns
 import androidx.lifecycle.lifecycleScope
 import com.example.smartcare.data.AuthRepository
-import com.example.smartcare.util.IcUtils
+import com.example.smartcare.util.parseIc
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
@@ -68,7 +68,7 @@ class RegisterActivity : BaseActivity() {
             icNumber.length != 12 -> {
                 tilIcNumber.error = getString(R.string.error_invalid_ic); valid = false
             }
-            IcUtils.birthDate(icNumber) == null -> {
+            parseIc(icNumber) == null -> {
                 tilIcNumber.error = getString(R.string.error_invalid_ic_date); valid = false
             }
         }

@@ -1,6 +1,6 @@
 package com.example.smartcare.data
 
-import com.example.smartcare.util.IcUtils
+import com.example.smartcare.util.parseIc
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.auth.providers.builtin.Email
 import io.github.jan.supabase.auth.status.SessionStatus
@@ -77,12 +77,13 @@ object AuthRepository {
             }
         ) { select() }.decodeSingle<JsonObject>()
 
+        val ic = parseIc(icNumber)
         db.from("patient").insert(
             buildJsonObject {
                 put("user_id", account.int("user_id"))
                 put("full_name", fullName)
-                put("date_of_birth", IcUtils.birthDate(icNumber))
-                put("gender", IcUtils.gender(icNumber))
+                put("date_of_birth", ic?.dateOfBirth?.toString()) // ISO yyyy-MM-dd for DATE
+                put("gender", ic?.gender)
             }
         )
 
