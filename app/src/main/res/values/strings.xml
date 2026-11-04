@@ -145,6 +145,16 @@
     <string name="error_password_needs">Use 8+ characters with an uppercase letter and a number</string>
     <string name="error_terms">Please agree to the terms to continue</string>
 
+    <!-- 4. Forgot password -->
+    <string name="forgot_hero_title">Forgot your password?</string>
+    <string name="forgot_hero_sub">We\'ll email you a link to set a new one.</string>
+    <string name="action_send_link">Send reset link</string>
+    <string name="action_resend_link">Resend link</string>
+    <string name="link_sent_title">Link sent</string>
+    <string name="link_sent_desc">Check your inbox. The link works for one hour.</string>
+    <string name="footer_remembered">Remembered it?</string>
+    <string name="footer_back_login">Back to log in</string>
+
     <!-- 7. Patient home. Sample values are placeholders until the appointment module exists. -->
     <string name="greeting_morning">Good morning</string>
     <string name="greeting_afternoon">Good afternoon</string>

@@ -71,7 +71,7 @@ class LoginActivity : BaseActivity() {
         }
 
         findViewById<TextView>(R.id.linkForgot).setOnClickListener {
-            startActivity(Intent(this, ForgotPasswordActivity::class.java))
+            startActivity(ForgotPasswordActivity.intent(this, staff = isStaff))
         }
         fieldPassword.editText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) { attemptLogin(); true } else false
