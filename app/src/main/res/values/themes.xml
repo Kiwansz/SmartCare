@@ -90,6 +90,26 @@
         <item name="fontFamily">@font/figtree_semibold</item>
     </style>
 
+    <!-- "From IC" card: small uppercase label with a check, then the value -->
+    <style name="SmartCare.Text.FromIc" parent="">
+        <item name="android:textSize">10sp</item>
+        <item name="android:fontFamily">@font/figtree_bold</item>
+        <item name="android:textColor">?attr/scMain</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:letterSpacing">0.08</item>
+        <item name="android:drawablePadding">5dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="drawableStartCompat">@drawable/ic_sc_check_small</item>
+        <item name="drawableTint">?attr/scMain</item>
+    </style>
+
+    <style name="SmartCare.Text.FromIcValue" parent="">
+        <item name="android:layout_marginTop">3dp</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">@font/figtree_bold</item>
+        <item name="android:textColor">@color/ink_placeholder</item>
+    </style>
+
     <!-- Value / placeholder text inside a SmartField -->
     <style name="SmartCare.TextAppearance.FieldValue" parent="TextAppearance.Material3.BodyLarge">
         <item name="android:textSize">14sp</item>

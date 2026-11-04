@@ -2,100 +2,194 @@ package com.example.smartcare
 
 import android.os.Bundle
 import android.util.Patterns
+import android.view.View
+import android.view.inputmethod.EditorInfo
+import android.widget.TextView
+import androidx.activity.OnBackPressedCallback
+import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.lifecycleScope
 import com.example.smartcare.data.AuthRepository
+import com.example.smartcare.ui.SmartField
+import com.example.smartcare.ui.StrengthMeter
+import com.example.smartcare.util.IcInfo
+import com.example.smartcare.util.PasswordRules
+import com.example.smartcare.util.icDigits
 import com.example.smartcare.util.parseIc
 import com.google.android.material.button.MaterialButton
-import com.google.android.material.textfield.TextInputEditText
-import com.google.android.material.textfield.TextInputLayout
+import com.google.android.material.checkbox.MaterialCheckBox
 import kotlinx.coroutines.launch
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 
-/** 3. Patient sign up: saves to user_account and patient, including IC number. */
+/**
+ * 3. Patient sign up in two steps (one screen, two panels).
+ * Step 1: full name, IC number (date of birth + gender fill in from it), phone.
+ * Step 2: email, password with strength bar, confirm, terms.
+ * Saves through the existing AuthRepository.signUpPatient (Auth user + user_account + patient).
+ */
 class RegisterActivity : BaseActivity() {
 
-    private lateinit var btnRegister: MaterialButton
-    private lateinit var tilFullName: TextInputLayout
-    private lateinit var tilIcNumber: TextInputLayout
-    private lateinit var tilPhone: TextInputLayout
-    private lateinit var tilEmail: TextInputLayout
-    private lateinit var tilPassword: TextInputLayout
-    private lateinit var etFullName: TextInputEditText
-    private lateinit var etIcNumber: TextInputEditText
-    private lateinit var etPhone: TextInputEditText
-    private lateinit var etEmail: TextInputEditText
-    private lateinit var etPassword: TextInputEditText
+    private companion object {
+        const val STATE_STEP = "step"
+        val DOB_FORMAT: DateTimeFormatter = DateTimeFormatter.ofPattern("d MMM yyyy", Locale.ENGLISH)
+    }
+
+    private var step = 1
+
+    private lateinit var step1: View
+    private lateinit var step2: View
+    private lateinit var fieldFullName: SmartField
+    private lateinit var fieldIc: SmartField
+    private lateinit var fieldPhone: SmartField
+    private lateinit var fieldEmail: SmartField
+    private lateinit var fieldPassword: SmartField
+    private lateinit var fieldConfirm: SmartField
+    private lateinit var tvDob: TextView
+    private lateinit var tvGender: TextView
+    private lateinit var meter: View
+    private lateinit var cbTerms: MaterialCheckBox
+    private lateinit var tvTermsError: TextView
+    private lateinit var btnCreate: MaterialButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
-        setupTopBar(R.string.register_bar)
 
-        tilFullName = findViewById(R.id.tilFullName)
-        tilIcNumber = findViewById(R.id.tilIcNumber)
-        tilPhone = findViewById(R.id.tilPhone)
-        tilEmail = findViewById(R.id.tilEmail)
-        tilPassword = findViewById(R.id.tilPassword)
-        etFullName = findViewById(R.id.etFullName)
-        etIcNumber = findViewById(R.id.etIcNumber)
-        etPhone = findViewById(R.id.etPhone)
-        etEmail = findViewById(R.id.etEmail)
-        etPassword = findViewById(R.id.etPassword)
-        btnRegister = findViewById(R.id.btnRegister)
+        step1 = findViewById(R.id.step1)
+        step2 = findViewById(R.id.step2)
+        fieldFullName = findViewById(R.id.fieldFullName)
+        fieldIc = findViewById(R.id.fieldIc)
+        fieldPhone = findViewById(R.id.fieldPhone)
+        fieldEmail = findViewById(R.id.fieldEmail)
+        fieldPassword = findViewById(R.id.fieldPassword)
+        fieldConfirm = findViewById(R.id.fieldConfirm)
+        tvDob = findViewById(R.id.tvDob)
+        tvGender = findViewById(R.id.tvGender)
+        meter = findViewById(R.id.meter)
+        cbTerms = findViewById(R.id.cbTerms)
+        tvTermsError = findViewById(R.id.tvTermsError)
+        btnCreate = findViewById(R.id.btnCreate)
 
-        btnRegister.setOnClickListener { attemptRegister() }
-        // Login is the previous screen, so just close this one.
-        setupFooterLink(R.string.have_account_prefix, R.string.login_link) { finish() }
+        // Live: fill the "From IC" cards once 12 digits are typed.
+        fieldIc.editText.doAfterTextChanged { showIcInfo(liveIc()) }
+        // Live: strength bar.
+        fieldPassword.editText.doAfterTextChanged { StrengthMeter.bind(meter, PasswordRules.check(fieldPassword.text)) }
+        cbTerms.setOnCheckedChangeListener { _, checked -> if (checked) tvTermsError.visibility = View.GONE }
+
+        findViewById<MaterialButton>(R.id.btnNext).setOnClickListener { goToStep2() }
+        fieldPhone.editText.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) { goToStep2(); true } else false
+        }
+        btnCreate.setOnClickListener { createAccount() }
+
+        // Back (header arrow or system back): step 2 -> step 1, step 1 -> close.
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (step == 2) showStep(1) else finish()
+            }
+        })
+
+        showStep(savedInstanceState?.getInt(STATE_STEP) ?: 1)
+        showIcInfo(liveIc())
+        StrengthMeter.bind(meter, PasswordRules.check(fieldPassword.text))
     }
 
-    private fun attemptRegister() {
-        val fullName = etFullName.text?.toString()?.trim().orEmpty()
-        val icNumber = etIcNumber.text?.toString().orEmpty().filter { it.isDigit() } // dashes allowed
-        val phone = etPhone.text?.toString()?.trim().orEmpty()
-        val email = etEmail.text?.toString()?.trim().orEmpty()
-        val password = etPassword.text?.toString().orEmpty()
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt(STATE_STEP, step)
+    }
 
-        listOf(tilFullName, tilIcNumber, tilPhone, tilEmail, tilPassword).forEach { it.error = null }
+    private fun showStep(n: Int) {
+        step = n
+        step1.visibility = if (n == 1) View.VISIBLE else View.GONE
+        step2.visibility = if (n == 2) View.VISIBLE else View.GONE
+        setupHeader(
+            title = if (n == 1) R.string.signup_step1_title else R.string.signup_step2_title,
+            pill = getString(R.string.step_pill, n),
+            step = n
+        )
+    }
+
+    /** IC info while typing; shows the date error only once all 12 digits are in. */
+    private fun liveIc(): IcInfo? {
+        val digits = icDigits(fieldIc.text)
+        if (digits.length != 12) return null
+        val info = parseIc(digits)
+        if (info == null) fieldIc.error = getString(R.string.error_invalid_ic_date)
+        return info
+    }
+
+    private fun showIcInfo(info: IcInfo?) {
+        val filled = getColor(R.color.ink)
+        val empty = getColor(R.color.ink_placeholder)
+        if (info == null) {
+            tvDob.setText(R.string.from_ic_dob_placeholder)
+            tvGender.setText(R.string.from_ic_gender_placeholder)
+            tvDob.setTextColor(empty)
+            tvGender.setTextColor(empty)
+        } else {
+            tvDob.text = info.dateOfBirth.format(DOB_FORMAT)
+            tvGender.setText(if (info.gender == "MALE") R.string.gender_male else R.string.gender_female)
+            tvDob.setTextColor(filled)
+            tvGender.setTextColor(filled)
+        }
+    }
+
+    private fun goToStep2() {
+        val name = fieldFullName.text.trim()
+        val ic = icDigits(fieldIc.text)
+        val phone = fieldPhone.text.trim()
         var valid = true
 
-        if (fullName.isEmpty()) {
-            tilFullName.error = getString(R.string.error_required); valid = false
+        if (name.isEmpty()) {
+            fieldFullName.error = getString(R.string.error_required); valid = false
         }
-
         when {
-            etIcNumber.text.isNullOrBlank() -> {
-                tilIcNumber.error = getString(R.string.error_required); valid = false
-            }
-            icNumber.length != 12 -> {
-                tilIcNumber.error = getString(R.string.error_invalid_ic); valid = false
-            }
-            parseIc(icNumber) == null -> {
-                tilIcNumber.error = getString(R.string.error_invalid_ic_date); valid = false
-            }
+            fieldIc.text.isBlank() -> { fieldIc.error = getString(R.string.error_required); valid = false }
+            ic.length != 12 -> { fieldIc.error = getString(R.string.error_ic_length); valid = false }
+            parseIc(ic) == null -> { fieldIc.error = getString(R.string.error_invalid_ic_date); valid = false }
         }
-
         if (phone.isEmpty()) {
-            tilPhone.error = getString(R.string.error_required); valid = false
+            fieldPhone.error = getString(R.string.error_required); valid = false
         } else if (!Patterns.PHONE.matcher(phone).matches() || phone.count { it.isDigit() } < 9) {
-            tilPhone.error = getString(R.string.error_invalid_phone); valid = false
+            fieldPhone.error = getString(R.string.error_invalid_phone); valid = false
         }
+        if (valid) showStep(2)
+    }
+
+    private fun createAccount() {
+        val email = fieldEmail.text.trim()
+        val password = fieldPassword.text
+        val confirm = fieldConfirm.text
+        var valid = true
 
         if (email.isEmpty()) {
-            tilEmail.error = getString(R.string.error_required); valid = false
+            fieldEmail.error = getString(R.string.error_required); valid = false
         } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            tilEmail.error = getString(R.string.error_invalid_email); valid = false
+            fieldEmail.error = getString(R.string.error_invalid_email); valid = false
         }
-
         if (password.isEmpty()) {
-            tilPassword.error = getString(R.string.error_required); valid = false
-        } else if (password.length < 8) {
-            tilPassword.error = getString(R.string.error_password_short); valid = false
+            fieldPassword.error = getString(R.string.error_required); valid = false
+        } else if (!PasswordRules.check(password).isValid) {
+            fieldPassword.error = getString(R.string.error_password_needs); valid = false
         }
-
+        if (confirm.isEmpty()) {
+            fieldConfirm.error = getString(R.string.error_required); valid = false
+        } else if (!PasswordRules.matches(password, confirm)) {
+            fieldConfirm.error = getString(R.string.error_password_mismatch); valid = false
+        }
+        if (!cbTerms.isChecked) {
+            tvTermsError.visibility = View.VISIBLE; valid = false
+        }
         if (!valid) return
 
-        setLoading(true, btnRegister)
+        val name = fieldFullName.text.trim()
+        val ic = icDigits(fieldIc.text)
+        val phone = fieldPhone.text.trim()
+
+        setLoading(true, btnCreate)
         lifecycleScope.launch {
-            AuthRepository.signUpPatient(fullName, icNumber, email, phone, password)
+            AuthRepository.signUpPatient(name, ic, email, phone, password)
                 .onSuccess { loggedIn ->
                     if (!loggedIn) {
                         // Email confirmation is on: they must confirm before logging in.
@@ -107,7 +201,7 @@ class RegisterActivity : BaseActivity() {
                     if (account != null) goAfterLogin(account) else finish()
                 }
                 .onFailure {
-                    setLoading(false, btnRegister)
+                    setLoading(false, btnCreate)
                     toast(it.friendly())
                 }
         }

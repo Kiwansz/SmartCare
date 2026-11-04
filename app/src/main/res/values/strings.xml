@@ -119,6 +119,32 @@
     <string name="error_login_ic">IC number or password is incorrect.</string>
     <string name="error_login_email">Email or password is incorrect.</string>
 
+    <!-- 3. Sign up (two steps) -->
+    <string name="signup_step1_title">About you</string>
+    <string name="signup_step2_title">Secure your account</string>
+    <string name="step_pill">Step %1$d of 2</string>
+    <string name="field_full_name">Full name</string>
+    <string name="field_phone">Phone number</string>
+    <string name="hint_phone_example">012-345 6789</string>
+    <string name="from_ic">From IC</string>
+    <string name="from_ic_dob_placeholder">Date of birth</string>
+    <string name="from_ic_gender_placeholder">Gender</string>
+    <string name="gender_male">Male</string>
+    <string name="gender_female">Female</string>
+    <string name="action_next">Next</string>
+    <string name="field_email">Email</string>
+    <string name="hint_email_example">name@example.com</string>
+    <string name="field_confirm_password">Confirm password</string>
+    <string name="hint_type_again">Type it again</string>
+    <string name="terms_text">I agree to the clinic\'s <b>terms</b> and <b>privacy policy</b></string>
+    <string name="action_create_account">Create account</string>
+    <string name="strength_weak">Weak</string>
+    <string name="strength_fair">Fair</string>
+    <string name="strength_good">Good</string>
+    <string name="strength_strong">Strong</string>
+    <string name="error_password_needs">Use 8+ characters with an uppercase letter and a number</string>
+    <string name="error_terms">Please agree to the terms to continue</string>
+
     <!-- 7. Patient home. Sample values are placeholders until the appointment module exists. -->
     <string name="greeting_morning">Good morning</string>
     <string name="greeting_afternoon">Good afternoon</string>
