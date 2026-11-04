@@ -38,15 +38,27 @@
             android:name=".ForgotPasswordActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
-        <!-- 6. Change password -->
+        <!-- 5. Staff login (navy) -->
+        <activity
+            android:name=".StaffLoginActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SmartCare.Staff"
+            android:windowSoftInputMode="adjustResize" />
+        <!-- 6. Change password (navy, staff first login) -->
         <activity
             android:name=".ChangePasswordActivity"
             android:exported="false"
+            android:theme="@style/Theme.SmartCare.Staff"
             android:windowSoftInputMode="adjustResize" />
-        <!-- 7. Home -->
+        <!-- 7. Patient home -->
         <activity
             android:name=".HomeActivity"
             android:exported="false" />
+        <!-- 8. Staff home placeholder (navy) -->
+        <activity
+            android:name=".StaffHomeActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SmartCare.Staff" />
         <activity
             android:name=".MainActivity"
             android:exported="false"

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 8. Staff home: plain placeholder (no design yet). Navy theme. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:paddingStart="20dp"
+    android:paddingEnd="20dp"
+    android:paddingBottom="22dp"
+    tools:context=".StaffHomeActivity">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <ImageView
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:background="@drawable/bg_tile_icon"
+        android:importantForAccessibility="no"
+        android:padding="18dp"
+        android:src="@drawable/ic_sc_staff"
+        app:tint="?attr/scMain" />
+
+    <TextView
+        android:id="@+id/tvName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:fontFamily="@font/figtree_bold"
+        android:gravity="center"
+        android:textColor="@color/ink"
+        android:textSize="20sp"
+        tools:text="Siti Aminah" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:fontFamily="@font/figtree_bold"
+        android:text="@string/staff_home_title"
+        android:textColor="?attr/scMain"
+        android:textSize="15sp" />
+
+    <TextView
+        android:id="@+id/tvRole"
+        style="@style/SmartCare.Text.Sub"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:gravity="center"
+        tools:text="Your staff dashboard will appear here." />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnLogout"
+        style="@style/SmartCare.Button.Pill"
+        android:layout_width="match_parent"
+        android:text="@string/logout" />
+</LinearLayout>

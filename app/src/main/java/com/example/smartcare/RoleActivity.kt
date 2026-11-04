@@ -36,7 +36,8 @@ class RoleActivity : BaseActivity() {
         select(savedInstanceState?.getBoolean(STATE_STAFF) ?: false)
 
         findViewById<MaterialButton>(R.id.btnContinue).setOnClickListener {
-            startActivity(LoginActivity.intent(this, staff = staffSelected))
+            val target = if (staffSelected) StaffLoginActivity::class.java else LoginActivity::class.java
+            startActivity(android.content.Intent(this, target))
         }
 
         if (savedInstanceState == null) restoreSession()

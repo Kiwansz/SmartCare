@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 5. Staff login: navy theme, work email + password, no sign up. -->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:fillViewport="true"
+    tools:context=".StaffLoginActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <include layout="@layout/view_auth_header" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="-28dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_sheet"
+            android:orientation="vertical"
+            android:paddingStart="20dp"
+            android:paddingTop="9dp"
+            android:paddingEnd="20dp"
+            android:paddingBottom="22dp">
+
+            <View
+                android:layout_width="36dp"
+                android:layout_height="4dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="11dp"
+                android:background="@drawable/bg_grab_handle" />
+
+            <com.example.smartcare.ui.SmartField
+                android:id="@+id/fieldEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionNext"
+                android:inputType="textEmailAddress"
+                app:sfIcon="@drawable/ic_sc_mail"
+                app:sfLabel="@string/field_work_email"
+                app:sfPlaceholder="@string/hint_work_email_example" />
+
+            <com.example.smartcare.ui.SmartField
+                android:id="@+id/fieldPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:imeOptions="actionDone"
+                app:sfIcon="@drawable/ic_sc_lock"
+                app:sfLabel="@string/field_password"
+                app:sfPassword="true"
+                app:sfPlaceholder="@string/hint_password_enter" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="14dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/switchRemember"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="-6dp"
+                    android:scaleX="0.75"
+                    android:scaleY="0.75"
+                    app:thumbTint="@color/white"
+                    app:trackDecorationTint="@android:color/transparent"
+                    app:trackTint="@color/switch_track" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="-4dp"
+                    android:fontFamily="@font/figtree_semibold"
+                    android:labelFor="@id/switchRemember"
+                    android:text="@string/remember_me"
+                    android:textColor="@color/ink_sub"
+                    android:textSize="12.5sp" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:id="@+id/linkForgot"
+                    style="@style/SmartCare.Text.Link"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:padding="6dp"
+                    android:text="@string/forgot_password_link" />
+            </LinearLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnLogin"
+                style="@style/SmartCare.Button.Pill"
+                android:layout_width="match_parent"
+                android:text="@string/action_log_in"
+                app:icon="@drawable/ic_sc_arrow" />
+
+            <ProgressBar
+                android:id="@+id/progress"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="12dp"
+                android:visibility="gone" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:minHeight="24dp" />
+
+            <TextView
+                android:id="@+id/tvFooter"
+                style="@style/SmartCare.Text.Sub"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground"
+                android:gravity="center"
+                android:padding="10dp" />
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

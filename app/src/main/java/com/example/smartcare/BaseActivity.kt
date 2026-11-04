@@ -187,9 +187,16 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 }
 
-/** Where to go after a successful login. Clears the back stack so Back doesn't return to login. */
+/**
+ * Where to go after a successful login, by role. Clears the back stack so Back doesn't
+ * return to login. A forced password change comes first.
+ */
 fun Activity.goAfterLogin(account: Account) {
-    val target = if (account.mustChangePassword) ChangePasswordActivity::class.java else HomeActivity::class.java
+    val target = when {
+        account.mustChangePassword -> ChangePasswordActivity::class.java
+        account.role == "PATIENT" -> HomeActivity::class.java
+        else -> StaffHomeActivity::class.java // STAFF, DOCTOR
+    }
     startActivity(Intent(this, target).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK))
 }
 

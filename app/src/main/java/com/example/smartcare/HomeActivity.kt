@@ -54,6 +54,10 @@ class HomeActivity : BaseActivity() {
                 goToRolePicker()
                 return@launch
             }
+            if (acc.role != "PATIENT") {
+                goAfterLogin(acc) // staff have their own home
+                return@launch
+            }
             account = acc
             showName(acc.fullName)
         }

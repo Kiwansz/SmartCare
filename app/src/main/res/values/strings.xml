@@ -155,6 +155,32 @@
     <string name="footer_remembered">Remembered it?</string>
     <string name="footer_back_login">Back to log in</string>
 
+    <!-- 5. Staff login -->
+    <string name="staff_pill">Staff portal</string>
+    <string name="staff_hero_title">Good to see you</string>
+    <string name="staff_hero_sub">Use the email and password your Admin sent you.</string>
+    <string name="field_work_email">Work email</string>
+    <string name="hint_work_email_example">name@clinic.com</string>
+    <string name="footer_no_account">No account yet?</string>
+    <string name="footer_ask_admin">Ask your Admin</string>
+
+    <!-- 6. Change password -->
+    <string name="change_pill">First login</string>
+    <string name="change_hero_title">Make it yours</string>
+    <string name="change_hero_sub">Your temporary password expires in 24 hours. Set your own now.</string>
+    <string name="field_temp_password">Temporary password</string>
+    <string name="field_new_password">New password</string>
+    <string name="field_confirm_new_password">Confirm new password</string>
+    <string name="chip_length">8+ characters</string>
+    <string name="chip_upper">Uppercase</string>
+    <string name="chip_number">Number</string>
+    <string name="chip_match">Passwords match</string>
+    <string name="action_save_continue">Save and continue</string>
+
+    <!-- 8. Staff home (placeholder, no design yet) -->
+    <string name="staff_home_title">Staff home coming soon</string>
+    <string name="staff_home_sub">Your %1$s dashboard will appear here.</string>
+
     <!-- 7. Patient home. Sample values are placeholders until the appointment module exists. -->
     <string name="greeting_morning">Good morning</string>
     <string name="greeting_afternoon">Good afternoon</string>

@@ -110,6 +110,22 @@
         <item name="android:textColor">@color/ink_placeholder</item>
     </style>
 
+    <!-- Password rule chip (change password). ChangePasswordActivity swaps the
+         background, text colour and check icon when the rule passes. -->
+    <style name="SmartCare.RuleChip" parent="">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">28dp</item>
+        <item name="android:background">@drawable/bg_chip_off</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:paddingStart">11dp</item>
+        <item name="android:paddingEnd">11dp</item>
+        <item name="android:drawablePadding">5dp</item>
+        <item name="android:fontFamily">@font/figtree_semibold</item>
+        <item name="android:textSize">11.5sp</item>
+        <item name="android:textColor">@color/ink_sub</item>
+        <item name="drawableTint">?attr/scMain</item>
+    </style>
+
     <!-- Value / placeholder text inside a SmartField -->
     <style name="SmartCare.TextAppearance.FieldValue" parent="TextAppearance.Material3.BodyLarge">
         <item name="android:textSize">14sp</item>
