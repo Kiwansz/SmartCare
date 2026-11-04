@@ -13,9 +13,11 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
+import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.smartcare.data.Account
 
@@ -32,21 +34,73 @@ abstract class BaseActivity : AppCompatActivity() {
 
     override fun setContentView(layoutResID: Int) {
         super.setContentView(layoutResID)
-        findViewById<View>(R.id.root)?.let(::applySystemBarPadding)
+        val root = findViewById<View>(R.id.root) ?: return
+        val header = findViewById<View>(R.id.header)
+        applySystemBarPadding(root, header)
+        if (header != null) {
+            // Gradient header sits behind the status bar, so use white status bar icons.
+            WindowCompat.getInsetsController(window, window.decorView).isAppearanceLightStatusBars = false
+        }
     }
 
-    /** Keeps content clear of the status bar, navigation bar and keyboard. */
-    private fun applySystemBarPadding(root: View) {
+    /**
+     * Keeps content clear of the status bar, navigation bar and keyboard.
+     * With a gradient [header], the header takes the status bar inset (it draws behind it)
+     * and the root takes the rest; otherwise the root takes all of it.
+     */
+    private fun applySystemBarPadding(root: View, header: View?) {
         val start = root.paddingLeft
         val top = root.paddingTop
         val end = root.paddingRight
         val bottom = root.paddingBottom
+        val headerTop = header?.paddingTop ?: 0
         ViewCompat.setOnApplyWindowInsetsListener(root) { v, insets ->
             val bars = insets.getInsets(
                 WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.ime()
             )
-            v.setPadding(start + bars.left, top + bars.top, end + bars.right, bottom + bars.bottom)
+            if (header != null) {
+                header.setPadding(header.paddingLeft, headerTop + bars.top, header.paddingRight, header.paddingBottom)
+                v.setPadding(start + bars.left, top, end + bars.right, bottom + bars.bottom)
+            } else {
+                v.setPadding(start + bars.left, top + bars.top, end + bars.right, bottom + bars.bottom)
+            }
             WindowInsetsCompat.CONSUMED
+        }
+    }
+
+    /**
+     * Configures view_auth_header.xml. [pill] is the glass label on the right
+     * (e.g. "Step 1 of 2"); [step] (1 or 2) shows the two-segment progress bar.
+     */
+    protected fun setupHeader(
+        @StringRes title: Int,
+        @StringRes subtitle: Int? = null,
+        showBack: Boolean = true,
+        showBrand: Boolean = false,
+        pill: CharSequence? = null,
+        @DrawableRes pillIcon: Int = 0,
+        step: Int? = null
+    ) {
+        findViewById<TextView>(R.id.headerTitle).setText(title)
+        findViewById<TextView>(R.id.headerSubtitle).apply {
+            visibility = if (subtitle != null) View.VISIBLE else View.GONE
+            subtitle?.let { setText(it) }
+        }
+        findViewById<ImageButton>(R.id.headerBack).apply {
+            visibility = if (showBack) View.VISIBLE else View.GONE
+            setOnClickListener { onBackPressedDispatcher.onBackPressed() }
+        }
+        findViewById<View>(R.id.headerBrand).visibility = if (showBrand) View.VISIBLE else View.GONE
+        findViewById<TextView>(R.id.headerPill).apply {
+            visibility = if (pill != null) View.VISIBLE else View.GONE
+            text = pill
+            setCompoundDrawablesRelativeWithIntrinsicBounds(pillIcon, 0, 0, 0)
+        }
+        findViewById<View>(R.id.headerProgress).visibility = if (step != null) View.VISIBLE else View.GONE
+        if (step != null) {
+            findViewById<View>(R.id.headerStep2).setBackgroundResource(
+                if (step >= 2) R.drawable.bg_progress_on else R.drawable.bg_progress_off
+            )
         }
     }
 

@@ -14,4 +14,43 @@
     <color name="sc_surface_tint">#F7F8FA</color>
     <color name="sc_success">#2E7D5B</color>
     <color name="sc_error">#B3261E</color>
+
+    <!-- ===== SmartCare UI design tokens (docs/design/smartcare-ui-design.html) ===== -->
+
+    <!-- Patient: Clinic Sky -->
+    <color name="sky_main">#0880B3</color>
+    <color name="sky_accent">#36B4EA</color>
+    <color name="sky_highlight">#A6E3FF</color>
+    <color name="sky_soft">#E3F4FC</color>
+    <color name="sky_btn_top">#1D9BD3</color>
+    <color name="sky_header_dark">#065F88</color>
+    <color name="sky_ic_card_bg">#EEF8FD</color>
+    <color name="sky_ic_card_border">#C9E7F6</color>
+
+    <!-- Staff: Navy -->
+    <color name="navy_main">#0B2A5B</color>
+    <color name="navy_accent">#3A86DC</color>
+    <color name="navy_highlight">#9FD0FF</color>
+    <color name="navy_soft">#E5EFFD</color>
+    <color name="navy_btn_top">#183F7F</color>
+    <color name="navy_header_dark">#061A3D</color>
+    <color name="navy_header_glow">#1A4F9E</color>
+    <color name="navy_ic_card_bg">#EEF5FE</color>
+    <color name="navy_ic_card_border">#C8DBF6</color>
+
+    <!-- Shared -->
+    <color name="ink">#0F1F36</color>
+    <color name="ink_sub">#66768C</color>
+    <color name="ink_placeholder">#A8B5B7</color>
+    <color name="line">#E1E8F1</color>
+    <color name="field_fill">#F2F6FB</color>
+    <color name="page_bg">#EEF3F9</color>
+    <color name="danger">#D93B3B</color>
+    <color name="success">#1E9E6A</color>
+    <color name="glass_fill">#29FFFFFF</color>      <!-- white 16% -->
+    <color name="glass_stroke">#47FFFFFF</color>    <!-- white 28% -->
+    <color name="hero_circle">#2EFFFFFF</color>     <!-- white 18% -->
+    <color name="hero_subtitle">#D1FFFFFF</color>   <!-- white 82% -->
+    <color name="dock_bg">#EB0F1F36</color>         <!-- ink 92% -->
+    <color name="dock_icon">#8CFFFFFF</color>       <!-- white 55% -->
 </resources>

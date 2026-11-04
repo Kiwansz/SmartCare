@@ -18,6 +18,97 @@
 
     <style name="Theme.SmartCare" parent="Base.Theme.SmartCare" />
 
+    <!-- ===== New design: patient (Clinic Sky) and staff (Navy) themes ===== -->
+    <style name="Theme.SmartCare.Patient" parent="Theme.SmartCare">
+        <item name="colorPrimary">@color/sky_main</item>
+        <item name="colorSecondary">@color/sky_accent</item>
+        <item name="colorControlActivated">@color/sky_main</item>
+        <item name="colorOnSurface">@color/ink</item>
+        <item name="android:textColorPrimary">@color/ink</item>
+        <item name="android:textColorSecondary">@color/ink_sub</item>
+        <item name="android:fontFamily">@font/figtree</item>
+        <item name="fontFamily">@font/figtree</item>
+        <item name="scMain">@color/sky_main</item>
+        <item name="scAccent">@color/sky_accent</item>
+        <item name="scSoft">@color/sky_soft</item>
+        <item name="scBtnTop">@color/sky_btn_top</item>
+        <item name="scIcCardBg">@color/sky_ic_card_bg</item>
+        <item name="scIcCardBorder">@color/sky_ic_card_border</item>
+        <item name="scHeaderBackground">@drawable/bg_header_patient</item>
+    </style>
+
+    <style name="Theme.SmartCare.Staff" parent="Theme.SmartCare.Patient">
+        <item name="colorPrimary">@color/navy_main</item>
+        <item name="colorSecondary">@color/navy_accent</item>
+        <item name="colorControlActivated">@color/navy_main</item>
+        <item name="scMain">@color/navy_main</item>
+        <item name="scAccent">@color/navy_accent</item>
+        <item name="scSoft">@color/navy_soft</item>
+        <item name="scBtnTop">@color/navy_btn_top</item>
+        <item name="scIcCardBg">@color/navy_ic_card_bg</item>
+        <item name="scIcCardBorder">@color/navy_ic_card_border</item>
+        <item name="scHeaderBackground">@drawable/bg_header_staff</item>
+    </style>
+
+    <!-- Header text -->
+    <style name="SmartCare.Text.Hero" parent="">
+        <item name="android:textSize">29sp</item>
+        <item name="android:fontFamily">@font/figtree_bold</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:letterSpacing">-0.03</item>
+        <item name="android:lineSpacingMultiplier">0.95</item>
+    </style>
+
+    <style name="SmartCare.Text.HeroSub" parent="">
+        <item name="android:textSize">13.5sp</item>
+        <item name="android:textColor">@color/hero_subtitle</item>
+        <item name="android:lineSpacingMultiplier">1.15</item>
+    </style>
+
+    <!-- Body text on the white sheet -->
+    <style name="SmartCare.Text.Body" parent="">
+        <item name="android:textSize">13.5sp</item>
+        <item name="android:textColor">@color/ink</item>
+    </style>
+
+    <style name="SmartCare.Text.Sub" parent="">
+        <item name="android:textSize">12.5sp</item>
+        <item name="android:textColor">@color/ink_sub</item>
+    </style>
+
+    <style name="SmartCare.Text.Link" parent="">
+        <item name="android:textSize">12.5sp</item>
+        <item name="android:fontFamily">@font/figtree_bold</item>
+        <item name="android:textColor">?attr/scMain</item>
+    </style>
+
+    <!-- Floating label inside a SmartField (collapsed hint) -->
+    <style name="SmartCare.TextAppearance.FieldLabel" parent="TextAppearance.Material3.BodySmall">
+        <item name="android:textSize">11sp</item>
+        <item name="android:fontFamily">@font/figtree_semibold</item>
+        <item name="fontFamily">@font/figtree_semibold</item>
+    </style>
+
+    <!-- Pill button: 54dp, vertical gradient scBtnTop -> scMain, white bold text. -->
+    <style name="SmartCare.Button.Pill" parent="Widget.Material3.Button">
+        <item name="android:layout_height">54dp</item>
+        <item name="android:minHeight">54dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="backgroundTint">@null</item>
+        <item name="android:background">@drawable/bg_button_pill</item>
+        <item name="android:stateListAnimator">@null</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">14.5sp</item>
+        <item name="android:fontFamily">@font/figtree_bold</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:letterSpacing">0</item>
+        <item name="iconTint">@color/white</item>
+        <item name="iconGravity">textEnd</item>
+        <item name="iconSize">17dp</item>
+        <item name="iconPadding">8dp</item>
+    </style>
+
     <!-- Rounded silver-outlined input box -->
     <style name="SmartCare.Input" parent="Widget.Material3.TextInputLayout.OutlinedBox">
         <item name="boxCornerRadiusTopStart">12dp</item>

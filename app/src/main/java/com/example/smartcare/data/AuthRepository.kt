@@ -253,7 +253,6 @@ object AuthRepository {
         val rows = db.from("user_account").select {
             filter { ilike("email", pattern) }
         }.decodeList<JsonObject>()
-        android.util.Log.d("SmartCareAuth", "findAccountRowByEmail('$email', pattern='$pattern') -> $rows")
         return rows.firstOrNull { it.str("email").equals(email, ignoreCase = true) }
     }
 

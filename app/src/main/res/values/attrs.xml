@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Theme colours that differ between Theme.SmartCare.Patient (Clinic Sky) and .Staff (Navy).
+         Drawables and layouts use ?attr/scMain etc. so one file works for both themes. -->
+    <attr name="scMain" format="color" />
+    <attr name="scAccent" format="color" />
+    <attr name="scSoft" format="color" />
+    <attr name="scBtnTop" format="color" />
+    <attr name="scIcCardBg" format="color" />
+    <attr name="scIcCardBorder" format="color" />
+    <attr name="scHeaderBackground" format="reference" />
+
+    <!-- SmartField: label-inside input box with focus glow and inline error. -->
+    <declare-styleable name="SmartField">
+        <attr name="sfLabel" format="string" />
+        <attr name="sfPlaceholder" format="string" />
+        <attr name="sfHelper" format="string" />
+        <attr name="sfIcon" format="reference" />
+        <attr name="sfPassword" format="boolean" />
+        <attr name="android:inputType" />
+        <attr name="android:imeOptions" />
+        <attr name="android:maxLength" />
+        <attr name="android:digits" />
+    </declare-styleable>
+</resources>

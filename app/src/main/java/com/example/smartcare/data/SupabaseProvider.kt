@@ -22,12 +22,13 @@ object SupabaseProvider {
 
             // Debug builds: log each request's method + URL + status to Logcat (tag "SupabaseHttp").
             // INFO level never includes headers or bodies, so tokens/passwords are not logged.
+            // IC numbers can appear in query URLs, so they are masked before logging.
             if (BuildConfig.DEBUG) {
                 httpConfig {
                     install(io.ktor.client.plugins.logging.Logging) {
                         logger = object : io.ktor.client.plugins.logging.Logger {
                             override fun log(message: String) {
-                                android.util.Log.d("SupabaseHttp", message)
+                                android.util.Log.d("SupabaseHttp", maskSensitive(message))
                             }
                         }
                         level = io.ktor.client.plugins.logging.LogLevel.INFO
@@ -36,6 +37,13 @@ object SupabaseProvider {
             }
         }
     }
+
+    private val IC_IN_URL = Regex("""(ic_number=[a-z]+\.)[^&\s]+""")
+    private val LONG_DIGITS = Regex("""\d{12}""")
+
+    /** Hides IC numbers (ic_number=eq.123456789012 and any bare 12-digit run) in a log line. */
+    internal fun maskSensitive(message: String): String =
+        message.replace(IC_IN_URL, "$1***").replace(LONG_DIGITS, "************")
 
     /**
      * Pings the Supabase Auth health endpoint through the client's HTTP stack.
