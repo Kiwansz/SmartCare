@@ -2,20 +2,13 @@ package com.example.smartcare.data
 
 import com.example.smartcare.BuildConfig
 import io.github.jan.supabase.auth.Auth
-import io.github.jan.supabase.auth.auth
-import io.github.jan.supabase.auth.providers.builtin.Email
-import io.github.jan.supabase.postgrest.postgrest
-import kotlinx.serialization.json.JsonObject
-import kotlinx.serialization.json.buildJsonObject
-import kotlinx.serialization.json.int
-import kotlinx.serialization.json.jsonPrimitive
-import kotlinx.serialization.json.put
 import io.github.jan.supabase.createSupabaseClient
 import io.github.jan.supabase.postgrest.Postgrest
 
 /** Single shared Supabase client for the whole app. */
 object SupabaseProvider {
 
+    @OptIn(io.github.jan.supabase.annotations.SupabaseInternal::class) // for httpConfig {}
     val client by lazy {
         require(BuildConfig.SUPABASE_URL.isNotBlank() && BuildConfig.SUPABASE_ANON_KEY.isNotBlank()) {
             "Set supabase.url and supabase.anon.key in local.properties"
@@ -26,47 +19,22 @@ object SupabaseProvider {
         ) {
             install(Auth)
             install(Postgrest)
-        }
-    }
 
-    /**
-     * Creates an account in Supabase Auth. Name, IC number and phone are stored as user metadata.
-     * If email confirmation is enabled in the project, the user must confirm before logging in.
-     */
-    suspend fun signUp(
-        fullName: String,
-        icNumber: String,
-        email: String,
-        phone: String,
-        password: String
-    ): Result<Unit> = runCatching {
-        client.auth.signUpWith(Email) {
-            this.email = email
-            this.password = password
-            data = buildJsonObject {
-                put("full_name", fullName)
-                put("ic_number", icNumber)
-                put("phone", phone)
+            // Debug builds: log each request's method + URL + status to Logcat (tag "SupabaseHttp").
+            // INFO level never includes headers or bodies, so tokens/passwords are not logged.
+            if (BuildConfig.DEBUG) {
+                httpConfig {
+                    install(io.ktor.client.plugins.logging.Logging) {
+                        logger = object : io.ktor.client.plugins.logging.Logger {
+                            override fun log(message: String) {
+                                android.util.Log.d("SupabaseHttp", message)
+                            }
+                        }
+                        level = io.ktor.client.plugins.logging.LogLevel.INFO
+                    }
+                }
             }
         }
-
-        // Insert the clinic rows: user_account first, then the linked patient row.
-        val account = client.postgrest.from("user_account").insert(
-            buildJsonObject {
-                put("email", email)
-                put("ic_number", icNumber)
-                put("phone_number", phone)
-                put("role", "PATIENT")
-            }
-        ) { select() }.decodeSingle<JsonObject>()
-
-        val userId = account.getValue("user_id").jsonPrimitive.int
-        client.postgrest.from("patient").insert(
-            buildJsonObject {
-                put("user_id", userId)
-                put("full_name", fullName)
-            }
-        )
     }
 
     /**

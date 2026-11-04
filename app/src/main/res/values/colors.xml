@@ -3,4 +3,15 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="brand_blue">#1F4E79</color>
+
+    <!-- SmartCare white & silver palette (design.pdf) -->
+    <color name="sc_background">#FFFFFF</color>
+    <color name="sc_text">#22262B</color>
+    <color name="sc_text_secondary">#5C636B</color>
+    <color name="sc_hint">#8A9099</color>
+    <color name="sc_silver">#C8CDD4</color>
+    <color name="sc_silver_light">#E4E7EB</color>
+    <color name="sc_surface_tint">#F7F8FA</color>
+    <color name="sc_success">#2E7D5B</color>
+    <color name="sc_error">#B3261E</color>
 </resources>

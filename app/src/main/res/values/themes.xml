@@ -1,9 +1,86 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Base.Theme.SmartCare" parent="Theme.Material3.DayNight.NoActionBar">
-        <item name="colorPrimary">@color/brand_blue</item>
+    <!-- Base application theme: always light (design is white & silver). -->
+    <style name="Base.Theme.SmartCare" parent="Theme.Material3.Light.NoActionBar">
+        <item name="colorPrimary">@color/sc_text</item>
         <item name="colorOnPrimary">@color/white</item>
+        <item name="colorSecondary">@color/sc_text_secondary</item>
+        <item name="colorError">@color/sc_error</item>
+        <item name="colorSurface">@color/sc_background</item>
+        <item name="colorOnSurface">@color/sc_text</item>
+        <item name="android:colorBackground">@color/sc_background</item>
+        <item name="android:windowBackground">@color/sc_background</item>
+        <item name="android:statusBarColor">@color/sc_background</item>
+        <item name="android:navigationBarColor">@color/sc_background</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:textColorPrimary">@color/sc_text</item>
+        <item name="android:textColorSecondary">@color/sc_text_secondary</item>
     </style>
 
     <style name="Theme.SmartCare" parent="Base.Theme.SmartCare" />
+
+    <!-- Rounded silver-outlined input box -->
+    <style name="SmartCare.Input" parent="Widget.Material3.TextInputLayout.OutlinedBox">
+        <item name="boxCornerRadiusTopStart">12dp</item>
+        <item name="boxCornerRadiusTopEnd">12dp</item>
+        <item name="boxCornerRadiusBottomStart">12dp</item>
+        <item name="boxCornerRadiusBottomEnd">12dp</item>
+        <item name="boxStrokeColor">@color/sc_text_secondary</item>
+        <item name="boxStrokeWidth">1dp</item>
+        <item name="boxStrokeWidthFocused">1.5dp</item>
+        <item name="startIconTint">@color/sc_hint</item>
+        <item name="endIconTint">@color/sc_hint</item>
+        <item name="hintEnabled">false</item>
+        <item name="android:layout_marginTop">6dp</item>
+    </style>
+
+    <style name="SmartCare.EditText" parent="">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/sc_text</item>
+        <item name="android:textColorHint">@color/sc_hint</item>
+        <item name="android:maxLines">1</item>
+    </style>
+
+    <!-- Field label above each input -->
+    <style name="SmartCare.Label" parent="">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/sc_text</item>
+        <item name="android:layout_marginTop">16dp</item>
+    </style>
+
+    <!-- White button with silver border and soft shadow -->
+    <style name="SmartCare.Button" parent="Widget.Material3.Button">
+        <item name="android:layout_height">56dp</item>
+        <item name="backgroundTint">@color/white</item>
+        <item name="android:textColor">@color/sc_text</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:letterSpacing">0.02</item>
+        <item name="strokeColor">@color/sc_silver</item>
+        <item name="strokeWidth">1dp</item>
+        <item name="cornerRadius">14dp</item>
+        <item name="elevation">3dp</item>
+        <item name="rippleColor">@color/sc_silver_light</item>
+    </style>
+
+    <style name="SmartCare.Title" parent="">
+        <item name="android:textSize">24sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/sc_text</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="SmartCare.Subtitle" parent="">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/sc_text_secondary</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_marginTop">6dp</item>
+    </style>
+
+    <style name="SmartCare.Footer" parent="">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/sc_text</item>
+        <item name="android:gravity">center</item>
+        <item name="android:padding">12dp</item>
+    </style>
 </resources>

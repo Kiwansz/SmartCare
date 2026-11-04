@@ -1,91 +1,116 @@
 package com.example.smartcare
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
+import android.text.InputType
+import android.util.Patterns
 import android.widget.TextView
-import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.example.smartcare.data.SupabaseProvider
-import kotlinx.coroutines.launch
+import com.example.smartcare.data.AuthRepository
+import com.example.smartcare.data.SessionPrefs
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.checkbox.MaterialCheckBox
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import kotlinx.coroutines.launch
 
-class LoginActivity : AppCompatActivity() {
+/**
+ * 2. Patient login and 5. Staff login. Same layout, different texts and rules:
+ * - Patient: username = IC number or email, has a Sign Up link.
+ * - Staff: work email only, no Sign Up (accounts are Admin-created).
+ */
+class LoginActivity : BaseActivity() {
 
-    private lateinit var tilIcNumber: TextInputLayout
+    companion object {
+        private const val EXTRA_STAFF = "staff"
+
+        fun intent(context: Context, staff: Boolean) =
+            Intent(context, LoginActivity::class.java).putExtra(EXTRA_STAFF, staff)
+    }
+
+    private val isStaff by lazy { intent.getBooleanExtra(EXTRA_STAFF, false) }
+
+    private lateinit var tilUsername: TextInputLayout
     private lateinit var tilPassword: TextInputLayout
-    private lateinit var etIcNumber: TextInputEditText
+    private lateinit var etUsername: TextInputEditText
     private lateinit var etPassword: TextInputEditText
+    private lateinit var cbRemember: MaterialCheckBox
+    private lateinit var btnLogin: MaterialButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        tilIcNumber = findViewById(R.id.tilIcNumber)
+        tilUsername = findViewById(R.id.tilUsername)
         tilPassword = findViewById(R.id.tilPassword)
-        etIcNumber = findViewById(R.id.etIcNumber)
+        etUsername = findViewById(R.id.etUsername)
         etPassword = findViewById(R.id.etPassword)
+        cbRemember = findViewById(R.id.cbRemember)
+        btnLogin = findViewById(R.id.btnLogin)
 
-        // Temporary: verify the Supabase connection on launch (debug builds only).
-        if (BuildConfig.DEBUG) testSupabaseConnection()
+        if (isStaff) {
+            setupTopBar(R.string.staff_login_bar)
+            findViewById<TextView>(R.id.tvTitle).setText(R.string.staff_title)
+            findViewById<TextView>(R.id.tvSubtitle).setText(R.string.staff_subtitle)
+            findViewById<TextView>(R.id.tvUsernameLabel).setText(R.string.label_work_email)
+            etUsername.setHint(R.string.hint_work_email)
+            tilUsername.setStartIconDrawable(R.drawable.ic_mail)
+            setupFooterLink(R.string.staff_no_account_prefix, R.string.ask_admin) {
+                toast(R.string.msg_ask_admin)
+            }
+        } else {
+            setupTopBar(R.string.patient_login_bar)
+            findViewById<TextView>(R.id.tvTitle).setText(R.string.login_title)
+            findViewById<TextView>(R.id.tvSubtitle).setText(R.string.login_subtitle)
+            findViewById<TextView>(R.id.tvUsernameLabel).setText(R.string.label_username)
+            etUsername.setHint(R.string.hint_username)
+            etUsername.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
+            setupFooterLink(R.string.no_account_prefix, R.string.sign_up) {
+                startActivity(Intent(this, RegisterActivity::class.java))
+            }
+        }
 
-        findViewById<MaterialButton>(R.id.btnLogin).setOnClickListener { attemptLogin() }
+        cbRemember.isChecked = SessionPrefs.rememberMe(this)
 
         findViewById<TextView>(R.id.tvForgotPassword).setOnClickListener {
-            Toast.makeText(this, R.string.msg_forgot_password, Toast.LENGTH_SHORT).show()
+            startActivity(Intent(this, ForgotPasswordActivity::class.java))
         }
-
-        findViewById<TextView>(R.id.tvRegister).setOnClickListener {
-            startActivity(Intent(this, RegisterActivity::class.java))
-        }
-    }
-
-    private fun testSupabaseConnection() {
-        lifecycleScope.launch {
-            SupabaseProvider.testConnection()
-                .onSuccess {
-                    Log.d("SupabaseTest", it)
-                    Toast.makeText(this@LoginActivity, it, Toast.LENGTH_LONG).show()
-                }
-                .onFailure {
-                    Log.e("SupabaseTest", "Connection failed", it)
-                    Toast.makeText(
-                        this@LoginActivity,
-                        "Supabase connection failed: ${it.message}",
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-        }
+        btnLogin.setOnClickListener { attemptLogin() }
     }
 
     private fun attemptLogin() {
-        val icNumber = etIcNumber.text?.toString()?.trim().orEmpty()
+        val username = etUsername.text?.toString()?.trim().orEmpty()
         val password = etPassword.text?.toString().orEmpty()
-
-        tilIcNumber.error = null
+        tilUsername.error = null
         tilPassword.error = null
 
         var valid = true
-
-        if (icNumber.isEmpty()) {
-            tilIcNumber.error = getString(R.string.error_required)
+        if (username.isEmpty()) {
+            tilUsername.error = getString(R.string.error_required)
             valid = false
-        } else if (icNumber.length != 12 || !icNumber.all { it.isDigit() }) {
-            tilIcNumber.error = getString(R.string.error_invalid_ic)
+        } else if (isStaff && !Patterns.EMAIL_ADDRESS.matcher(username).matches()) {
+            tilUsername.error = getString(R.string.error_invalid_email)
             valid = false
         }
-
         if (password.isEmpty()) {
             tilPassword.error = getString(R.string.error_required)
             valid = false
         }
-
         if (!valid) return
 
-        // TODO: Replace with real authentication once the backend exists.
-        Toast.makeText(this, R.string.msg_login_success, Toast.LENGTH_SHORT).show()
+        val roles = if (isStaff) AuthRepository.STAFF_ROLES else AuthRepository.PATIENT_ROLES
+        setLoading(true, btnLogin)
+        lifecycleScope.launch {
+            AuthRepository.signIn(username, password, roles)
+                .onSuccess { account ->
+                    SessionPrefs.setRememberMe(this@LoginActivity, cbRemember.isChecked)
+                    goAfterLogin(account)
+                }
+                .onFailure {
+                    setLoading(false, btnLogin)
+                    toast(it.friendly())
+                }
+        }
     }
 }
