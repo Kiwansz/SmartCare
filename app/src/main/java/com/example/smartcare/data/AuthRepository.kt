@@ -33,6 +33,12 @@ data class Account(
 
 data class NextAppointment(val slotStart: Date, val doctorName: String?, val reason: String?)
 
+/**
+ * Wrong IC/email or wrong password. One error for both, so the login screen
+ * never reveals whether an account exists.
+ */
+class InvalidLoginException : Exception("Invalid login")
+
 /** All Supabase calls for the User Account module. */
 object AuthRepository {
 
@@ -99,9 +105,17 @@ object AuthRepository {
     suspend fun signIn(username: String, password: String, allowedRoles: Set<String>): Result<Account> =
         runCatching {
             val email = resolveEmail(username)
-            auth.signInWith(Email) {
-                this.email = email
-                this.password = password
+            try {
+                auth.signInWith(Email) {
+                    this.email = email
+                    this.password = password
+                }
+            } catch (e: Exception) {
+                val msg = e.message.orEmpty()
+                if (msg.contains("invalid_credentials", true) || msg.contains("Invalid login credentials", true)) {
+                    throw InvalidLoginException()
+                }
+                throw e
             }
 
             val account = try {
@@ -198,11 +212,11 @@ object AuthRepository {
         if (input.contains("@")) return input.lowercase()
 
         val ic = input.filter { it.isDigit() }
-        if (ic.length != 12) error("Enter your email or 12-digit IC number")
+        if (ic.length != 12) throw InvalidLoginException()
         val row = db.from("user_account").select(Columns.list("email")) {
             filter { eq("ic_number", ic) }
         }.decodeSingleOrNull<JsonObject>()
-        return row?.str("email") ?: error("No account found for this IC number")
+        return row?.str("email") ?: throw InvalidLoginException()
     }
 
     private suspend fun loadAccount(email: String): Account {

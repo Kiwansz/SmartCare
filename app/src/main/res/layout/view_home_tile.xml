@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- One home shortcut tile. HomeActivity sets icon/title/subtitle; the chatbot tile
+     switches to the navy style with HomeActivity.styleAsChatTile(). -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_tile"
+    android:clickable="true"
+    android:focusable="true"
+    android:minHeight="116dp"
+    android:orientation="vertical"
+    android:padding="14dp">
+
+    <ImageView
+        android:id="@+id/tileIcon"
+        android:layout_width="38dp"
+        android:layout_height="38dp"
+        android:background="@drawable/bg_tile_icon"
+        android:importantForAccessibility="no"
+        android:padding="9dp"
+        app:tint="?attr/scMain"
+        tools:src="@drawable/ic_sc_plus" />
+
+    <TextView
+        android:id="@+id/tileTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:fontFamily="@font/figtree_bold"
+        android:textColor="@color/ink"
+        android:textSize="13.5sp"
+        tools:text="@string/tile_book" />
+
+    <TextView
+        android:id="@+id/tileSub"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:fontFamily="@font/figtree_medium"
+        android:textColor="@color/ink_sub"
+        android:textSize="11.5sp"
+        tools:text="@string/tile_book_sub" />
+</LinearLayout>

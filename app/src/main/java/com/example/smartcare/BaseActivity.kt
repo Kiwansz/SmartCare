@@ -17,7 +17,6 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
-import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.smartcare.data.Account
 
@@ -25,8 +24,9 @@ import com.example.smartcare.data.Account
 abstract class BaseActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // Transparent status bar with dark icons; the page background shows through.
         enableEdgeToEdge(
-            statusBarStyle = SystemBarStyle.light(Color.WHITE, Color.WHITE),
+            statusBarStyle = SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT),
             navigationBarStyle = SystemBarStyle.light(Color.WHITE, Color.WHITE)
         )
         super.onCreate(savedInstanceState)
@@ -38,8 +38,11 @@ abstract class BaseActivity : AppCompatActivity() {
         val header = findViewById<View>(R.id.header)
         applySystemBarPadding(root, header)
         if (header != null) {
-            // Gradient header sits behind the status bar, so use white status bar icons.
-            WindowCompat.getInsetsController(window, window.decorView).isAppearanceLightStatusBars = false
+            // Gradient header draws behind a transparent status bar, with white status bar icons.
+            enableEdgeToEdge(
+                statusBarStyle = SystemBarStyle.dark(Color.TRANSPARENT),
+                navigationBarStyle = SystemBarStyle.light(Color.WHITE, Color.WHITE)
+            )
         }
     }
 
@@ -77,6 +80,7 @@ abstract class BaseActivity : AppCompatActivity() {
         @StringRes subtitle: Int? = null,
         showBack: Boolean = true,
         showBrand: Boolean = false,
+        brandCentered: Boolean = true,
         pill: CharSequence? = null,
         @DrawableRes pillIcon: Int = 0,
         step: Int? = null
@@ -90,7 +94,14 @@ abstract class BaseActivity : AppCompatActivity() {
             visibility = if (showBack) View.VISIBLE else View.GONE
             setOnClickListener { onBackPressedDispatcher.onBackPressed() }
         }
-        findViewById<View>(R.id.headerBrand).visibility = if (showBrand) View.VISIBLE else View.GONE
+        findViewById<View>(R.id.headerBrand).apply {
+            visibility = if (showBrand) View.VISIBLE else View.GONE
+            (layoutParams as android.widget.FrameLayout.LayoutParams).apply {
+                gravity = if (brandCentered) android.view.Gravity.CENTER
+                    else android.view.Gravity.START or android.view.Gravity.CENTER_VERTICAL
+                marginStart = if (!brandCentered && showBack) dp(52) else 0
+            }
+        }
         findViewById<TextView>(R.id.headerPill).apply {
             visibility = if (pill != null) View.VISIBLE else View.GONE
             text = pill
@@ -123,6 +134,9 @@ abstract class BaseActivity : AppCompatActivity() {
         val start = text.length
         text.append(bold)
         text.setSpan(StyleSpan(android.graphics.Typeface.BOLD), start, text.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        themeColor(R.attr.scMain)?.let {
+            text.setSpan(android.text.style.ForegroundColorSpan(it), start, text.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        }
         findViewById<TextView>(R.id.tvFooter).apply {
             setText(text)
             setOnClickListener { onClick() }
@@ -132,7 +146,16 @@ abstract class BaseActivity : AppCompatActivity() {
     /** Shows the spinner and disables [button] while a request runs. */
     protected fun setLoading(loading: Boolean, button: View) {
         button.isEnabled = !loading
+        button.alpha = if (loading) 0.6f else 1f
         findViewById<View>(R.id.progress)?.visibility = if (loading) View.VISIBLE else View.GONE
+    }
+
+    protected fun dp(value: Int): Int = (value * resources.displayMetrics.density).toInt()
+
+    /** Resolves a colour theme attribute such as R.attr.scMain. */
+    protected fun themeColor(attr: Int): Int? {
+        val tv = android.util.TypedValue()
+        return if (theme.resolveAttribute(attr, tv, true)) tv.data else null
     }
 
     protected fun toast(message: String) =
@@ -156,7 +179,9 @@ abstract class BaseActivity : AppCompatActivity() {
             first.contains("should be different", true) -> "New password must be different from the old one"
             this is java.io.IOException || first.contains("Unable to resolve host", true) ->
                 "No internet connection"
-            first.isNotEmpty() -> first
+            // Only our own messages (from error("...") in AuthRepository) are shown as-is;
+            // raw library/server text never reaches the user.
+            this is IllegalStateException && first.isNotEmpty() -> first
             else -> "Something went wrong. Please try again."
         }
     }

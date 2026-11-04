@@ -26,8 +26,9 @@
         <item name="colorOnSurface">@color/ink</item>
         <item name="android:textColorPrimary">@color/ink</item>
         <item name="android:textColorSecondary">@color/ink_sub</item>
+        <!-- Only android:fontFamily here. A theme-level app:fontFamily would override every
+             view's android:fontFamily (e.g. @font/figtree_bold) in AppCompat text views. -->
         <item name="android:fontFamily">@font/figtree</item>
-        <item name="fontFamily">@font/figtree</item>
         <item name="scMain">@color/sky_main</item>
         <item name="scAccent">@color/sky_accent</item>
         <item name="scSoft">@color/sky_soft</item>
@@ -87,6 +88,13 @@
         <item name="android:textSize">11sp</item>
         <item name="android:fontFamily">@font/figtree_semibold</item>
         <item name="fontFamily">@font/figtree_semibold</item>
+    </style>
+
+    <!-- Value / placeholder text inside a SmartField -->
+    <style name="SmartCare.TextAppearance.FieldValue" parent="TextAppearance.Material3.BodyLarge">
+        <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">@font/figtree_medium</item>
+        <item name="fontFamily">@font/figtree_medium</item>
     </style>
 
     <!-- Pill button: 54dp, vertical gradient scBtnTop -> scMain, white bold text. -->

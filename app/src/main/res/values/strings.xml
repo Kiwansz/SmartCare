@@ -92,6 +92,57 @@
     <string name="logout">Log out</string>
     <string name="close">Close</string>
 
+    <!-- ===== New design (docs/design/smartcare-ui-design.html) ===== -->
+    <string name="action_continue">Continue</string>
+    <string name="action_log_in">Log in</string>
+
+    <!-- 1. Role picker -->
+    <string name="role_hero_title">Your clinic, in your pocket</string>
+    <string name="role_hero_sub">Book visits, get reminders and follow-ups in one place.</string>
+    <string name="role_choice_patient">I\'m a patient</string>
+    <string name="role_choice_patient_desc">Book and manage visits</string>
+    <string name="role_choice_staff">I\'m clinic staff</string>
+    <string name="role_choice_staff_desc">Doctors, nurses, reception</string>
+
+    <!-- 2. Patient login -->
+    <string name="login_hero_title">Welcome back</string>
+    <string name="login_hero_sub">Log in to see your appointments.</string>
+    <string name="field_ic">IC number</string>
+    <string name="hint_ic_example">e.g. 010203-14-5677</string>
+    <string name="helper_ic">12 digits, no need to type dashes.</string>
+    <string name="field_password">Password</string>
+    <string name="hint_password_enter">Enter your password</string>
+    <string name="forgot_password_link">Forgot password?</string>
+    <string name="footer_new_prefix">New to SmartCare?</string>
+    <string name="footer_create_account">Create an account</string>
+    <string name="error_ic_length">IC number must be 12 digits</string>
+    <string name="error_login_ic">IC number or password is incorrect.</string>
+    <string name="error_login_email">Email or password is incorrect.</string>
+
+    <!-- 7. Patient home. Sample values are placeholders until the appointment module exists. -->
+    <string name="greeting_morning">Good morning</string>
+    <string name="greeting_afternoon">Good afternoon</string>
+    <string name="greeting_evening">Good evening</string>
+    <string name="home_sample_name">Ahmad Hafiz</string>
+    <string name="home_sample_status">Confirmed</string>
+    <string name="home_sample_day">Tue, 10 Nov</string>
+    <string name="home_sample_time">9:30 AM · General check-up</string>
+    <string name="home_sample_doctor_initials">DA</string>
+    <string name="home_sample_doctor">Dr. Aisyah</string>
+    <string name="home_sample_doctor_role">General doctor</string>
+    <string name="home_checkin">CHECK-IN</string>
+    <string name="home_sample_code">4F7K</string>
+    <string name="tile_book">Book visit</string>
+    <string name="tile_book_sub">Pick a slot</string>
+    <string name="tile_chat">Ask SmartCare</string>
+    <string name="tile_chat_sub">Chat assistant</string>
+    <string name="tile_followups">Follow-ups</string>
+    <string name="tile_followups_sub">1 due this week</string>
+    <string name="tile_records">My records</string>
+    <string name="tile_records_sub">Prescriptions, MC</string>
+    <string name="nav_records">Records</string>
+    <string name="cd_notifications">Notifications</string>
+
     <!-- Validation / messages -->
     <string name="error_required">This field is required</string>
     <string name="error_invalid_email">Enter a valid email address</string>

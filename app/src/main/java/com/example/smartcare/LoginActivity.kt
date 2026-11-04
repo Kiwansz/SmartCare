@@ -5,20 +5,23 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.InputType
 import android.util.Patterns
+import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 import androidx.lifecycle.lifecycleScope
 import com.example.smartcare.data.AuthRepository
+import com.example.smartcare.data.InvalidLoginException
 import com.example.smartcare.data.SessionPrefs
+import com.example.smartcare.ui.SmartField
+import com.example.smartcare.util.icDigits
 import com.google.android.material.button.MaterialButton
-import com.google.android.material.checkbox.MaterialCheckBox
-import com.google.android.material.textfield.TextInputEditText
-import com.google.android.material.textfield.TextInputLayout
+import com.google.android.material.materialswitch.MaterialSwitch
 import kotlinx.coroutines.launch
 
 /**
- * 2. Patient login and 5. Staff login. Same layout, different texts and rules:
- * - Patient: username = IC number or email, has a Sign Up link.
- * - Staff: work email only, no Sign Up (accounts are Admin-created).
+ * 2. Patient login: IC number + password. Finds the account by IC, signs in with
+ * Supabase Auth using its email, then checks role = PATIENT and status = ACTIVE.
+ *
+ * The staff branch (work email) is temporary until StaffLoginActivity exists (step 7).
  */
 class LoginActivity : BaseActivity() {
 
@@ -31,85 +34,90 @@ class LoginActivity : BaseActivity() {
 
     private val isStaff by lazy { intent.getBooleanExtra(EXTRA_STAFF, false) }
 
-    private lateinit var tilUsername: TextInputLayout
-    private lateinit var tilPassword: TextInputLayout
-    private lateinit var etUsername: TextInputEditText
-    private lateinit var etPassword: TextInputEditText
-    private lateinit var cbRemember: MaterialCheckBox
+    private lateinit var fieldUser: SmartField
+    private lateinit var fieldPassword: SmartField
+    private lateinit var switchRemember: MaterialSwitch
     private lateinit var btnLogin: MaterialButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+        setupHeader(R.string.login_hero_title, R.string.login_hero_sub, showBrand = true)
 
-        tilUsername = findViewById(R.id.tilUsername)
-        tilPassword = findViewById(R.id.tilPassword)
-        etUsername = findViewById(R.id.etUsername)
-        etPassword = findViewById(R.id.etPassword)
-        cbRemember = findViewById(R.id.cbRemember)
+        fieldUser = findViewById(R.id.fieldIc)
+        fieldPassword = findViewById(R.id.fieldPassword)
+        switchRemember = findViewById(R.id.switchRemember)
         btnLogin = findViewById(R.id.btnLogin)
 
         if (isStaff) {
-            setupTopBar(R.string.staff_login_bar)
-            findViewById<TextView>(R.id.tvTitle).setText(R.string.staff_title)
-            findViewById<TextView>(R.id.tvSubtitle).setText(R.string.staff_subtitle)
-            findViewById<TextView>(R.id.tvUsernameLabel).setText(R.string.label_work_email)
-            etUsername.setHint(R.string.hint_work_email)
-            tilUsername.setStartIconDrawable(R.drawable.ic_mail)
-            setupFooterLink(R.string.staff_no_account_prefix, R.string.ask_admin) {
-                toast(R.string.msg_ask_admin)
-            }
+            // TODO(step 7): replace with StaffLoginActivity (navy theme).
+            fieldUser.inputLayout.hint = getString(R.string.label_work_email)
+            fieldUser.inputLayout.placeholderText = getString(R.string.hint_work_email)
+            fieldUser.inputLayout.setStartIconDrawable(R.drawable.ic_sc_mail)
+            fieldUser.editText.filters = arrayOf()
+            // Setting inputType also replaces the IC digits-only key listener.
+            fieldUser.editText.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
+            fieldUser.helperText = null
+            findViewById<TextView>(R.id.tvFooter).text = null
         } else {
-            setupTopBar(R.string.patient_login_bar)
-            findViewById<TextView>(R.id.tvTitle).setText(R.string.login_title)
-            findViewById<TextView>(R.id.tvSubtitle).setText(R.string.login_subtitle)
-            findViewById<TextView>(R.id.tvUsernameLabel).setText(R.string.label_username)
-            etUsername.setHint(R.string.hint_username)
-            etUsername.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
-            setupFooterLink(R.string.no_account_prefix, R.string.sign_up) {
+            setupFooterLink(R.string.footer_new_prefix, R.string.footer_create_account) {
                 startActivity(Intent(this, RegisterActivity::class.java))
             }
         }
 
-        cbRemember.isChecked = SessionPrefs.rememberMe(this)
+        switchRemember.isChecked = SessionPrefs.rememberMe(this)
+        if (!isStaff && savedInstanceState == null) {
+            SessionPrefs.savedIc(this)?.let { fieldUser.text = it }
+        }
 
-        findViewById<TextView>(R.id.tvForgotPassword).setOnClickListener {
+        findViewById<TextView>(R.id.linkForgot).setOnClickListener {
             startActivity(Intent(this, ForgotPasswordActivity::class.java))
+        }
+        fieldPassword.editText.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) { attemptLogin(); true } else false
         }
         btnLogin.setOnClickListener { attemptLogin() }
     }
 
     private fun attemptLogin() {
-        val username = etUsername.text?.toString()?.trim().orEmpty()
-        val password = etPassword.text?.toString().orEmpty()
-        tilUsername.error = null
-        tilPassword.error = null
+        val user = fieldUser.text.trim()
+        val password = fieldPassword.text
+        fieldUser.error = null
+        fieldPassword.error = null
 
         var valid = true
-        if (username.isEmpty()) {
-            tilUsername.error = getString(R.string.error_required)
-            valid = false
-        } else if (isStaff && !Patterns.EMAIL_ADDRESS.matcher(username).matches()) {
-            tilUsername.error = getString(R.string.error_invalid_email)
-            valid = false
+        if (user.isEmpty()) {
+            fieldUser.error = getString(R.string.error_required); valid = false
+        } else if (isStaff && !Patterns.EMAIL_ADDRESS.matcher(user).matches()) {
+            fieldUser.error = getString(R.string.error_invalid_email); valid = false
+        } else if (!isStaff && icDigits(user).length != 12) {
+            fieldUser.error = getString(R.string.error_ic_length); valid = false
         }
         if (password.isEmpty()) {
-            tilPassword.error = getString(R.string.error_required)
-            valid = false
+            fieldPassword.error = getString(R.string.error_required); valid = false
         }
         if (!valid) return
 
+        val username = if (isStaff) user else icDigits(user)
         val roles = if (isStaff) AuthRepository.STAFF_ROLES else AuthRepository.PATIENT_ROLES
         setLoading(true, btnLogin)
         lifecycleScope.launch {
             AuthRepository.signIn(username, password, roles)
                 .onSuccess { account ->
-                    SessionPrefs.setRememberMe(this@LoginActivity, cbRemember.isChecked)
+                    val remember = switchRemember.isChecked
+                    SessionPrefs.setRememberMe(this@LoginActivity, remember)
+                    if (!isStaff) SessionPrefs.setSavedIc(this@LoginActivity, if (remember) username else null)
                     goAfterLogin(account)
                 }
                 .onFailure {
                     setLoading(false, btnLogin)
-                    toast(it.friendly())
+                    toast(
+                        if (it is InvalidLoginException) {
+                            getString(if (isStaff) R.string.error_login_email else R.string.error_login_ic)
+                        } else {
+                            it.friendly()
+                        }
+                    )
                 }
         }
     }

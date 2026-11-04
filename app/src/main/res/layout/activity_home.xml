@@ -1,29 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!-- 7. Patient home. Appointment card, tiles and dock use sample data.
+     TODO(appointment module): bind the card and tiles to real data. -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:background="@drawable/bg_home_page"
     tools:context=".HomeActivity">
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingBottom="100dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="24dp">
+            android:paddingStart="18dp"
+            android:paddingTop="14dp"
+            android:paddingEnd="18dp">
 
             <!-- Greeting -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
@@ -31,11 +35,11 @@
                     android:id="@+id/tvInitials"
                     android:layout_width="44dp"
                     android:layout_height="44dp"
-                    android:background="@drawable/bg_circle"
+                    android:background="@drawable/bg_avatar"
+                    android:fontFamily="@font/figtree_bold"
                     android:gravity="center"
-                    android:textColor="@color/sc_text"
+                    android:textColor="@color/white"
                     android:textSize="15sp"
-                    android:textStyle="bold"
                     tools:text="AH" />
 
                 <LinearLayout
@@ -46,169 +50,306 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/tvGreeting"
+                        style="@style/SmartCare.Text.Sub"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/home_welcome"
-                        android:textColor="@color/sc_text_secondary"
-                        android:textSize="13sp" />
+                        android:fontFamily="@font/figtree_medium"
+                        tools:text="@string/greeting_morning" />
 
                     <TextView
                         android:id="@+id/tvName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/sc_text"
-                        android:textSize="20sp"
-                        android:textStyle="bold"
-                        tools:text="Ahmad Hafiz" />
+                        android:ellipsize="end"
+                        android:fontFamily="@font/figtree_bold"
+                        android:letterSpacing="-0.02"
+                        android:maxLines="1"
+                        android:textColor="@color/ink"
+                        android:textSize="18sp"
+                        tools:text="@string/home_sample_name" />
                 </LinearLayout>
+
+                <FrameLayout
+                    android:id="@+id/btnBell"
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
+                    android:background="@drawable/bg_bell"
+                    android:clickable="true"
+                    android:contentDescription="@string/cd_notifications"
+                    android:focusable="true">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/ic_sc_bell"
+                        app:tint="@color/ink" />
+
+                    <View
+                        android:layout_width="8dp"
+                        android:layout_height="8dp"
+                        android:layout_gravity="top|end"
+                        android:layout_marginTop="9dp"
+                        android:layout_marginEnd="10dp"
+                        android:background="@drawable/bg_bell_dot" />
+                </FrameLayout>
             </LinearLayout>
 
-            <!-- Patient-only content -->
+            <!-- Next appointment (sample) -->
             <LinearLayout
-                android:id="@+id/patientSection"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:background="@drawable/bg_card"
-                    android:orientation="vertical"
-                    android:padding="18dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:letterSpacing="0.1"
-                        android:text="@string/home_next_appointment"
-                        android:textColor="@color/sc_text"
-                        android:textSize="12sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/tvApptWhen"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="@string/home_loading"
-                        android:textColor="@color/sc_text"
-                        android:textSize="19sp"
-                        android:textStyle="bold"
-                        tools:text="Tue, 10 Nov · 9:30 AM" />
-
-                    <TextView
-                        android:id="@+id/tvApptDetail"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:textColor="@color/sc_text_secondary"
-                        android:textSize="14sp"
-                        tools:text="Dr. Aisyah · General check-up" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:orientation="horizontal">
-
-                    <LinearLayout
-                        android:id="@+id/cardBook"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/bg_card"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:foreground="?attr/selectableItemBackground"
-                        android:orientation="vertical"
-                        android:padding="16dp">
-
-                        <ImageView
-                            android:layout_width="36dp"
-                            android:layout_height="36dp"
-                            android:background="@drawable/bg_icon_box"
-                            android:importantForAccessibility="no"
-                            android:padding="8dp"
-                            android:src="@drawable/ic_calendar"
-                            app:tint="@color/sc_text_secondary" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="16dp"
-                            android:text="@string/home_book"
-                            android:textColor="@color/sc_text"
-                            android:textSize="15sp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/cardFollowups"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/bg_card"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:foreground="?attr/selectableItemBackground"
-                        android:orientation="vertical"
-                        android:padding="16dp">
-
-                        <ImageView
-                            android:layout_width="36dp"
-                            android:layout_height="36dp"
-                            android:background="@drawable/bg_icon_box"
-                            android:importantForAccessibility="no"
-                            android:padding="8dp"
-                            android:src="@drawable/ic_task"
-                            app:tint="@color/sc_text_secondary" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="16dp"
-                            android:text="@string/home_followups"
-                            android:textColor="@color/sc_text"
-                            android:textSize="15sp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-                </LinearLayout>
-            </LinearLayout>
-
-            <!-- Staff placeholder (staff home differs by role, per the design notes) -->
-            <TextView
-                android:id="@+id/tvStaffNote"
+                android:id="@+id/cardAppointment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:background="@drawable/bg_info_box"
-                android:padding="16dp"
-                android:textColor="@color/sc_text"
-                android:textSize="14sp"
-                android:visibility="gone" />
+                android:background="@drawable/bg_appt_card"
+                android:elevation="6dp"
+                android:orientation="vertical"
+                android:outlineAmbientShadowColor="@color/sky_main"
+                android:outlineSpotShadowColor="@color/sky_main"
+                android:padding="20dp"
+                tools:targetApi="p">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:alpha="0.85"
+                        android:fontFamily="@font/figtree_bold"
+                        android:letterSpacing="0.12"
+                        android:text="@string/home_next_appointment"
+                        android:textColor="@color/white"
+                        android:textSize="11sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="28dp"
+                        android:background="@drawable/bg_glass_pill"
+                        android:fontFamily="@font/figtree_bold"
+                        android:gravity="center"
+                        android:paddingStart="12dp"
+                        android:paddingEnd="12dp"
+                        android:text="@string/home_sample_status"
+                        android:textColor="@color/white"
+                        android:textSize="11.5sp" />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="@font/figtree_bold"
+                    android:letterSpacing="-0.035"
+                    android:text="@string/home_sample_day"
+                    android:textColor="@color/white"
+                    android:textSize="29sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:drawablePadding="6dp"
+                    android:fontFamily="@font/figtree_semibold"
+                    android:gravity="center_vertical"
+                    android:text="@string/home_sample_time"
+                    android:textColor="@color/white"
+                    android:textSize="13sp"
+                    app:drawableStartCompat="@drawable/ic_sc_clock"
+                    app:drawableTint="@color/white" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="16dp"
+                    android:background="@drawable/bg_appt_divider" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="34dp"
+                        android:layout_height="34dp"
+                        android:background="@drawable/bg_doc_tile"
+                        android:fontFamily="@font/figtree_bold"
+                        android:gravity="center"
+                        android:text="@string/home_sample_doctor_initials"
+                        android:textColor="@color/sky_main"
+                        android:textSize="11.5sp" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/figtree_bold"
+                            android:text="@string/home_sample_doctor"
+                            android:textColor="@color/white"
+                            android:textSize="13.5sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:alpha="0.8"
+                            android:text="@string/home_sample_doctor_role"
+                            android:textColor="@color/white"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="end"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:alpha="0.8"
+                            android:letterSpacing="0.1"
+                            android:text="@string/home_checkin"
+                            android:textColor="@color/white"
+                            android:textSize="10sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/figtree_bold"
+                            android:fontFeatureSettings="tnum"
+                            android:letterSpacing="0.12"
+                            android:text="@string/home_sample_code"
+                            android:textColor="@color/white"
+                            android:textSize="16sp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Shortcut tiles, 2 x 2 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:baselineAligned="false"
+                android:orientation="horizontal">
+
+                <include
+                    android:id="@+id/tileBook"
+                    layout="@layout/view_home_tile"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
+                    android:layout_weight="1" />
+
+                <include
+                    android:id="@+id/tileChat"
+                    layout="@layout/view_home_tile"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_weight="1" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:baselineAligned="false"
+                android:orientation="horizontal">
+
+                <include
+                    android:id="@+id/tileFollowups"
+                    layout="@layout/view_home_tile"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
+                    android:layout_weight="1" />
+
+                <include
+                    android:id="@+id/tileRecords"
+                    layout="@layout/view_home_tile"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_weight="1" />
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 
-    <View
+    <!-- Floating tab bar -->
+    <LinearLayout
+        android:id="@+id/dock"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
-        android:background="@color/sc_silver_light" />
+        android:layout_height="64dp"
+        android:layout_gravity="bottom"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/bg_dock"
+        android:elevation="8dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp">
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottomNav"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/sc_background"
-        app:itemActiveIndicatorStyle="@null"
-        app:itemIconTint="@color/bottom_nav_item"
-        app:itemTextColor="@color/bottom_nav_item"
-        app:labelVisibilityMode="labeled"
-        app:menu="@menu/menu_home_bottom" />
-</LinearLayout>
+        <TextView
+            android:id="@+id/dockHome"
+            android:layout_width="wrap_content"
+            android:layout_height="46dp"
+            android:background="@drawable/bg_dock_selected"
+            android:drawablePadding="7dp"
+            android:fontFamily="@font/figtree_bold"
+            android:gravity="center_vertical"
+            android:paddingStart="16dp"
+            android:paddingEnd="18dp"
+            android:text="@string/nav_home"
+            android:textColor="@color/ink"
+            android:textSize="13sp"
+            app:drawableStartCompat="@drawable/ic_sc_home"
+            app:drawableTint="@color/sky_main" />
+
+        <ImageButton
+            android:id="@+id/dockVisits"
+            android:layout_width="0dp"
+            android:layout_height="46dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_dock_item"
+            android:contentDescription="@string/nav_visits"
+            android:src="@drawable/ic_sc_calendar"
+            app:tint="@color/dock_icon" />
+
+        <ImageButton
+            android:id="@+id/dockRecords"
+            android:layout_width="0dp"
+            android:layout_height="46dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_dock_item"
+            android:contentDescription="@string/nav_records"
+            android:src="@drawable/ic_sc_file"
+            app:tint="@color/dock_icon" />
+
+        <ImageButton
+            android:id="@+id/dockProfile"
+            android:layout_width="0dp"
+            android:layout_height="46dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_dock_item"
+            android:contentDescription="@string/nav_profile"
+            android:src="@drawable/ic_sc_user"
+            app:tint="@color/dock_icon" />
+    </LinearLayout>
+</FrameLayout>

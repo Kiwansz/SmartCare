@@ -9,26 +9,51 @@ import androidx.annotation.StringRes
 import androidx.lifecycle.lifecycleScope
 import com.example.smartcare.data.AuthRepository
 import com.example.smartcare.data.SessionPrefs
+import com.google.android.material.button.MaterialButton
 import kotlinx.coroutines.launch
 
-/** 1. Role picker: first screen, decides which login the user sees. */
+/** 1. Role picker: pick patient or staff, then Continue. First screen of the app. */
 class RoleActivity : BaseActivity() {
+
+    private companion object {
+        const val STATE_STAFF = "staff_selected"
+    }
+
+    private lateinit var choicePatient: View
+    private lateinit var choiceStaff: View
+    private var staffSelected = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_role)
 
-        setupCard(R.id.cardPatient, R.drawable.ic_person, R.string.role_patient, R.string.role_patient_desc) {
-            startActivity(LoginActivity.intent(this, staff = false))
-        }
-        setupCard(R.id.cardStaff, R.drawable.ic_medical_bag, R.string.role_staff, R.string.role_staff_desc) {
-            startActivity(LoginActivity.intent(this, staff = true))
+        choicePatient = findViewById(R.id.choicePatient)
+        choiceStaff = findViewById(R.id.choiceStaff)
+        setupChoice(choicePatient, R.drawable.ic_sc_user, R.string.role_choice_patient, R.string.role_choice_patient_desc)
+        setupChoice(choiceStaff, R.drawable.ic_sc_staff, R.string.role_choice_staff, R.string.role_choice_staff_desc)
+        choicePatient.setOnClickListener { select(staff = false) }
+        choiceStaff.setOnClickListener { select(staff = true) }
+        select(savedInstanceState?.getBoolean(STATE_STAFF) ?: false)
+
+        findViewById<MaterialButton>(R.id.btnContinue).setOnClickListener {
+            startActivity(LoginActivity.intent(this, staff = staffSelected))
         }
 
         if (savedInstanceState == null) restoreSession()
     }
 
-    /** "Remember me": skip straight to Home if a saved session exists; otherwise clear it. */
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBoolean(STATE_STAFF, staffSelected)
+    }
+
+    private fun select(staff: Boolean) {
+        staffSelected = staff
+        choicePatient.isSelected = !staff
+        choiceStaff.isSelected = staff
+    }
+
+    /** "Remember me": skip straight to the right home if a saved session exists; otherwise clear it. */
     private fun restoreSession() {
         val progress = findViewById<View>(R.id.progress)
         progress.visibility = View.VISIBLE
@@ -45,17 +70,9 @@ class RoleActivity : BaseActivity() {
         }
     }
 
-    private fun setupCard(
-        cardId: Int,
-        @DrawableRes icon: Int,
-        @StringRes title: Int,
-        @StringRes desc: Int,
-        onClick: () -> Unit
-    ) {
-        val card = findViewById<View>(cardId)
-        card.findViewById<ImageView>(R.id.ivRoleIcon).setImageResource(icon)
-        card.findViewById<TextView>(R.id.tvRoleTitle).setText(title)
-        card.findViewById<TextView>(R.id.tvRoleDesc).setText(desc)
-        card.setOnClickListener { onClick() }
+    private fun setupChoice(card: View, @DrawableRes icon: Int, @StringRes title: Int, @StringRes desc: Int) {
+        card.findViewById<ImageView>(R.id.choiceIcon).setImageResource(icon)
+        card.findViewById<TextView>(R.id.choiceTitle).setText(title)
+        card.findViewById<TextView>(R.id.choiceDesc).setText(desc)
     }
 }

@@ -103,6 +103,14 @@ class SmartField @JvmOverloads constructor(
             showMessage(value ?: helper, isError = value != null)
         }
 
+    /** Grey line under the box when there is no error. */
+    var helperText: CharSequence?
+        get() = helper
+        set(value) {
+            helper = value
+            if (error == null) showMessage(value, isError = false)
+        }
+
     private fun showMessage(text: CharSequence?, isError: Boolean) {
         message.text = text
         message.visibility = if (text.isNullOrEmpty()) View.GONE else View.VISIBLE
