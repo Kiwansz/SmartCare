@@ -115,14 +115,6 @@ abstract class BaseActivity : AppCompatActivity() {
         }
     }
 
-    /** Back button + title from view_top_bar.xml. */
-    protected fun setupTopBar(@StringRes title: Int) {
-        findViewById<TextView>(R.id.tvTopTitle).setText(title)
-        findViewById<ImageButton>(R.id.btnBack).setOnClickListener {
-            onBackPressedDispatcher.onBackPressed()
-        }
-    }
-
     /** Footer like "Don't have an account? **Sign Up**". */
     protected fun setupFooterLink(
         @StringRes prefix: Int,
@@ -166,24 +158,23 @@ abstract class BaseActivity : AppCompatActivity() {
     /** Turns Supabase / network errors into a short message for the user. */
     protected fun Throwable.friendly(): String {
         val first = message?.lineSequence()?.firstOrNull()?.trim().orEmpty()
-        return when {
-            first.contains("Invalid login credentials", true) -> "Incorrect username or password"
-            first.contains("User already registered", true) -> "An account with this email already exists"
-            first.contains("duplicate key", true) && first.contains("ic_number", true) ->
-                "An account with this IC number already exists"
-            first.contains("duplicate key", true) && first.contains("email", true) ->
-                "An account with this email already exists"
-            first.contains("email_address_invalid", true) || first.contains("Email address", true) && first.contains("invalid", true) ->
-                "Please use a valid email address"
-            first.contains("rate limit", true) -> "Too many attempts. Please try again later."
-            first.contains("should be different", true) -> "New password must be different from the old one"
-            this is java.io.IOException || first.contains("Unable to resolve host", true) ->
-                "No internet connection"
-            // Only our own messages (from error("...") in AuthRepository) are shown as-is;
+        // The strings matched below are server/library texts, not shown to the user.
+        val res = when {
+            first.contains("Invalid login credentials", true) -> R.string.error_login_generic
+            first.contains("User already registered", true) -> R.string.error_email_taken
+            first.contains("duplicate key", true) && first.contains("ic_number", true) -> R.string.error_ic_taken
+            first.contains("duplicate key", true) && first.contains("email", true) -> R.string.error_email_taken
+            first.contains("email_address_invalid", true) ||
+                (first.contains("Email address", true) && first.contains("invalid", true)) -> R.string.error_email_rejected
+            first.contains("rate limit", true) -> R.string.error_rate_limit
+            first.contains("should be different", true) -> R.string.error_password_same
+            this is java.io.IOException || first.contains("Unable to resolve host", true) -> R.string.error_no_internet
+            // Our own messages (error("...") in AuthRepository) are shown as-is;
             // raw library/server text never reaches the user.
-            this is IllegalStateException && first.isNotEmpty() -> first
-            else -> "Something went wrong. Please try again."
+            this is IllegalStateException && first.isNotEmpty() -> return first
+            else -> R.string.error_generic
         }
+        return getString(res)
     }
 }
 

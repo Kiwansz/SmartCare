@@ -1,21 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- SmartCare design tokens (docs/SMARTCARE_UI_TASK.md section 7, docs/design/smartcare-ui-design.html).
+     Header/card gradients also use these colours with alpha in their drawables. -->
 <resources>
-    <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="brand_blue">#1F4E79</color>
-
-    <!-- SmartCare white & silver palette (design.pdf) -->
-    <color name="sc_background">#FFFFFF</color>
-    <color name="sc_text">#22262B</color>
-    <color name="sc_text_secondary">#5C636B</color>
-    <color name="sc_hint">#8A9099</color>
-    <color name="sc_silver">#C8CDD4</color>
-    <color name="sc_silver_light">#E4E7EB</color>
-    <color name="sc_surface_tint">#F7F8FA</color>
-    <color name="sc_success">#2E7D5B</color>
-    <color name="sc_error">#B3261E</color>
-
-    <!-- ===== SmartCare UI design tokens (docs/design/smartcare-ui-design.html) ===== -->
 
     <!-- Patient: Clinic Sky -->
     <color name="sky_main">#0880B3</color>
@@ -30,7 +17,6 @@
     <!-- Staff: Navy -->
     <color name="navy_main">#0B2A5B</color>
     <color name="navy_accent">#3A86DC</color>
-    <color name="navy_highlight">#9FD0FF</color>
     <color name="navy_soft">#E5EFFD</color>
     <color name="navy_btn_top">#183F7F</color>
     <color name="navy_header_dark">#061A3D</color>
@@ -44,9 +30,7 @@
     <color name="ink_placeholder">#A8B5B7</color>
     <color name="line">#E1E8F1</color>
     <color name="field_fill">#F2F6FB</color>
-    <color name="page_bg">#EEF3F9</color>
     <color name="danger">#D93B3B</color>
-    <color name="success">#1E9E6A</color>
     <color name="glass_fill">#29FFFFFF</color>      <!-- white 16% -->
     <color name="glass_stroke">#47FFFFFF</color>    <!-- white 28% -->
     <color name="hero_circle">#2EFFFFFF</color>     <!-- white 18% -->

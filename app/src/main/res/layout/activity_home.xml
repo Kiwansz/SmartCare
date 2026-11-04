@@ -224,7 +224,7 @@
                             android:letterSpacing="0.1"
                             android:text="@string/home_checkin"
                             android:textColor="@color/white"
-                            android:textSize="10sp" />
+                            android:textSize="11sp" />
 
                         <TextView
                             android:layout_width="wrap_content"

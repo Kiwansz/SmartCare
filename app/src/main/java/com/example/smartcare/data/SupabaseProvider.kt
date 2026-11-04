@@ -44,17 +44,4 @@ object SupabaseProvider {
     /** Hides IC numbers (ic_number=eq.123456789012 and any bare 12-digit run) in a log line. */
     internal fun maskSensitive(message: String): String =
         message.replace(IC_IN_URL, "$1***").replace(LONG_DIGITS, "************")
-
-    /**
-     * Pings the Supabase Auth health endpoint through the client's HTTP stack.
-     * Succeeds only if the URL is reachable and the API key is accepted.
-     */
-    suspend fun testConnection(): Result<String> = runCatching {
-        val response = client.httpClient.request("${BuildConfig.SUPABASE_URL}/auth/v1/health") {
-            method = io.ktor.http.HttpMethod.Get
-        }
-        val status = response.status.value
-        check(status in 200..299) { "Supabase responded with HTTP $status" }
-        "Connected to Supabase (HTTP $status)"
-    }
 }

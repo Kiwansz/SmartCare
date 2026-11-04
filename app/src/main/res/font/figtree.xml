@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Figtree (OFL), bundled static weights. android: attrs for API 26+, app: attrs for API 24-25. -->
 <font-family xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="UnusedAttribute">
     <font android:font="@font/figtree_regular" android:fontStyle="normal" android:fontWeight="400"
         app:font="@font/figtree_regular" app:fontStyle="normal" app:fontWeight="400" />
     <font android:font="@font/figtree_medium" android:fontStyle="normal" android:fontWeight="500"
