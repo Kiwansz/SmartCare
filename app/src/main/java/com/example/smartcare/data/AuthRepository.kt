@@ -340,7 +340,7 @@ object AuthRepository {
         val mustChange = row["must_change_password"]?.jsonPrimitive?.booleanOrNull ?: false
         val expiresAt = parseTimestamp(row.str("temporary_password_expires_at"), TimeZone.getTimeZone("UTC"))
         if (mustChange && expiresAt != null && expiresAt.before(Date())) {
-            error("Your temporary password has expired. Ask your Admin for a new one.")
+            error("Your temporary password has expired. Ask your Admin to issue a new one.")
         }
 
         val profileTable = when (role) {

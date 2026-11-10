@@ -22,7 +22,6 @@
     <string name="nav_profile">Profile</string>
     <string name="coming_soon">Coming soon</string>
     <string name="logout">Log out</string>
-    <string name="close">Close</string>
 
     <!-- ===== New design (docs/design/smartcare-ui-design.html) ===== -->
     <string name="action_continue">Continue</string>
