@@ -39,6 +39,12 @@ data class NextAppointment(val slotStart: Date, val doctorName: String?, val rea
  */
 class InvalidLoginException : Exception("Invalid login")
 
+/** Sign up: this IC number already has an account. */
+class IcAlreadyRegisteredException : Exception("IC already registered")
+
+/** Sign up: this email already has an account. */
+class EmailAlreadyRegisteredException : Exception("Email already registered")
+
 /** All Supabase calls for the User Account module. */
 object AuthRepository {
 
@@ -50,10 +56,24 @@ object AuthRepository {
 
     // ---------- 3. Sign up ----------
 
+    /** True if a user_account already uses this IC number (12 digits, no dashes). */
+    suspend fun isIcRegistered(icNumber: String): Result<Boolean> = runCatching {
+        db.from("user_account").select(Columns.list("user_id")) {
+            filter { eq("ic_number", icNumber) }
+        }.decodeList<JsonObject>().isNotEmpty()
+    }
+
+    /** True if a user_account already uses this email (case-insensitive). */
+    suspend fun isEmailRegistered(email: String): Result<Boolean> = runCatching {
+        findAccountRowByEmail(email.trim().lowercase()) != null
+    }
+
     /**
      * Creates the Auth user, then the user_account + patient rows.
      * Returns true if the user is now logged in (email confirmation off),
      * false if they must confirm their email first.
+     * Fails with [IcAlreadyRegisteredException] / [EmailAlreadyRegisteredException]
+     * before anything is created if the IC or email is taken.
      */
     suspend fun signUpPatient(
         fullName: String,
@@ -64,6 +84,12 @@ object AuthRepository {
         gender: String? // MALE, FEMALE, or null if the user skipped it
     ): Result<Boolean> = runCatching {
         val cleanEmail = email.trim().lowercase()
+
+        // Final check right before saving. Without it, the Auth login below would be
+        // created even though the user_account insert then fails on the unique IC,
+        // leaving an orphan login for this email.
+        if (isIcRegistered(icNumber).getOrThrow()) throw IcAlreadyRegisteredException()
+        if (isEmailRegistered(cleanEmail).getOrThrow()) throw EmailAlreadyRegisteredException()
 
         auth.signUpWith(Email) {
             this.email = cleanEmail

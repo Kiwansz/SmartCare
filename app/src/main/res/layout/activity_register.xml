@@ -67,6 +67,17 @@
                     app:sfLabel="@string/field_ic"
                     app:sfPlaceholder="@string/hint_ic_example" />
 
+                <TextView
+                    android:id="@+id/linkIcLogin"
+                    style="@style/SmartCare.Text.Link"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:padding="4dp"
+                    android:text="@string/link_login_instead"
+                    android:visibility="gone" />
+
                 <!-- Read-only "From IC" date of birth -->
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -163,6 +174,17 @@
                     app:sfIcon="@drawable/ic_sc_mail"
                     app:sfLabel="@string/field_email"
                     app:sfPlaceholder="@string/hint_email_example" />
+
+                <TextView
+                    android:id="@+id/linkEmailLogin"
+                    style="@style/SmartCare.Text.Link"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:padding="4dp"
+                    android:text="@string/link_login_instead"
+                    android:visibility="gone" />
 
                 <com.example.smartcare.ui.SmartField
                     android:id="@+id/fieldPassword"

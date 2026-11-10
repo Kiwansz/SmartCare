@@ -152,4 +152,8 @@
     <string name="error_password_same">New password must be different from the old one</string>
     <string name="error_no_internet">No internet connection</string>
     <string name="error_generic">Something went wrong. Please try again.</string>
+    <string name="error_ic_registered">This IC number is already registered.</string>
+    <string name="error_email_registered">This email is already registered.</string>
+    <string name="helper_checking">Checking…</string>
+    <string name="link_login_instead">Log in instead</string>
 </resources>
