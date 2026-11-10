@@ -9,8 +9,12 @@ import io.github.jan.supabase.exceptions.RestException
 import io.github.jan.supabase.postgrest.postgrest
 import io.github.jan.supabase.postgrest.query.Columns
 import kotlinx.coroutines.flow.first
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonNull
 import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.boolean
 import kotlinx.serialization.json.booleanOrNull
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.contentOrNull
@@ -61,16 +65,17 @@ object AuthRepository {
 
     // ---------- 3. Sign up ----------
 
-    /** True if a user_account already uses this IC number (12 digits, no dashes). */
+    /**
+     * True if a user_account already uses this IC number. Database function
+     * is_ic_registered (works before login without reading user_account directly).
+     */
     suspend fun isIcRegistered(icNumber: String): Result<Boolean> = runCatching {
-        db.from("user_account").select(Columns.list("user_id")) {
-            filter { eq("ic_number", icNumber) }
-        }.decodeList<JsonObject>().isNotEmpty()
+        rpc("is_ic_registered", buildJsonObject { put("p_ic", icNumber) }).jsonPrimitive.boolean
     }
 
-    /** True if a user_account already uses this email (case-insensitive). */
+    /** True if a user_account already uses this email. Database function is_email_registered. */
     suspend fun isEmailRegistered(email: String): Result<Boolean> = runCatching {
-        findAccountRowByEmail(email.trim().lowercase()) != null
+        rpc("is_email_registered", buildJsonObject { put("p_email", email.trim()) }).jsonPrimitive.boolean
     }
 
     /**
@@ -157,9 +162,7 @@ object AuthRepository {
                 throw e
             }
 
-            db.from("user_account").update(
-                buildJsonObject { put("last_login_at", nowTimestamp()) }
-            ) { filter { eq("user_id", account.userId) } }
+            rpc("mark_login") // sets last_login_at on the user's own row
 
             account
         }
@@ -221,14 +224,8 @@ object AuthRepository {
 
             auth.updateUser { password = newPassword }
 
-            val userId = findAccountRowByEmail(email)?.int("user_id")
-                ?: error("No SmartCare account is linked to this login")
-            db.from("user_account").update(
-                buildJsonObject {
-                    put("must_change_password", false)
-                    put("temporary_password_expires_at", JsonNull)
-                }
-            ) { filter { eq("user_id", userId) } }
+            // Clears must_change_password and temporary_password_expires_at on the own row.
+            rpc("complete_password_change")
         }
 
     // ---------- 7. Home ----------
@@ -257,17 +254,27 @@ object AuthRepository {
 
     // ---------- helpers ----------
 
-    /** IC number -> email from user_account; anything with "@" is used as-is. */
+    /**
+     * IC number -> email through the database function get_login_email (patients only;
+     * returns null when not found). Anything with "@" is used as-is (staff login).
+     */
     private suspend fun resolveEmail(username: String): String {
         val input = username.trim()
         if (input.contains("@")) return input.lowercase()
 
         val ic = input.filter { it.isDigit() }
         if (ic.length != 12) throw InvalidLoginException()
-        val row = db.from("user_account").select(Columns.list("email")) {
-            filter { eq("ic_number", ic) }
-        }.decodeSingleOrNull<JsonObject>()
-        return row?.str("email") ?: throw InvalidLoginException()
+        val email = rpc("get_login_email", buildJsonObject { put("p_ic", ic) })
+        return (email as? JsonPrimitive)?.contentOrNull ?: throw InvalidLoginException()
+    }
+
+    /**
+     * Calls a Postgres function (Supabase RPC) and returns its JSON result.
+     * Functions that return void give JsonNull.
+     */
+    private suspend fun rpc(name: String, params: JsonObject = buildJsonObject { }): JsonElement {
+        val body = db.rpc(name, params).data
+        return if (body.isBlank()) JsonNull else Json.parseToJsonElement(body)
     }
 
     private suspend fun loadAccount(email: String): Account {
@@ -330,12 +337,6 @@ object AuthRepository {
             else "This is a staff account. Please use the Staff login."
         )
     }
-
-    /** Current time for TIMESTAMP columns (stored as UTC, same as Postgres NOW()). */
-    private fun nowTimestamp(): String =
-        SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US).apply {
-            timeZone = TimeZone.getTimeZone("UTC")
-        }.format(Date())
 
     /** Parses "2026-11-10T09:30:00" (fractions / offsets ignored). */
     private fun parseTimestamp(value: String?, zone: TimeZone): Date? {
