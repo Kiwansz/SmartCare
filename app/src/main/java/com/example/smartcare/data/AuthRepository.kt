@@ -61,7 +61,7 @@ object AuthRepository {
         email: String,
         phone: String,
         password: String,
-        gender: String? // MALE, FEMALE, OTHER, or null if the user skipped it
+        gender: String? // MALE, FEMALE, or null if the user skipped it
     ): Result<Boolean> = runCatching {
         val cleanEmail = email.trim().lowercase()
 

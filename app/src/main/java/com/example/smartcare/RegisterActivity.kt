@@ -37,7 +37,7 @@ class RegisterActivity : BaseActivity() {
 
     private var step = 1
 
-    /** MALE, FEMALE, OTHER or null (not chosen). Never guessed from the IC. */
+    /** MALE, FEMALE or null (not chosen). Never guessed from the IC. */
     private var gender: String? = null
     private lateinit var genderOptions: Map<String, View>
 
@@ -70,8 +70,7 @@ class RegisterActivity : BaseActivity() {
         tvDob = findViewById(R.id.tvDob)
         genderOptions = mapOf(
             "MALE" to findViewById(R.id.genderMale),
-            "FEMALE" to findViewById(R.id.genderFemale),
-            "OTHER" to findViewById(R.id.genderOther)
+            "FEMALE" to findViewById(R.id.genderFemale)
         )
         // Tap to choose, tap the chosen one again to clear (gender is optional).
         genderOptions.forEach { (value, view) ->

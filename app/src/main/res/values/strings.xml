@@ -62,7 +62,6 @@
     <string name="from_ic_dob_placeholder">Date of birth</string>
     <string name="gender_male">Male</string>
     <string name="gender_female">Female</string>
-    <string name="gender_other">Other</string>
     <string name="label_gender_optional">Gender (optional)</string>
     <string name="action_next">Next</string>
     <string name="field_email">Email</string>

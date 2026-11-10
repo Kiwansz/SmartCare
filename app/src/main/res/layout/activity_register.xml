@@ -119,13 +119,7 @@
                     <TextView
                         android:id="@+id/genderFemale"
                         style="@style/SmartCare.GenderOption"
-                        android:layout_marginEnd="8dp"
                         android:text="@string/gender_female" />
-
-                    <TextView
-                        android:id="@+id/genderOther"
-                        style="@style/SmartCare.GenderOption"
-                        android:text="@string/gender_other" />
                 </LinearLayout>
 
                 <com.example.smartcare.ui.SmartField
