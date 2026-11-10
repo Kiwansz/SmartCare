@@ -23,7 +23,7 @@ import java.util.Locale
 
 /**
  * 3. Patient sign up in two steps (one screen, two panels).
- * Step 1: full name, IC number (date of birth + gender fill in from it), phone.
+ * Step 1: full name, IC number (date of birth fills in from it), optional gender, phone.
  * Step 2: email, password with strength bar, confirm, terms.
  * Saves through the existing AuthRepository.signUpPatient (Auth user + user_account + patient).
  */
@@ -31,10 +31,15 @@ class RegisterActivity : BaseActivity() {
 
     private companion object {
         const val STATE_STEP = "step"
+        const val STATE_GENDER = "gender"
         val DOB_FORMAT: DateTimeFormatter = DateTimeFormatter.ofPattern("d MMM yyyy", Locale.ENGLISH)
     }
 
     private var step = 1
+
+    /** MALE, FEMALE, OTHER or null (not chosen). Never guessed from the IC. */
+    private var gender: String? = null
+    private lateinit var genderOptions: Map<String, View>
 
     private lateinit var step1: View
     private lateinit var step2: View
@@ -45,7 +50,6 @@ class RegisterActivity : BaseActivity() {
     private lateinit var fieldPassword: SmartField
     private lateinit var fieldConfirm: SmartField
     private lateinit var tvDob: TextView
-    private lateinit var tvGender: TextView
     private lateinit var meter: View
     private lateinit var cbTerms: MaterialCheckBox
     private lateinit var tvTermsError: TextView
@@ -64,7 +68,15 @@ class RegisterActivity : BaseActivity() {
         fieldPassword = findViewById(R.id.fieldPassword)
         fieldConfirm = findViewById(R.id.fieldConfirm)
         tvDob = findViewById(R.id.tvDob)
-        tvGender = findViewById(R.id.tvGender)
+        genderOptions = mapOf(
+            "MALE" to findViewById(R.id.genderMale),
+            "FEMALE" to findViewById(R.id.genderFemale),
+            "OTHER" to findViewById(R.id.genderOther)
+        )
+        // Tap to choose, tap the chosen one again to clear (gender is optional).
+        genderOptions.forEach { (value, view) ->
+            view.setOnClickListener { selectGender(if (gender == value) null else value) }
+        }
         meter = findViewById(R.id.meter)
         cbTerms = findViewById(R.id.cbTerms)
         tvTermsError = findViewById(R.id.tvTermsError)
@@ -90,6 +102,7 @@ class RegisterActivity : BaseActivity() {
         })
 
         showStep(savedInstanceState?.getInt(STATE_STEP) ?: 1)
+        selectGender(savedInstanceState?.getString(STATE_GENDER))
         showIcInfo(liveIc())
         StrengthMeter.bind(meter, PasswordRules.check(fieldPassword.text))
     }
@@ -97,6 +110,7 @@ class RegisterActivity : BaseActivity() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putInt(STATE_STEP, step)
+        outState.putString(STATE_GENDER, gender)
     }
 
     private fun showStep(n: Int) {
@@ -120,19 +134,18 @@ class RegisterActivity : BaseActivity() {
     }
 
     private fun showIcInfo(info: IcInfo?) {
-        val filled = getColor(R.color.ink)
-        val empty = getColor(R.color.ink_placeholder)
         if (info == null) {
             tvDob.setText(R.string.from_ic_dob_placeholder)
-            tvGender.setText(R.string.from_ic_gender_placeholder)
-            tvDob.setTextColor(empty)
-            tvGender.setTextColor(empty)
+            tvDob.setTextColor(getColor(R.color.ink_placeholder))
         } else {
             tvDob.text = info.dateOfBirth.format(DOB_FORMAT)
-            tvGender.setText(if (info.gender == "MALE") R.string.gender_male else R.string.gender_female)
-            tvDob.setTextColor(filled)
-            tvGender.setTextColor(filled)
+            tvDob.setTextColor(getColor(R.color.ink))
         }
+    }
+
+    private fun selectGender(value: String?) {
+        gender = value
+        genderOptions.forEach { (key, view) -> view.isSelected = key == value }
     }
 
     private fun goToStep2() {
@@ -189,7 +202,7 @@ class RegisterActivity : BaseActivity() {
 
         setLoading(true, btnCreate)
         lifecycleScope.launch {
-            AuthRepository.signUpPatient(name, ic, email, phone, password)
+            AuthRepository.signUpPatient(name, ic, email, phone, password, gender)
                 .onSuccess { loggedIn ->
                     if (!loggedIn) {
                         // Email confirmation is on: they must confirm before logging in.

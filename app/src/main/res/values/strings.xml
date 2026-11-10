@@ -60,9 +60,10 @@
     <string name="hint_phone_example" tools:ignore="TypographyDashes">012-345 6789</string>
     <string name="from_ic">From IC</string>
     <string name="from_ic_dob_placeholder">Date of birth</string>
-    <string name="from_ic_gender_placeholder">Gender</string>
     <string name="gender_male">Male</string>
     <string name="gender_female">Female</string>
+    <string name="gender_other">Other</string>
+    <string name="label_gender_optional">Gender (optional)</string>
     <string name="action_next">Next</string>
     <string name="field_email">Email</string>
     <string name="hint_email_example">name@example.com</string>

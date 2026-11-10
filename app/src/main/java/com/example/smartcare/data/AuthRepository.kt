@@ -60,7 +60,8 @@ object AuthRepository {
         icNumber: String,   // 12 digits, no dashes
         email: String,
         phone: String,
-        password: String
+        password: String,
+        gender: String? // MALE, FEMALE, OTHER, or null if the user skipped it
     ): Result<Boolean> = runCatching {
         val cleanEmail = email.trim().lowercase()
 
@@ -89,7 +90,7 @@ object AuthRepository {
                 put("user_id", account.int("user_id"))
                 put("full_name", fullName)
                 put("date_of_birth", ic?.dateOfBirth?.toString()) // ISO yyyy-MM-dd for DATE
-                put("gender", ic?.gender)
+                put("gender", gender) // chosen by the user, not taken from the IC
             }
         )
 

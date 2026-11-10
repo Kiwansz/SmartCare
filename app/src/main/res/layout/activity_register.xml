@@ -67,65 +67,65 @@
                     app:sfLabel="@string/field_ic"
                     app:sfPlaceholder="@string/hint_ic_example" />
 
-                <!-- Read-only "From IC" cards -->
+                <!-- Read-only "From IC" date of birth -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="6dp"
-                    android:layout_marginBottom="6dp"
-                    android:baselineAligned="false"
+                    android:background="@drawable/bg_ic_card"
+                    android:orientation="vertical"
+                    android:paddingStart="13dp"
+                    android:paddingTop="10dp"
+                    android:paddingEnd="13dp"
+                    android:paddingBottom="11dp">
+
+                    <TextView
+                        style="@style/SmartCare.Text.FromIc"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/from_ic" />
+
+                    <TextView
+                        android:id="@+id/tvDob"
+                        style="@style/SmartCare.Text.FromIcValue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/from_ic_dob_placeholder" />
+                </LinearLayout>
+
+                <!-- Gender: optional, chosen by the user (tap again to clear) -->
+                <TextView
+                    style="@style/SmartCare.Text.Sub"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginTop="12dp"
+                    android:fontFamily="@font/figtree_semibold"
+                    android:text="@string/label_gender_optional" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginBottom="8dp"
                     android:orientation="horizontal">
 
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
+                    <TextView
+                        android:id="@+id/genderMale"
+                        style="@style/SmartCare.GenderOption"
                         android:layout_marginEnd="8dp"
-                        android:layout_weight="1.4"
-                        android:background="@drawable/bg_ic_card"
-                        android:orientation="vertical"
-                        android:paddingStart="13dp"
-                        android:paddingTop="10dp"
-                        android:paddingEnd="13dp"
-                        android:paddingBottom="11dp">
+                        android:text="@string/gender_male" />
 
-                        <TextView
-                            style="@style/SmartCare.Text.FromIc"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/from_ic" />
+                    <TextView
+                        android:id="@+id/genderFemale"
+                        style="@style/SmartCare.GenderOption"
+                        android:layout_marginEnd="8dp"
+                        android:text="@string/gender_female" />
 
-                        <TextView
-                            android:id="@+id/tvDob"
-                            style="@style/SmartCare.Text.FromIcValue"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/from_ic_dob_placeholder" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:background="@drawable/bg_ic_card"
-                        android:orientation="vertical"
-                        android:paddingStart="13dp"
-                        android:paddingTop="10dp"
-                        android:paddingEnd="13dp"
-                        android:paddingBottom="11dp">
-
-                        <TextView
-                            style="@style/SmartCare.Text.FromIc"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/from_ic" />
-
-                        <TextView
-                            android:id="@+id/tvGender"
-                            style="@style/SmartCare.Text.FromIcValue"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/from_ic_gender_placeholder" />
-                    </LinearLayout>
+                    <TextView
+                        android:id="@+id/genderOther"
+                        style="@style/SmartCare.GenderOption"
+                        android:text="@string/gender_other" />
                 </LinearLayout>
 
                 <com.example.smartcare.ui.SmartField
