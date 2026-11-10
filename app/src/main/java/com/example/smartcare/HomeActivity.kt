@@ -11,7 +11,6 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.example.smartcare.data.Account
 import com.example.smartcare.data.AuthRepository
-import com.example.smartcare.data.SessionPrefs
 import kotlinx.coroutines.launch
 import java.util.Calendar
 
@@ -99,8 +98,7 @@ class HomeActivity : BaseActivity() {
             .setMessage(acc.email)
             .setPositiveButton(R.string.logout) { _, _ ->
                 lifecycleScope.launch {
-                    AuthRepository.signOut()
-                    SessionPrefs.setRememberMe(this@HomeActivity, false)
+                    AuthRepository.signOut() // ends the session; the Remember me choice is kept
                     goToRolePicker()
                 }
             }

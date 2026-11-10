@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.widget.TextView
 import androidx.lifecycle.lifecycleScope
 import com.example.smartcare.data.AuthRepository
-import com.example.smartcare.data.SessionPrefs
 import com.google.android.material.button.MaterialButton
 import kotlinx.coroutines.launch
 
@@ -17,8 +16,7 @@ class StaffHomeActivity : BaseActivity() {
 
         findViewById<MaterialButton>(R.id.btnLogout).setOnClickListener {
             lifecycleScope.launch {
-                AuthRepository.signOut()
-                SessionPrefs.setRememberMe(this@StaffHomeActivity, false)
+                AuthRepository.signOut() // ends the session; the Remember me choice is kept
                 goToRolePicker()
             }
         }

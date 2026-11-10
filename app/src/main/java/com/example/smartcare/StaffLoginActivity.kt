@@ -1,6 +1,7 @@
 package com.example.smartcare
 
 import android.os.Bundle
+import android.view.View
 import android.util.Patterns
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
@@ -43,6 +44,8 @@ class StaffLoginActivity : BaseActivity() {
         switchRemember = findViewById(R.id.switchRemember)
         btnLogin = findViewById(R.id.btnLogin)
         switchRemember.isChecked = SessionPrefs.rememberMe(this)
+        // Tapping the "Remember me" text toggles the switch as well.
+        findViewById<View>(R.id.labelRemember).setOnClickListener { switchRemember.toggle() }
 
         findViewById<TextView>(R.id.linkForgot).setOnClickListener {
             startActivity(ForgotPasswordActivity.intent(this, staff = true))

@@ -2,6 +2,7 @@ package com.example.smartcare
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 import androidx.lifecycle.lifecycleScope
@@ -40,6 +41,8 @@ class LoginActivity : BaseActivity() {
         btnLogin = findViewById(R.id.btnLogin)
 
         switchRemember.isChecked = SessionPrefs.rememberMe(this)
+        // Tapping the "Remember me" text toggles the switch as well.
+        findViewById<View>(R.id.labelRemember).setOnClickListener { switchRemember.toggle() }
         if (savedInstanceState == null) {
             SessionPrefs.savedIc(this)?.let { fieldIc.text = it }
         }
