@@ -38,6 +38,11 @@
             android:name=".ForgotPasswordActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
+        <!-- 4b. Forgot password: enter the emailed code (theme follows the caller) -->
+        <activity
+            android:name=".ResetCodeActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
         <!-- 5. Staff login (navy) -->
         <activity
             android:name=".StaffLoginActivity"

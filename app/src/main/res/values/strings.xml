@@ -79,11 +79,11 @@
 
     <!-- 4. Forgot password -->
     <string name="forgot_hero_title">Forgot your password?</string>
-    <string name="forgot_hero_sub">We\'ll email you a link to set a new one.</string>
-    <string name="action_send_link">Send reset link</string>
-    <string name="action_resend_link">Resend link</string>
-    <string name="link_sent_title">Link sent</string>
-    <string name="link_sent_desc">Check your inbox. The link works for one hour.</string>
+    <string name="forgot_hero_sub">We\'ll email you a code to set a new one.</string>
+    <string name="action_send_link">Send code</string>
+    <string name="action_resend_link">Enter code</string>
+    <string name="link_sent_title">Code sent</string>
+    <string name="link_sent_desc">Check your inbox for a code from SmartCare Clinic.</string>
     <string name="footer_remembered">Remembered it?</string>
     <string name="footer_back_login">Back to log in</string>
 
@@ -156,4 +156,15 @@
     <string name="error_email_registered">This email is already registered.</string>
     <string name="helper_checking">Checking…</string>
     <string name="link_login_instead">Log in instead</string>
+    <!-- Forgot password: enter the emailed code -->
+    <string name="code_hero_title">Enter your code</string>
+    <string name="code_hero_sub">We sent it to %1$s</string>
+    <string name="field_reset_code">Code from email</string>
+    <string name="hint_reset_code">6 to 8 digits</string>
+    <string name="action_reset_password">Reset password</string>
+    <string name="resend_code">Resend code</string>
+    <string name="resend_code_in">Resend code in %1$ds</string>
+    <string name="msg_code_resent">A new code is on its way.</string>
+    <string name="msg_password_reset_done">Password updated. Log in with your new password.</string>
+    <string name="error_reset_code">That code is wrong or has expired. Request a new one.</string>
 </resources>

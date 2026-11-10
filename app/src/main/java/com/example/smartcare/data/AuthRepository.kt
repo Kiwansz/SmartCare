@@ -1,9 +1,11 @@
 package com.example.smartcare.data
 
 import com.example.smartcare.util.parseIc
+import io.github.jan.supabase.auth.OtpType
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.auth.providers.builtin.Email
 import io.github.jan.supabase.auth.status.SessionStatus
+import io.github.jan.supabase.exceptions.RestException
 import io.github.jan.supabase.postgrest.postgrest
 import io.github.jan.supabase.postgrest.query.Columns
 import kotlinx.coroutines.flow.first
@@ -38,6 +40,9 @@ data class NextAppointment(val slotStart: Date, val doctorName: String?, val rea
  * never reveals whether an account exists.
  */
 class InvalidLoginException : Exception("Invalid login")
+
+/** Forgot password: the emailed code is wrong or has expired. */
+class InvalidResetCodeException : Exception("Invalid reset code")
 
 /** Sign up: this IC number already has an account. */
 class IcAlreadyRegisteredException : Exception("IC already registered")
@@ -176,6 +181,25 @@ object AuthRepository {
     suspend fun sendPasswordReset(email: String): Result<Unit> = runCatching {
         auth.resetPasswordForEmail(email.trim().lowercase())
     }
+
+    /**
+     * Finishes a reset with the emailed code: verifies it as a recovery email OTP
+     * (which signs the user in), sets the new password, then signs out again so
+     * they log in normally. A wrong or expired code fails with [InvalidResetCodeException].
+     */
+    suspend fun resetPasswordWithCode(email: String, code: String, newPassword: String): Result<Unit> =
+        runCatching {
+            try {
+                auth.verifyEmailOtp(type = OtpType.Email.RECOVERY, email = email.trim().lowercase(), token = code)
+            } catch (e: RestException) {
+                throw InvalidResetCodeException() // server rejected the code
+            }
+            try {
+                auth.updateUser { password = newPassword }
+            } finally {
+                signOut()
+            }
+        }
 
     // ---------- 6. Change password ----------
 
