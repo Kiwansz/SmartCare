@@ -167,4 +167,18 @@
     <string name="msg_code_resent">A new code is on its way.</string>
     <string name="msg_password_reset_done">Password updated. Log in with your new password.</string>
     <string name="error_reset_code">That code is wrong or has expired. Request a new one.</string>
+    <!-- Patient profile -->
+    <string name="profile_title">My profile</string>
+    <string name="profile_ic">IC number</string>
+    <string name="profile_dob">Date of birth</string>
+    <string name="profile_gender">Gender</string>
+    <string name="profile_phone">Phone number</string>
+    <string name="not_set">Not set</string>
+    <string name="action_edit">Edit</string>
+    <string name="action_change">Change</string>
+    <string name="action_save">Save</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="dialog_phone_title">Edit phone number</string>
+    <string name="msg_phone_saved">Phone number updated</string>
+    <string name="msg_gender_saved">Gender updated</string>
 </resources>

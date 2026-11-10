@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Body of the "Edit phone number" dialog on the profile screen. -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingStart="24dp"
+    android:paddingTop="8dp"
+    android:paddingEnd="24dp">
+
+    <com.example.smartcare.ui.SmartField
+        android:id="@+id/fieldPhone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:imeOptions="actionDone"
+        android:inputType="phone"
+        app:sfIcon="@drawable/ic_sc_phone"
+        app:sfLabel="@string/field_phone"
+        app:sfPlaceholder="@string/hint_phone_example" />
+</FrameLayout>

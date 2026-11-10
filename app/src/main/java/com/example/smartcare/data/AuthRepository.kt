@@ -37,6 +37,17 @@ data class Account(
     val patientId: Int?             // only for PATIENT
 )
 
+/** The logged-in patient's own details for the profile screen. */
+data class PatientProfile(
+    val userId: Int,
+    val fullName: String,
+    val email: String,
+    val icNumber: String?,      // 12 digits
+    val phone: String?,
+    val dateOfBirth: String?,   // yyyy-MM-dd
+    val gender: String?         // MALE, FEMALE or null
+)
+
 data class NextAppointment(val slotStart: Date, val doctorName: String?, val reason: String?)
 
 /**
@@ -227,6 +238,45 @@ object AuthRepository {
             // Clears must_change_password and temporary_password_expires_at on the own row.
             rpc("complete_password_change")
         }
+
+    // ---------- Profile ----------
+
+    /** The logged-in patient's own user_account + patient rows (allowed by RLS). */
+    suspend fun loadMyProfile(): Result<PatientProfile> = runCatching {
+        auth.sessionStatus.first { it !is SessionStatus.Initializing }
+        val email = auth.currentUserOrNull()?.email
+            ?: error("Your session has ended. Please log in again.")
+        val row = findAccountRowByEmail(email)
+            ?: error("No SmartCare account is linked to this login")
+        val userId = row.int("user_id")
+        val patient = db.from("patient").select {
+            filter { eq("user_id", userId) }
+        }.decodeSingleOrNull<JsonObject>()
+
+        PatientProfile(
+            userId = userId,
+            fullName = patient?.str("full_name") ?: email.substringBefore("@"),
+            email = row.str("email") ?: email,
+            icNumber = row.str("ic_number"),
+            phone = row.str("phone_number"),
+            dateOfBirth = patient?.str("date_of_birth"),
+            gender = patient?.str("gender")
+        )
+    }
+
+    /** Saves the phone number on the user's own account row (database function update_my_phone). */
+    suspend fun updateMyPhone(phone: String): Result<Unit> = runCatching {
+        rpc("update_my_phone", buildJsonObject { put("p_phone", phone) })
+        Unit
+    }
+
+    /** Saves gender (MALE, FEMALE or null) on the user's own patient row (RLS: own row only). */
+    suspend fun updateMyGender(userId: Int, gender: String?): Result<Unit> = runCatching {
+        db.from("patient").update(buildJsonObject { put("gender", gender) }) {
+            filter { eq("user_id", userId) }
+        }
+        Unit
+    }
 
     // ---------- 7. Home ----------
 

@@ -1,12 +1,12 @@
 package com.example.smartcare
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.example.smartcare.data.Account
@@ -40,9 +40,17 @@ class HomeActivity : BaseActivity() {
         listOf(R.id.btnBell, R.id.cardAppointment, R.id.dockVisits, R.id.dockRecords).forEach { id ->
             findViewById<View>(id).setOnClickListener { toast(R.string.coming_soon) }
         }
-        findViewById<View>(R.id.dockProfile).setOnClickListener { showProfile() }
+        findViewById<View>(R.id.dockProfile).setOnClickListener {
+            startActivity(Intent(this, ProfileActivity::class.java))
+        }
 
         loadAccount()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // The name may have changed on the profile screen; reload when coming back.
+        if (account != null) loadAccount()
     }
 
     private fun loadAccount() {
@@ -89,21 +97,6 @@ class HomeActivity : BaseActivity() {
         }
         // TODO(appointment module / chatbot module): open the real screens.
         tile.setOnClickListener { toast(R.string.coming_soon) }
-    }
-
-    private fun showProfile() {
-        val acc = account ?: return
-        AlertDialog.Builder(this)
-            .setTitle(acc.fullName)
-            .setMessage(acc.email)
-            .setPositiveButton(R.string.logout) { _, _ ->
-                lifecycleScope.launch {
-                    AuthRepository.signOut() // ends the session; the Remember me choice is kept
-                    goToRolePicker()
-                }
-            }
-            .setNegativeButton(R.string.close, null)
-            .show()
     }
 
     @StringRes
