@@ -63,12 +63,18 @@
                             android:textSize="15.5sp" />
                     </LinearLayout>
 
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end|center_vertical"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
                     <!-- Role badge: Staff or Doctor -->
                     <TextView
                         android:id="@+id/tvRoleBadge"
                         android:layout_width="wrap_content"
                         android:layout_height="32dp"
-                        android:layout_gravity="end|center_vertical"
                         android:background="@drawable/bg_glass_pill"
                         android:drawablePadding="6dp"
                         android:fontFamily="@font/figtree_bold"
@@ -82,6 +88,20 @@
                         app:drawableTint="@color/white"
                         tools:text="@string/role_badge_staff"
                         tools:visibility="visible" />
+
+                    <!-- Opens the staff profile (details, change password, log out) -->
+                    <ImageButton
+                        android:id="@+id/btnProfile"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginStart="8dp"
+                        android:background="@drawable/bg_glass_circle"
+                        android:contentDescription="@string/open_profile"
+                        android:padding="10dp"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ic_sc_user"
+                        app:tint="@color/white" />
+                    </LinearLayout>
                 </FrameLayout>
 
                 <TextView
@@ -272,19 +292,6 @@
                         android:text="@string/clinic_rules_empty"
                         android:visibility="gone" />
                 </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:minHeight="24dp" />
-
-                <!-- Temporary: moves to the staff profile screen in a later step. -->
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnLogout"
-                    style="@style/SmartCare.Button.Pill"
-                    android:layout_width="match_parent"
-                    android:text="@string/logout" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

@@ -1,5 +1,6 @@
 package com.example.smartcare
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
@@ -37,7 +38,9 @@ class StaffHomeActivity : BaseActivity() {
 
         findViewById<TextView>(R.id.tvGreeting).setText(greeting())
         findViewById<MaterialButton>(R.id.btnRetry).setOnClickListener { load() }
-        findViewById<MaterialButton>(R.id.btnLogout).setOnClickListener { logOut() }
+        findViewById<View>(R.id.btnProfile).setOnClickListener {
+            startActivity(Intent(this, StaffProfileActivity::class.java))
+        }
 
         load()
     }

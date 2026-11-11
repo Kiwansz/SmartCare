@@ -34,7 +34,8 @@ data class Account(
     val role: String,               // PATIENT, STAFF, DOCTOR, ADMIN
     val fullName: String,
     val mustChangePassword: Boolean,
-    val patientId: Int?             // only for PATIENT
+    val patientId: Int?,            // only for PATIENT
+    val lastLoginAt: Date? = null   // user_account.last_login_at (set at each password login)
 )
 
 /** The logged-in patient's own details for the profile screen. */
@@ -255,18 +256,25 @@ object AuthRepository {
 
     /** Checks the temporary password, sets the new one, and clears the must-change flag. */
     suspend fun changeTemporaryPassword(tempPassword: String, newPassword: String): Result<Unit> =
+        changePassword(tempPassword, newPassword, "Temporary password is incorrect")
+
+    /** A logged-in user changing their own password (staff profile). Same steps as above. */
+    suspend fun changeOwnPassword(currentPassword: String, newPassword: String): Result<Unit> =
+        changePassword(currentPassword, newPassword, "Current password is incorrect")
+
+    private suspend fun changePassword(oldPassword: String, newPassword: String, wrongOld: String): Result<Unit> =
         runCatching {
             val email = auth.currentUserOrNull()?.email
                 ?: error("Your session has ended. Please log in again.")
 
-            // Re-sign in to prove the temporary password is correct.
+            // Re-sign in to prove the old password is correct.
             try {
                 auth.signInWith(Email) {
                     this.email = email
-                    this.password = tempPassword
+                    this.password = oldPassword
                 }
             } catch (e: Exception) {
-                error("Temporary password is incorrect")
+                error(wrongOld)
             }
 
             auth.updateUser { password = newPassword }
@@ -394,7 +402,8 @@ object AuthRepository {
             role = role,
             fullName = profile?.str("full_name") ?: email.substringBefore("@"),
             mustChangePassword = mustChange,
-            patientId = if (role == "PATIENT") profile?.get("patient_id")?.jsonPrimitive?.intOrNull else null
+            patientId = if (role == "PATIENT") profile?.get("patient_id")?.jsonPrimitive?.intOrNull else null,
+            lastLoginAt = parseTimestamp(row.str("last_login_at"), TimeZone.getTimeZone("UTC"))
         )
     }
 
