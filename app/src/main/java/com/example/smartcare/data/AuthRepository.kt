@@ -50,6 +50,16 @@ data class PatientProfile(
 
 data class NextAppointment(val slotStart: Date, val doctorName: String?, val reason: String?)
 
+/** The single clinic_setting row (setting_id = 1), saved by the Admin in the web panel. */
+data class ClinicSettings(
+    val clinicName: String,
+    val address: String?,
+    val phone: String?,
+    val gracePeriodMinutes: Int?,
+    val cancelCutoffHours: Int?,
+    val maxActiveAppointments: Int?
+)
+
 /**
  * Wrong IC/email or wrong password. One error for both, so the login screen
  * never reveals whether an account exists.
@@ -177,6 +187,32 @@ object AuthRepository {
 
             account
         }
+
+    /**
+     * Like [currentAccount], but tells "not logged in" (success with null) apart from
+     * "could not load" (failure), so a screen can show an error with Try again instead
+     * of sending the user back to the start.
+     */
+    suspend fun loadCurrentAccount(): Result<Account?> = runCatching {
+        auth.sessionStatus.first { it !is SessionStatus.Initializing }
+        val email = auth.currentUserOrNull()?.email ?: return@runCatching null
+        loadAccount(email)
+    }
+
+    /** The clinic_setting row, or null if it has not been created yet. */
+    suspend fun loadClinicSettings(): Result<ClinicSettings?> = runCatching {
+        val row = db.from("clinic_setting").select {
+            filter { eq("setting_id", 1) }
+        }.decodeSingleOrNull<JsonObject>() ?: return@runCatching null
+        ClinicSettings(
+            clinicName = row.str("clinic_name") ?: "",
+            address = row.str("address")?.takeIf { it.isNotBlank() },
+            phone = row.str("phone_number")?.takeIf { it.isNotBlank() },
+            gracePeriodMinutes = row["grace_period_minutes"]?.jsonPrimitive?.intOrNull,
+            cancelCutoffHours = row["cancel_cutoff_hours"]?.jsonPrimitive?.intOrNull,
+            maxActiveAppointments = row["max_active_appointments"]?.jsonPrimitive?.intOrNull
+        )
+    }
 
     /** The account for the session saved on the device, or null if not logged in. */
     suspend fun currentAccount(): Account? {

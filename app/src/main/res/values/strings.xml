@@ -108,10 +108,6 @@
     <string name="chip_match">Passwords match</string>
     <string name="action_save_continue">Save and continue</string>
 
-    <!-- 8. Staff home (placeholder, no design yet) -->
-    <string name="staff_home_title">Staff home coming soon</string>
-    <string name="staff_home_sub">Your %1$s dashboard will appear here.</string>
-
     <!-- 7. Patient home. Sample values are placeholders until the appointment module exists. -->
     <string name="greeting_morning">Good morning</string>
     <string name="greeting_afternoon">Good afternoon</string>
@@ -180,4 +176,11 @@
     <string name="dialog_phone_title">Edit phone number</string>
     <string name="msg_phone_saved">Phone number updated</string>
     <string name="msg_gender_saved">Gender updated</string>
+    <!-- Staff home (Module 1 shell) -->
+    <string name="role_badge_staff">Staff</string>
+    <string name="role_badge_doctor">Doctor</string>
+    <string name="staff_home_loading">Loading your account…</string>
+    <string name="staff_home_error">We couldn\'t load your account. Check your connection and try again.</string>
+    <string name="action_retry">Try again</string>
+    <string name="admin_use_web_panel">Admins use the SmartCare web panel, not the app.</string>
 </resources>
