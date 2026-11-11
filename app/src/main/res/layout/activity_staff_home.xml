@@ -196,7 +196,52 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:visibility="gone">
-                    <!-- Clinic rules card and tiles are added in the next steps. -->
+
+                    <!-- Clinic rules: real values from clinic_setting, set by the Admin -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/figtree_bold"
+                        android:text="@string/clinic_rules_title"
+                        android:textColor="@color/ink"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        style="@style/SmartCare.Text.Sub"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="@string/clinic_rules_sub" />
+
+                    <LinearLayout
+                        android:id="@+id/cardRules"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:background="@drawable/bg_tile"
+                        android:divider="@drawable/bg_profile_divider"
+                        android:orientation="vertical"
+                        android:showDividers="middle">
+
+                        <include android:id="@+id/rowGrace" layout="@layout/view_profile_row" />
+                        <include android:id="@+id/rowCutoff" layout="@layout/view_profile_row" />
+                        <include android:id="@+id/rowMaxActive" layout="@layout/view_profile_row" />
+                        <include android:id="@+id/rowClinicPhone" layout="@layout/view_profile_row" />
+                        <include android:id="@+id/rowClinicAddress" layout="@layout/view_profile_row" />
+                    </LinearLayout>
+
+                    <!-- Shown when the clinic_setting row is missing or cannot be read -->
+                    <TextView
+                        android:id="@+id/tvRulesEmpty"
+                        style="@style/SmartCare.Text.Sub"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:background="@drawable/bg_tile"
+                        android:gravity="center"
+                        android:padding="18dp"
+                        android:text="@string/clinic_rules_empty"
+                        android:visibility="gone" />
                 </LinearLayout>
 
                 <View

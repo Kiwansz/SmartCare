@@ -3,6 +3,7 @@ package com.example.smartcare
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
+import androidx.annotation.StringRes
 import androidx.lifecycle.lifecycleScope
 import com.example.smartcare.data.Account
 import com.example.smartcare.data.AuthRepository
@@ -79,6 +80,36 @@ class StaffHomeActivity : BaseActivity() {
             text = name
             visibility = if (name != null) View.VISIBLE else View.GONE
         }
+        showRules(settings)
+    }
+
+    /** Clinic rules card: the values the Admin saved, or a friendly empty state. */
+    private fun showRules(s: ClinicSettings?) {
+        val card = findViewById<View>(R.id.cardRules)
+        val empty = findViewById<View>(R.id.tvRulesEmpty)
+        val hasRules = s != null && listOf(s.gracePeriodMinutes, s.cancelCutoffHours, s.maxActiveAppointments)
+            .any { it != null }
+        card.visibility = if (hasRules) View.VISIBLE else View.GONE
+        empty.visibility = if (hasRules) View.GONE else View.VISIBLE
+        if (s == null || !hasRules) return
+
+        val notSet = getString(R.string.rule_not_set)
+        setRow(R.id.rowGrace, R.string.rule_grace_period,
+            s.gracePeriodMinutes?.let { resources.getQuantityString(R.plurals.rule_minutes, it, it) } ?: notSet)
+        setRow(R.id.rowCutoff, R.string.rule_cancel_cutoff,
+            s.cancelCutoffHours?.let { resources.getQuantityString(R.plurals.rule_hours_before, it, it) } ?: notSet)
+        setRow(R.id.rowMaxActive, R.string.rule_max_active,
+            s.maxActiveAppointments?.let { resources.getQuantityString(R.plurals.rule_max_active_value, it, it) } ?: notSet)
+        setRow(R.id.rowClinicPhone, R.string.rule_clinic_phone, s.phone)
+        setRow(R.id.rowClinicAddress, R.string.rule_clinic_address, s.address)
+    }
+
+    /** Fills one label/value row; a row with no value is hidden. */
+    private fun setRow(id: Int, @StringRes label: Int, value: String?) {
+        val row = findViewById<View>(id)
+        row.visibility = if (value.isNullOrBlank()) View.GONE else View.VISIBLE
+        row.findViewById<TextView>(R.id.rowLabel).setText(label)
+        row.findViewById<TextView>(R.id.rowValue).text = value
     }
 
     /** Admins manage the clinic in the web panel; the app is for patients and clinic staff. */
