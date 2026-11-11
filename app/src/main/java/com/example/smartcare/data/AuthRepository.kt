@@ -34,7 +34,8 @@ data class Account(
     val role: String,               // PATIENT, STAFF, DOCTOR, ADMIN
     val fullName: String,
     val mustChangePassword: Boolean,
-    val patientId: Int?             // only for PATIENT
+    val patientId: Int?,            // only for PATIENT
+    val lastLoginAt: Date? = null   // user_account.last_login_at (set at each password login)
 )
 
 /** The logged-in patient's own details for the profile screen. */
@@ -49,6 +50,16 @@ data class PatientProfile(
 )
 
 data class NextAppointment(val slotStart: Date, val doctorName: String?, val reason: String?)
+
+/** The single clinic_setting row (setting_id = 1), saved by the Admin in the web panel. */
+data class ClinicSettings(
+    val clinicName: String,
+    val address: String?,
+    val phone: String?,
+    val gracePeriodMinutes: Int?,
+    val cancelCutoffHours: Int?,
+    val maxActiveAppointments: Int?
+)
 
 /**
  * Wrong IC/email or wrong password. One error for both, so the login screen
@@ -178,6 +189,32 @@ object AuthRepository {
             account
         }
 
+    /**
+     * Like [currentAccount], but tells "not logged in" (success with null) apart from
+     * "could not load" (failure), so a screen can show an error with Try again instead
+     * of sending the user back to the start.
+     */
+    suspend fun loadCurrentAccount(): Result<Account?> = runCatching {
+        auth.sessionStatus.first { it !is SessionStatus.Initializing }
+        val email = auth.currentUserOrNull()?.email ?: return@runCatching null
+        loadAccount(email)
+    }
+
+    /** The clinic_setting row, or null if it has not been created yet. */
+    suspend fun loadClinicSettings(): Result<ClinicSettings?> = runCatching {
+        val row = db.from("clinic_setting").select {
+            filter { eq("setting_id", 1) }
+        }.decodeSingleOrNull<JsonObject>() ?: return@runCatching null
+        ClinicSettings(
+            clinicName = row.str("clinic_name") ?: "",
+            address = row.str("address")?.takeIf { it.isNotBlank() },
+            phone = row.str("phone_number")?.takeIf { it.isNotBlank() },
+            gracePeriodMinutes = row["grace_period_minutes"]?.jsonPrimitive?.intOrNull,
+            cancelCutoffHours = row["cancel_cutoff_hours"]?.jsonPrimitive?.intOrNull,
+            maxActiveAppointments = row["max_active_appointments"]?.jsonPrimitive?.intOrNull
+        )
+    }
+
     /** The account for the session saved on the device, or null if not logged in. */
     suspend fun currentAccount(): Account? {
         auth.sessionStatus.first { it !is SessionStatus.Initializing }
@@ -219,18 +256,25 @@ object AuthRepository {
 
     /** Checks the temporary password, sets the new one, and clears the must-change flag. */
     suspend fun changeTemporaryPassword(tempPassword: String, newPassword: String): Result<Unit> =
+        changePassword(tempPassword, newPassword, "Temporary password is incorrect")
+
+    /** A logged-in user changing their own password (staff profile). Same steps as above. */
+    suspend fun changeOwnPassword(currentPassword: String, newPassword: String): Result<Unit> =
+        changePassword(currentPassword, newPassword, "Current password is incorrect")
+
+    private suspend fun changePassword(oldPassword: String, newPassword: String, wrongOld: String): Result<Unit> =
         runCatching {
             val email = auth.currentUserOrNull()?.email
                 ?: error("Your session has ended. Please log in again.")
 
-            // Re-sign in to prove the temporary password is correct.
+            // Re-sign in to prove the old password is correct.
             try {
                 auth.signInWith(Email) {
                     this.email = email
-                    this.password = tempPassword
+                    this.password = oldPassword
                 }
             } catch (e: Exception) {
-                error("Temporary password is incorrect")
+                error(wrongOld)
             }
 
             auth.updateUser { password = newPassword }
@@ -358,7 +402,8 @@ object AuthRepository {
             role = role,
             fullName = profile?.str("full_name") ?: email.substringBefore("@"),
             mustChangePassword = mustChange,
-            patientId = if (role == "PATIENT") profile?.get("patient_id")?.jsonPrimitive?.intOrNull else null
+            patientId = if (role == "PATIENT") profile?.get("patient_id")?.jsonPrimitive?.intOrNull else null,
+            lastLoginAt = parseTimestamp(row.str("last_login_at"), TimeZone.getTimeZone("UTC"))
         )
     }
 

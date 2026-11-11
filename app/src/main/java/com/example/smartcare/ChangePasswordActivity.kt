@@ -1,5 +1,7 @@
 package com.example.smartcare
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.widget.TextView
 import androidx.activity.addCallback
@@ -18,6 +20,10 @@ import kotlinx.coroutines.launch
  * passes and both new-password fields match. Saving uses the existing
  * AuthRepository.changeTemporaryPassword (checks the temp password, sets the new one,
  * clears the flag), then opens the staff home.
+ *
+ * Opened with [changeIntent] from the staff profile it is a normal "change my password"
+ * screen instead: the first field is the current password, Back just closes it, and
+ * success returns to the profile.
  */
 class ChangePasswordActivity : BaseActivity() {
 
@@ -25,18 +31,23 @@ class ChangePasswordActivity : BaseActivity() {
     private lateinit var fieldNew: SmartField
     private lateinit var fieldConfirm: SmartField
     private lateinit var btnSave: MaterialButton
+    private val ownChange by lazy { intent.getBooleanExtra(EXTRA_OWN_CHANGE, false) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_change_password)
-        setupHeader(
-            R.string.change_hero_title,
-            R.string.change_hero_sub,
-            showBack = false,
-            showBrand = true,
-            brandCentered = false,
-            pill = getString(R.string.change_pill)
-        )
+        if (ownChange) {
+            setupHeader(R.string.change_own_title, R.string.change_own_sub)
+        } else {
+            setupHeader(
+                R.string.change_hero_title,
+                R.string.change_hero_sub,
+                showBack = false,
+                showBrand = true,
+                brandCentered = false,
+                pill = getString(R.string.change_pill)
+            )
+        }
 
         fieldTemp = findViewById(R.id.fieldTemp)
         fieldNew = findViewById(R.id.fieldNew)
@@ -47,9 +58,13 @@ class ChangePasswordActivity : BaseActivity() {
         fieldNew.editText.doAfterTextChanged { updateRules() }
         fieldConfirm.editText.doAfterTextChanged { updateRules() }
         updateRules()
+        if (ownChange) {
+            fieldTemp.inputLayout.hint = getString(R.string.field_current_password)
+            btnSave.setText(R.string.action_save)
+        }
 
-        // Leaving without a new password logs the user out.
-        onBackPressedDispatcher.addCallback(this) {
+        // First login: leaving without a new password logs the user out.
+        if (!ownChange) onBackPressedDispatcher.addCallback(this) {
             lifecycleScope.launch {
                 AuthRepository.signOut()
                 goToRolePicker()
@@ -86,9 +101,12 @@ class ChangePasswordActivity : BaseActivity() {
     private fun save() {
         setLoading(true, btnSave)
         lifecycleScope.launch {
-            AuthRepository.changeTemporaryPassword(fieldTemp.text, fieldNew.text)
+            val result = if (ownChange) AuthRepository.changeOwnPassword(fieldTemp.text, fieldNew.text)
+                else AuthRepository.changeTemporaryPassword(fieldTemp.text, fieldNew.text)
+            result
                 .onSuccess {
                     toast(R.string.msg_password_changed)
+                    if (ownChange) { finish(); return@onSuccess }
                     val account = AuthRepository.currentAccount()
                     if (account != null) goAfterLogin(account) else goToRolePicker()
                 }
@@ -98,5 +116,13 @@ class ChangePasswordActivity : BaseActivity() {
                     toast(it.friendly())
                 }
         }
+    }
+
+    companion object {
+        private const val EXTRA_OWN_CHANGE = "own_change"
+
+        /** A logged-in user changing their own password (not the first-login flow). */
+        fun changeIntent(context: Context) =
+            Intent(context, ChangePasswordActivity::class.java).putExtra(EXTRA_OWN_CHANGE, true)
     }
 }

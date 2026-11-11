@@ -108,10 +108,6 @@
     <string name="chip_match">Passwords match</string>
     <string name="action_save_continue">Save and continue</string>
 
-    <!-- 8. Staff home (placeholder, no design yet) -->
-    <string name="staff_home_title">Staff home coming soon</string>
-    <string name="staff_home_sub">Your %1$s dashboard will appear here.</string>
-
     <!-- 7. Patient home. Sample values are placeholders until the appointment module exists. -->
     <string name="greeting_morning">Good morning</string>
     <string name="greeting_afternoon">Good afternoon</string>
@@ -180,4 +176,74 @@
     <string name="dialog_phone_title">Edit phone number</string>
     <string name="msg_phone_saved">Phone number updated</string>
     <string name="msg_gender_saved">Gender updated</string>
+    <!-- Staff home (Module 1 shell) -->
+    <string name="role_badge_staff">Staff</string>
+    <string name="role_badge_doctor">Doctor</string>
+    <string name="staff_home_loading">Loading your account…</string>
+    <string name="staff_home_error">We couldn\'t load your account. Check your connection and try again.</string>
+    <string name="action_retry">Try again</string>
+    <string name="admin_use_web_panel">Admins use the SmartCare web panel, not the app.</string>
+
+    <!-- Staff profile -->
+    <string name="staff_profile_title">My profile</string>
+    <string name="staff_profile_sub">Your SmartCare staff account</string>
+    <string name="staff_profile_loading">Loading your profile…</string>
+    <string name="staff_profile_error">We couldn\'t load your profile. Check your connection and try again.</string>
+    <string name="profile_role">Role</string>
+    <string name="profile_last_login">Last login</string>
+    <string name="profile_last_login_none">Not recorded yet</string>
+    <string name="profile_password">Password</string>
+    <string name="profile_password_hidden">••••••••</string>
+    <string name="open_profile">Open my profile</string>
+
+    <!-- Change own password (from the staff profile) -->
+    <string name="change_own_title">Change password</string>
+    <string name="change_own_sub">Enter your current password, then choose a new one.</string>
+    <string name="field_current_password">Current password</string>
+
+    <!-- Staff home tiles (registry: staff/StaffFeature.kt) -->
+    <string name="staff_tiles_title">Clinic work</string>
+    <string name="feature_appointments">Appointments</string>
+    <string name="feature_appointments_sub">Bookings and queue</string>
+    <string name="feature_attendance">Attendance</string>
+    <string name="feature_attendance_sub">Check-ins and no-shows</string>
+    <string name="feature_patients">Patients</string>
+    <string name="feature_patients_sub">Patient details</string>
+    <string name="feature_todays_patients">Today\'s patients</string>
+    <string name="feature_todays_patients_sub">Your list for today</string>
+    <string name="feature_follow_ups">Follow-ups</string>
+    <string name="feature_follow_ups_sub">Return visits</string>
+    <string name="feature_medical_records">Medical records</string>
+    <string name="feature_medical_records_sub">Notes and history</string>
+    <string name="staff_tiles_none">No clinic features for your role yet.</string>
+
+    <!-- Shared Coming soon screen -->
+    <string name="coming_soon_sub">This part of SmartCare is still being built.</string>
+    <string name="coming_soon_body">%1$s isn\'t ready yet. It will open here once it is added to the app.</string>
+    <string name="coming_soon_owner">Built by: %1$s</string>
+    <string name="coming_soon_other_module">Part of another SmartCare module.</string>
+    <string name="action_back_home">Back to home</string>
+
+    <!-- Staff home: clinic rules card (values from clinic_setting) -->
+    <string name="clinic_rules_title">Clinic rules</string>
+    <string name="clinic_rules_sub">Set by the clinic Admin in the web panel.</string>
+    <string name="clinic_rules_empty">Clinic rules aren\'t available right now. Ask the clinic Admin to save them in the web panel, then come back.</string>
+    <string name="rule_grace_period">Late arrival grace period</string>
+    <string name="rule_cancel_cutoff">Cancellation cut-off</string>
+    <string name="rule_max_active">Active appointments per patient</string>
+    <string name="rule_clinic_phone">Clinic phone</string>
+    <string name="rule_clinic_address">Clinic address</string>
+    <string name="rule_not_set">Not set</string>
+    <plurals name="rule_minutes">
+        <item quantity="one">%d minute</item>
+        <item quantity="other">%d minutes</item>
+    </plurals>
+    <plurals name="rule_hours_before">
+        <item quantity="one">%d hour before</item>
+        <item quantity="other">%d hours before</item>
+    </plurals>
+    <plurals name="rule_max_active_value">
+        <item quantity="one">Up to %d at a time</item>
+        <item quantity="other">Up to %d at a time</item>
+    </plurals>
 </resources>

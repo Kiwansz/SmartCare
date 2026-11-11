@@ -69,6 +69,14 @@
             android:name=".StaffHomeActivity"
             android:exported="false"
             android:theme="@style/Theme.SmartCare.Staff" />
+        <activity
+            android:name=".StaffProfileActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SmartCare.Staff" />
+        <activity
+            android:name=".ComingSoonActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SmartCare.Staff" />
     </application>
 
 </manifest>
