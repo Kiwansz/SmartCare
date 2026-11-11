@@ -184,6 +184,29 @@
     <string name="action_retry">Try again</string>
     <string name="admin_use_web_panel">Admins use the SmartCare web panel, not the app.</string>
 
+    <!-- Staff home tiles (registry: staff/StaffFeature.kt) -->
+    <string name="staff_tiles_title">Clinic work</string>
+    <string name="feature_appointments">Appointments</string>
+    <string name="feature_appointments_sub">Bookings and queue</string>
+    <string name="feature_attendance">Attendance</string>
+    <string name="feature_attendance_sub">Check-ins and no-shows</string>
+    <string name="feature_patients">Patients</string>
+    <string name="feature_patients_sub">Patient details</string>
+    <string name="feature_todays_patients">Today\'s patients</string>
+    <string name="feature_todays_patients_sub">Your list for today</string>
+    <string name="feature_follow_ups">Follow-ups</string>
+    <string name="feature_follow_ups_sub">Return visits</string>
+    <string name="feature_medical_records">Medical records</string>
+    <string name="feature_medical_records_sub">Notes and history</string>
+    <string name="staff_tiles_none">No clinic features for your role yet.</string>
+
+    <!-- Shared Coming soon screen -->
+    <string name="coming_soon_sub">This part of SmartCare is still being built.</string>
+    <string name="coming_soon_body">%1$s isn\'t ready yet. It will open here once it is added to the app.</string>
+    <string name="coming_soon_owner">Built by: %1$s</string>
+    <string name="coming_soon_other_module">Part of another SmartCare module.</string>
+    <string name="action_back_home">Back to home</string>
+
     <!-- Staff home: clinic rules card (values from clinic_setting) -->
     <string name="clinic_rules_title">Clinic rules</string>
     <string name="clinic_rules_sub">Set by the clinic Admin in the web panel.</string>

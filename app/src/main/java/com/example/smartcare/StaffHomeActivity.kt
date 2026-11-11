@@ -2,12 +2,15 @@ package com.example.smartcare
 
 import android.os.Bundle
 import android.view.View
+import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.StringRes
 import androidx.lifecycle.lifecycleScope
 import com.example.smartcare.data.Account
 import com.example.smartcare.data.AuthRepository
 import com.example.smartcare.data.ClinicSettings
+import com.example.smartcare.staff.StaffFeature
 import com.google.android.material.button.MaterialButton
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
@@ -71,6 +74,39 @@ class StaffHomeActivity : BaseActivity() {
         findViewById<TextView>(R.id.tvRoleBadge).apply {
             setText(if (acc.role == "DOCTOR") R.string.role_badge_doctor else R.string.role_badge_staff)
             visibility = View.VISIBLE
+        }
+        showTiles(StaffFeature.forRole(acc.role))
+    }
+
+    /** Two tiles per row, in registry order; each opens its screen or "Coming soon". */
+    private fun showTiles(features: List<StaffFeature>) {
+        val grid = findViewById<LinearLayout>(R.id.tilesGrid)
+        grid.removeAllViews()
+        findViewById<View>(R.id.tvTilesNone).visibility = if (features.isEmpty()) View.VISIBLE else View.GONE
+        features.chunked(2).forEachIndexed { rowIndex, pair ->
+            val row = LinearLayout(this).apply {
+                orientation = LinearLayout.HORIZONTAL
+                isBaselineAligned = false
+            }
+            for (i in 0 until 2) {
+                val feature = pair.getOrNull(i)
+                val tile = layoutInflater.inflate(R.layout.view_home_tile, row, false)
+                tile.layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1f).apply {
+                    if (i == 0) marginEnd = dp(5) else marginStart = dp(5)
+                }
+                if (feature == null) {
+                    tile.visibility = View.INVISIBLE // keeps the last odd tile half width
+                } else {
+                    tile.findViewById<ImageView>(R.id.tileIcon).setImageResource(feature.icon)
+                    tile.findViewById<TextView>(R.id.tileTitle).setText(feature.title)
+                    tile.findViewById<TextView>(R.id.tileSub).setText(feature.subtitle)
+                    tile.setOnClickListener { ComingSoonActivity.open(this, feature) }
+                }
+                row.addView(tile)
+            }
+            grid.addView(row, LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply { if (rowIndex > 0) topMargin = dp(10) })
         }
     }
 

@@ -197,10 +197,39 @@
                     android:orientation="vertical"
                     android:visibility="gone">
 
+                    <!-- Tiles for the user's role, built from staff/StaffFeature.kt -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/figtree_bold"
+                        android:text="@string/staff_tiles_title"
+                        android:textColor="@color/ink"
+                        android:textSize="16sp" />
+
+                    <LinearLayout
+                        android:id="@+id/tilesGrid"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:orientation="vertical" />
+
+                    <TextView
+                        android:id="@+id/tvTilesNone"
+                        style="@style/SmartCare.Text.Sub"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:background="@drawable/bg_tile"
+                        android:gravity="center"
+                        android:padding="18dp"
+                        android:text="@string/staff_tiles_none"
+                        android:visibility="gone" />
+
                     <!-- Clinic rules: real values from clinic_setting, set by the Admin -->
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="26dp"
                         android:fontFamily="@font/figtree_bold"
                         android:text="@string/clinic_rules_title"
                         android:textColor="@color/ink"
