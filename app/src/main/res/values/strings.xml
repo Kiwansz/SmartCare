@@ -1,106 +1,183 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">SmartCare</string>
-    <string name="logo_text">SmartCare</string>
     <string name="back">Back</string>
 
-    <!-- 1. Role picker -->
-    <string name="role_title">Welcome</string>
-    <string name="role_subtitle">Choose how you want to continue</string>
-    <string name="role_patient">I\'m a Patient</string>
-    <string name="role_patient_desc">Book and manage appointments</string>
-    <string name="role_staff">I\'m Staff</string>
-    <string name="role_staff_desc">Doctors, nurses and reception</string>
-    <string name="role_admin_note">Admins sign in through the web panel</string>
-
     <!-- 2. Patient login -->
-    <string name="patient_login_bar">Patient Login</string>
-    <string name="login_title">Welcome Back</string>
-    <string name="login_subtitle">Login to view and manage\nyour appointments</string>
-    <string name="label_username">Username</string>
-    <string name="hint_username">IC number or email</string>
-    <string name="label_password">Password</string>
-    <string name="hint_password">Enter your password</string>
     <string name="remember_me">Remember me</string>
-    <string name="forgot_password">Forgot Password?</string>
-    <string name="login_button">Login</string>
-    <string name="no_account_prefix">Don\'t have an account?</string>
-    <string name="sign_up">Sign Up</string>
 
     <!-- 3. Patient sign up -->
-    <string name="register_bar">Create Account</string>
-    <string name="register_title">Join SmartCare</string>
-    <string name="register_subtitle">Register as a patient to book appointments</string>
-    <string name="label_full_name">Full name</string>
     <string name="hint_full_name">As shown on your IC</string>
-    <string name="label_ic_number">IC number</string>
-    <string name="hint_ic_number">e.g. 010203-14-5678</string>
-    <string name="label_phone">Phone number</string>
-    <string name="hint_phone">e.g. 012-345 6789</string>
-    <string name="label_email">Email</string>
-    <string name="hint_email">name@example.com</string>
     <string name="hint_password_new">At least 8 characters</string>
-    <string name="register_button">Create Account</string>
-    <string name="have_account_prefix">Already registered?</string>
-    <string name="login_link">Login</string>
-
-    <!-- 4. Forgot password -->
-    <string name="forgot_bar">Forgot Password</string>
-    <string name="forgot_title">Reset your password</string>
-    <string name="forgot_subtitle">Enter the email on your account\nand we\'ll send you a reset link</string>
-    <string name="forgot_info">The link works for one hour. Check your spam folder if it doesn\'t arrive.</string>
-    <string name="forgot_button">Send Reset Link</string>
-    <string name="back_to_prefix">Back to</string>
-    <string name="msg_reset_sent">Reset link sent. Check your email.</string>
 
     <!-- 5. Staff login -->
-    <string name="staff_login_bar">Staff Login</string>
-    <string name="staff_title">Staff Portal</string>
-    <string name="staff_subtitle">Sign in with the email and temporary\npassword sent by your Admin</string>
-    <string name="label_work_email">Work email</string>
-    <string name="hint_work_email">Enter your work email</string>
-    <string name="staff_no_account_prefix">No account?</string>
-    <string name="ask_admin">Ask your Admin</string>
     <string name="msg_ask_admin">Staff accounts are created by the clinic Admin.</string>
 
     <!-- 6. Change password -->
-    <string name="change_bar">Change Password</string>
-    <string name="change_title">Set a new password</string>
-    <string name="change_subtitle">Your temporary password has expired or was just issued. Choose a new one to continue.</string>
-    <string name="label_temp_password">Temporary password</string>
-    <string name="label_new_password">New password</string>
-    <string name="label_confirm_password">Confirm new password</string>
-    <string name="rule_length">At least 8 characters</string>
-    <string name="rule_upper">One uppercase letter</string>
-    <string name="rule_number">One number</string>
-    <string name="rule_match">Passwords match</string>
-    <string name="change_button">Save and Continue</string>
     <string name="msg_password_changed">Password updated</string>
 
     <!-- 7. Home -->
-    <string name="home_welcome">Welcome back</string>
     <string name="home_next_appointment">NEXT APPOINTMENT</string>
-    <string name="home_no_appointment">No upcoming appointments</string>
-    <string name="home_no_appointment_desc">Book one to see it here</string>
-    <string name="home_loading">Loading…</string>
-    <string name="home_book">Book\nAppointment</string>
-    <string name="home_followups">My\nFollow-ups</string>
-    <string name="home_staff_note">Your %1$s dashboard is coming soon.</string>
     <string name="nav_home">Home</string>
     <string name="nav_visits">Visits</string>
     <string name="nav_profile">Profile</string>
     <string name="coming_soon">Coming soon</string>
     <string name="logout">Log out</string>
-    <string name="close">Close</string>
+
+    <!-- ===== New design (docs/design/smartcare-ui-design.html) ===== -->
+    <string name="action_continue">Continue</string>
+    <string name="action_log_in">Log in</string>
+
+    <!-- 1. Role picker -->
+    <string name="role_hero_title">Your clinic, in your pocket</string>
+    <string name="role_hero_sub">Book visits, get reminders and follow-ups in one place.</string>
+    <string name="role_choice_patient">I\'m a patient</string>
+    <string name="role_choice_patient_desc">Book and manage visits</string>
+    <string name="role_choice_staff">I\'m clinic staff</string>
+    <string name="role_choice_staff_desc">Doctors, nurses, reception</string>
+
+    <!-- 2. Patient login -->
+    <string name="login_hero_title">Welcome back</string>
+    <string name="login_hero_sub">Log in to see your appointments.</string>
+    <string name="field_ic">IC number</string>
+    <string name="hint_ic_example" tools:ignore="TypographyDashes">e.g. 010203-14-5677</string>
+    <string name="helper_ic">12 digits, no need to type dashes.</string>
+    <string name="field_password">Password</string>
+    <string name="hint_password_enter">Enter your password</string>
+    <string name="forgot_password_link">Forgot password?</string>
+    <string name="footer_new_prefix">New to SmartCare?</string>
+    <string name="footer_create_account">Create an account</string>
+    <string name="error_ic_length">IC number must be 12 digits</string>
+    <string name="error_login_ic">IC number or password is incorrect.</string>
+    <string name="error_login_email">Email or password is incorrect.</string>
+
+    <!-- 3. Sign up (two steps) -->
+    <string name="signup_step1_title">About you</string>
+    <string name="signup_step2_title">Secure your account</string>
+    <string name="step_pill">Step %1$d of 2</string>
+    <string name="field_full_name">Full name</string>
+    <string name="field_phone">Phone number</string>
+    <string name="hint_phone_example" tools:ignore="TypographyDashes">012-345 6789</string>
+    <string name="from_ic">From IC</string>
+    <string name="from_ic_dob_placeholder">Date of birth</string>
+    <string name="gender_male">Male</string>
+    <string name="gender_female">Female</string>
+    <string name="label_gender_optional">Gender (optional)</string>
+    <string name="action_next">Next</string>
+    <string name="field_email">Email</string>
+    <string name="hint_email_example">name@example.com</string>
+    <string name="field_confirm_password">Confirm password</string>
+    <string name="hint_type_again">Type it again</string>
+    <string name="terms_text">I agree to the clinic\'s <b>terms</b> and <b>privacy policy</b></string>
+    <string name="action_create_account">Create account</string>
+    <string name="strength_weak">Weak</string>
+    <string name="strength_fair">Fair</string>
+    <string name="strength_good">Good</string>
+    <string name="strength_strong">Strong</string>
+    <string name="error_password_needs">Use 8+ characters with an uppercase letter and a number</string>
+    <string name="error_terms">Please agree to the terms to continue</string>
+
+    <!-- 4. Forgot password -->
+    <string name="forgot_hero_title">Forgot your password?</string>
+    <string name="forgot_hero_sub">We\'ll email you a code to set a new one.</string>
+    <string name="action_send_link">Send code</string>
+    <string name="action_resend_link">Enter code</string>
+    <string name="link_sent_title">Code sent</string>
+    <string name="link_sent_desc">Check your inbox for a code from SmartCare Clinic.</string>
+    <string name="footer_remembered">Remembered it?</string>
+    <string name="footer_back_login">Back to log in</string>
+
+    <!-- 5. Staff login -->
+    <string name="staff_pill">Staff portal</string>
+    <string name="staff_hero_title">Good to see you</string>
+    <string name="staff_hero_sub">Use the email and password your Admin sent you.</string>
+    <string name="field_work_email">Work email</string>
+    <string name="hint_work_email_example">name@clinic.com</string>
+    <string name="footer_no_account">No account yet?</string>
+    <string name="footer_ask_admin">Ask your Admin</string>
+
+    <!-- 6. Change password -->
+    <string name="change_pill">First login</string>
+    <string name="change_hero_title">Make it yours</string>
+    <string name="change_hero_sub">Your temporary password expires in 24 hours. Set your own now.</string>
+    <string name="field_temp_password">Temporary password</string>
+    <string name="field_new_password">New password</string>
+    <string name="field_confirm_new_password">Confirm new password</string>
+    <string name="chip_length">8+ characters</string>
+    <string name="chip_upper">Uppercase</string>
+    <string name="chip_number">Number</string>
+    <string name="chip_match">Passwords match</string>
+    <string name="action_save_continue">Save and continue</string>
+
+    <!-- 8. Staff home (placeholder, no design yet) -->
+    <string name="staff_home_title">Staff home coming soon</string>
+    <string name="staff_home_sub">Your %1$s dashboard will appear here.</string>
+
+    <!-- 7. Patient home. Sample values are placeholders until the appointment module exists. -->
+    <string name="greeting_morning">Good morning</string>
+    <string name="greeting_afternoon">Good afternoon</string>
+    <string name="greeting_evening">Good evening</string>
+    <string name="home_sample_name">Ahmad Hafiz</string>
+    <string name="home_sample_status">Confirmed</string>
+    <string name="home_sample_day">Tue, 10 Nov</string>
+    <string name="home_sample_time">9:30 AM · General check-up</string>
+    <string name="home_sample_doctor_initials">DA</string>
+    <string name="home_sample_doctor">Dr. Aisyah</string>
+    <string name="home_sample_doctor_role">General doctor</string>
+    <string name="home_checkin">CHECK-IN</string>
+    <string name="home_sample_code">4F7K</string>
+    <string name="tile_book">Book visit</string>
+    <string name="tile_book_sub">Pick a slot</string>
+    <string name="tile_chat">Ask SmartCare</string>
+    <string name="tile_chat_sub">Chat assistant</string>
+    <string name="tile_followups">Follow-ups</string>
+    <string name="tile_followups_sub">1 due this week</string>
+    <string name="tile_records">My records</string>
+    <string name="tile_records_sub">Prescriptions, MC</string>
+    <string name="nav_records">Records</string>
+    <string name="cd_notifications">Notifications</string>
 
     <!-- Validation / messages -->
     <string name="error_required">This field is required</string>
     <string name="error_invalid_email">Enter a valid email address</string>
-    <string name="error_invalid_ic">IC number must be exactly 12 digits</string>
     <string name="error_invalid_ic_date">IC number does not contain a valid date of birth</string>
     <string name="error_invalid_phone">Enter a valid phone number</string>
-    <string name="error_password_short">Password must be at least 8 characters</string>
-    <string name="error_password_rules">Password does not meet all the rules below</string>
     <string name="error_password_mismatch">Passwords do not match</string>
     <string name="msg_register_confirm_email">Account created! Check your email to confirm, then log in.</string>
-    <string name="msg_error">%1$s</string>
+    <string name="error_login_generic">Incorrect login details</string>
+    <string name="error_email_taken">An account with this email already exists</string>
+    <string name="error_ic_taken">An account with this IC number already exists</string>
+    <string name="error_email_rejected">Please use a valid email address</string>
+    <string name="error_rate_limit">Too many attempts. Please try again later.</string>
+    <string name="error_password_same">New password must be different from the old one</string>
+    <string name="error_no_internet">No internet connection</string>
+    <string name="error_generic">Something went wrong. Please try again.</string>
+    <string name="error_ic_registered">This IC number is already registered.</string>
+    <string name="error_email_registered">This email is already registered.</string>
+    <string name="helper_checking">Checking…</string>
+    <string name="link_login_instead">Log in instead</string>
+    <!-- Forgot password: enter the emailed code -->
+    <string name="code_hero_title">Enter your code</string>
+    <string name="code_hero_sub">We sent it to %1$s</string>
+    <string name="field_reset_code">Code from email</string>
+    <string name="hint_reset_code">6 to 8 digits</string>
+    <string name="action_reset_password">Reset password</string>
+    <string name="resend_code">Resend code</string>
+    <string name="resend_code_in">Resend code in %1$ds</string>
+    <string name="msg_code_resent">A new code is on its way.</string>
+    <string name="msg_password_reset_done">Password updated. Log in with your new password.</string>
+    <string name="error_reset_code">That code is wrong or has expired. Request a new one.</string>
+    <!-- Patient profile -->
+    <string name="profile_title">My profile</string>
+    <string name="profile_ic">IC number</string>
+    <string name="profile_dob">Date of birth</string>
+    <string name="profile_gender">Gender</string>
+    <string name="profile_phone">Phone number</string>
+    <string name="not_set">Not set</string>
+    <string name="action_edit">Edit</string>
+    <string name="action_change">Change</string>
+    <string name="action_save">Save</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="dialog_phone_title">Edit phone number</string>
+    <string name="msg_phone_saved">Phone number updated</string>
+    <string name="msg_gender_saved">Gender updated</string>
 </resources>

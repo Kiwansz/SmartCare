@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 4-segment password strength bar + label. Bound by ui/StrengthMeter.kt. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="2dp"
+    android:layout_marginTop="2dp"
+    android:layout_marginEnd="2dp"
+    android:layout_marginBottom="6dp"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
+
+    <View android:id="@+id/meter1" android:layout_width="0dp" android:layout_height="5dp"
+        android:layout_marginEnd="5dp" android:layout_weight="1" android:background="@drawable/bg_meter_off" />
+    <View android:id="@+id/meter2" android:layout_width="0dp" android:layout_height="5dp"
+        android:layout_marginEnd="5dp" android:layout_weight="1" android:background="@drawable/bg_meter_off" />
+    <View android:id="@+id/meter3" android:layout_width="0dp" android:layout_height="5dp"
+        android:layout_marginEnd="5dp" android:layout_weight="1" android:background="@drawable/bg_meter_off" />
+    <View android:id="@+id/meter4" android:layout_width="0dp" android:layout_height="5dp"
+        android:layout_weight="1" android:background="@drawable/bg_meter_off" />
+
+    <TextView
+        android:id="@+id/meterLabel"
+        android:layout_width="56dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:fontFamily="@font/figtree_bold"
+        android:textColor="?attr/scMain"
+        android:textSize="11.5sp" />
+</LinearLayout>

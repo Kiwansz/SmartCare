@@ -1,0 +1,459 @@
+<title>SmartCare UI Design</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap">
+
+<style>
+  /* Layout: gallery of phone screens. Auth screens = blue mesh hero + white bottom sheet. Patients get medical blue, staff get navy. Single light look by choice. */
+  :root {
+    --page: #eef3f9;
+    --card: #ffffff;
+    --ink: #0f1f36;
+    --sub: #66768c;
+    --line: #e1e8f1;
+    --fill: #f2f6fb;
+    --blue: #0880b3;
+    --blue-2: #36b4ea;
+    --sky: #a6e3ff;
+    --deep: #0b2a5b;
+    --soft: #e3f4fc;
+    --btn-top: #1d9bd3;
+    --hero-dark: #065f88;
+    --glow: rgba(8,128,179,.7);
+    --glow2: rgba(8,128,179,.8);
+    --auto-b: #c9e7f6;
+    --auto-bg: #eef8fd;
+    color-scheme: light;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Figtree', system-ui, sans-serif;
+    background: var(--page);
+    color: var(--ink);
+    padding-block: 44px 72px;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+  }
+  .wrap { max-width: 1320px; margin: 0 auto; }
+  .page-head { margin-bottom: 40px; max-width: 680px; }
+  .page-head h1 { font-size: 30px; font-weight: 800; letter-spacing: -0.03em; text-wrap: balance; }
+  .page-head p { margin-top: 8px; font-size: 15px; line-height: 1.55; color: var(--sub); }
+  .label { display: flex; align-items: center; gap: 10px; font-size: 12px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--sub); margin-bottom: 18px; }
+  .label::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+  .board { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 40px 24px; justify-items: center; margin-bottom: 48px; }
+  figure { display: flex; flex-direction: column; align-items: center; gap: 14px; min-width: 0; }
+  figcaption { text-align: center; max-width: 290px; }
+  figcaption b { display: block; font-size: 14px; font-weight: 700; }
+  figcaption span { display: block; margin-top: 3px; font-size: 12.5px; line-height: 1.5; color: var(--sub); }
+
+  .i { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+
+  /* Phone shell */
+  .phone {
+    position: relative; width: 300px; height: 650px; background: var(--card);
+    border-radius: 46px; overflow: hidden; display: flex; flex-direction: column;
+    box-shadow: 0 0 0 1px rgba(15,31,54,.06), 0 30px 60px -24px rgba(11,42,91,.35), 0 8px 18px -10px rgba(11,42,91,.18);
+  }
+  .status { display: flex; justify-content: space-between; align-items: center; height: 22px; padding: 0 8px; font-size: 12px; font-weight: 700; position: relative; z-index: 2; }
+  .status .r { display: flex; gap: 5px; align-items: center; }
+  .status .r s { display: block; width: 3px; border-radius: 1px; background: currentColor; }
+  .status .bat { width: 20px; height: 10px; border: 1.5px solid currentColor; border-radius: 3px; position: relative; opacity: .9; }
+  .status .bat::after { content: ""; position: absolute; inset: 1.5px 5px 1.5px 1.5px; background: currentColor; border-radius: 1px; }
+
+  /* Hero with mesh gradient */
+  .hero {
+    position: relative; color: #fff; padding: 14px 20px 52px; overflow: hidden; isolation: isolate;
+    background:
+      radial-gradient(110% 80% at 0% 0%, var(--blue-2) 0%, transparent 60%),
+      radial-gradient(70% 70% at 100% 0%, var(--sky) 0%, transparent 60%),
+      radial-gradient(90% 90% at 70% 110%, var(--hero-dark) 0%, transparent 70%),
+      var(--blue);
+  }
+  .hero.staff {
+    background:
+      radial-gradient(100% 80% at 0% 0%, #1a4f9e 0%, transparent 60%),
+      radial-gradient(70% 70% at 100% 0%, #3a86dc 0%, transparent 55%),
+      radial-gradient(90% 90% at 60% 110%, #061a3d 0%, transparent 70%),
+      var(--deep);
+  }
+  .hero::before, .hero::after { content: ""; position: absolute; border-radius: 50%; border: 1px solid rgba(255,255,255,.18); z-index: -1; }
+  .hero::before { width: 260px; height: 260px; right: -120px; top: -90px; }
+  .hero::after { width: 170px; height: 170px; right: -70px; top: -40px; }
+  .nav { display: flex; align-items: center; justify-content: space-between; height: 40px; margin-top: 12px; }
+  .glass {
+    width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center;
+    background: rgba(255,255,255,.16); border: 1px solid rgba(255,255,255,.28);
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); color: #fff;
+  }
+  .pill-glass { height: 30px; padding: 0 12px; border-radius: 999px; display: inline-flex; align-items: center; gap: 6px; font-size: 11.5px; font-weight: 700; letter-spacing: .02em; background: rgba(255,255,255,.16); border: 1px solid rgba(255,255,255,.28); }
+  .brand { display: inline-flex; align-items: center; gap: 7px; font-weight: 800; font-size: 14.5px; letter-spacing: -.01em; }
+  .brand i { width: 22px; height: 22px; border-radius: 8px; background: rgba(255,255,255,.95); display: grid; place-items: center; color: var(--blue); }
+  .brand i .i { width: 13px; height: 13px; stroke-width: 2.4; }
+  .hero h2 { font-size: 30px; line-height: 1.06; font-weight: 800; letter-spacing: -.035em; margin-top: 22px; text-wrap: balance; }
+  .hero p { font-size: 13px; line-height: 1.5; margin-top: 8px; color: rgba(255,255,255,.82); max-width: 230px; }
+  .progress { display: flex; gap: 6px; margin-top: 16px; }
+  .progress s { flex: 1; height: 4px; border-radius: 4px; background: rgba(255,255,255,.28); }
+  .progress s.on { background: #fff; }
+
+  /* Bottom sheet */
+  .sheet { position: relative; flex: 1; margin-top: -28px; background: var(--card); border-radius: 30px 30px 0 0; padding: 24px 20px 22px; display: flex; flex-direction: column; z-index: 1; }
+  .sheet::before { content: ""; position: absolute; top: 9px; left: 50%; width: 36px; height: 4px; margin-left: -18px; border-radius: 4px; background: var(--line); }
+
+  /* Inputs with floating labels */
+  .inp { display: flex; align-items: center; gap: 11px; height: 54px; padding: 0 15px; border-radius: 18px; background: var(--fill); border: 1.5px solid transparent; margin-bottom: 10px; }
+  .inp > .i { color: var(--sub); }
+  .inp .tx { flex: 1; min-width: 0; display: grid; gap: 1px; }
+  .inp .tx small { font-size: 10.5px; font-weight: 600; color: var(--sub); }
+  .inp .tx span { font-size: 13.5px; font-weight: 600; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .inp .tx span.ph { color: #a8b5b7; font-weight: 500; }
+  .inp.focus { background: #fff; border-color: var(--blue); box-shadow: 0 0 0 4px var(--soft); }
+  .inp.focus > .i { color: var(--blue); }
+  .inp .caret { display: inline-block; width: 1.5px; height: 14px; background: var(--blue); vertical-align: -2px; margin-left: 1px; }
+  .inp .end { color: var(--sub); }
+
+  .auto-row { display: grid; grid-template-columns: 1.4fr 1fr; gap: 8px; margin-bottom: 10px; }
+  .auto { border-radius: 16px; padding: 10px 12px; background: linear-gradient(180deg, var(--soft), var(--auto-bg)); border: 1px solid var(--auto-b); }
+  .auto small { display: flex; align-items: center; gap: 5px; font-size: 10px; font-weight: 700; color: var(--blue); text-transform: uppercase; letter-spacing: .08em; }
+  .auto small .i { width: 11px; height: 11px; stroke-width: 2.2; }
+  .auto b { display: block; font-size: 13.5px; font-weight: 700; margin-top: 3px; }
+
+  .row { display: flex; justify-content: space-between; align-items: center; margin: 4px 2px 18px; font-size: 12px; font-weight: 600; color: var(--sub); }
+  .tog { display: inline-flex; align-items: center; gap: 8px; }
+  .tog i { width: 30px; height: 18px; border-radius: 999px; background: var(--blue); position: relative; }
+  .tog i::after { content: ""; position: absolute; right: 2px; top: 2px; width: 14px; height: 14px; border-radius: 50%; background: #fff; }
+  .row a { color: var(--blue); font-weight: 700; }
+  .box { display: inline-flex; align-items: center; gap: 8px; font-size: 11.5px; font-weight: 500; color: var(--sub); line-height: 1.4; margin: 2px 2px 16px; }
+  .box i { width: 18px; height: 18px; border-radius: 6px; background: var(--blue); color: #fff; display: grid; place-items: center; flex-shrink: 0; }
+  .box i .i { width: 11px; height: 11px; stroke-width: 3; }
+  .box b { color: var(--ink); font-weight: 700; }
+
+  .btn {
+    height: 54px; border-radius: 999px; display: flex; align-items: center; justify-content: center; gap: 8px;
+    background: linear-gradient(180deg, var(--btn-top), var(--blue)); color: #fff; font-size: 14.5px; font-weight: 700;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.25), 0 12px 22px -10px var(--glow);
+  }
+  .btn.dark { background: linear-gradient(180deg, #183f7f, var(--deep)); box-shadow: inset 0 1px 0 rgba(255,255,255,.18), 0 12px 22px -10px rgba(11,42,91,.7); }
+  .btn .i { width: 17px; height: 17px; stroke-width: 2.2; }
+  .grow { flex: 1; }
+  .foot { text-align: center; font-size: 12.5px; font-weight: 500; color: var(--sub); margin-top: 14px; }
+  .foot b { color: var(--blue); font-weight: 700; }
+  .foot.dark b { color: var(--deep); }
+
+  /* Role picker */
+  .hero.tall { padding-bottom: 70px; }
+  .emblem { position: relative; width: 92px; height: 92px; margin: 26px 0 6px; }
+  .emblem::before, .emblem::after { content: ""; position: absolute; border-radius: 50%; border: 1px solid rgba(255,255,255,.35); }
+  .emblem::before { inset: -14px; }
+  .emblem::after { inset: -30px; border-color: rgba(255,255,255,.15); }
+  .emblem div { position: absolute; inset: 0; border-radius: 30px; background: rgba(255,255,255,.18); border: 1px solid rgba(255,255,255,.4); backdrop-filter: blur(10px); display: grid; place-items: center; }
+  .emblem .i { width: 40px; height: 40px; stroke-width: 1.6; color: #fff; }
+  .choice { display: flex; align-items: center; gap: 13px; padding: 14px; border-radius: 22px; border: 1.5px solid var(--line); margin-bottom: 10px; }
+  .choice .ic { width: 46px; height: 46px; border-radius: 16px; display: grid; place-items: center; background: var(--fill); color: var(--ink); }
+  .choice b { display: block; font-size: 15px; font-weight: 700; letter-spacing: -.01em; }
+  .choice span { display: block; font-size: 12px; color: var(--sub); margin-top: 1px; }
+  .choice .radio { margin-left: auto; width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--line); display: grid; place-items: center; }
+  .choice.on { border-color: var(--blue); background: linear-gradient(180deg, #f5f9ff, #fff); box-shadow: 0 0 0 4px var(--soft); }
+  .choice.on .ic { background: var(--blue); color: #fff; }
+  .choice.on .radio { border-color: var(--blue); background: var(--blue); color: #fff; }
+  .choice .radio .i { width: 12px; height: 12px; stroke-width: 3; }
+
+  /* Password strength */
+  .meter { display: flex; gap: 5px; align-items: center; margin: -2px 2px 12px; }
+  .meter s { flex: 1; height: 5px; border-radius: 4px; background: var(--line); }
+  .meter s.on { background: linear-gradient(90deg, var(--blue-2), var(--blue)); }
+  .meter em { font-style: normal; font-size: 11px; font-weight: 700; color: var(--blue); margin-left: 6px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 2px 0 14px; }
+  .chip { display: inline-flex; align-items: center; gap: 5px; height: 26px; padding: 0 10px; border-radius: 999px; font-size: 11px; font-weight: 600; background: var(--fill); color: var(--sub); }
+  .chip.ok { background: var(--soft); color: var(--blue); }
+  .chip .i { width: 11px; height: 11px; stroke-width: 2.8; }
+
+  /* Forgot password sent state */
+  .sent { display: flex; gap: 11px; align-items: flex-start; padding: 13px; border-radius: 18px; background: var(--soft); margin: 4px 0 16px; }
+  .sent .ic { width: 34px; height: 34px; border-radius: 12px; background: #fff; display: grid; place-items: center; color: var(--blue); flex-shrink: 0; }
+  .sent b { display: block; font-size: 13px; font-weight: 700; }
+  .sent span { display: block; font-size: 11.5px; color: var(--sub); line-height: 1.45; margin-top: 2px; }
+
+  /* Home */
+  .home { padding: 14px 18px 0; background: linear-gradient(180deg, #f2f6fc 0%, #fff 40%); }
+  .hrow { display: flex; align-items: center; gap: 10px; margin-top: 14px; }
+  .av { width: 42px; height: 42px; border-radius: 15px; background: linear-gradient(135deg, var(--sky), var(--blue)); color: #fff; display: grid; place-items: center; font-weight: 800; font-size: 14px; }
+  .hrow small { display: block; font-size: 12px; color: var(--sub); font-weight: 500; }
+  .hrow b { font-size: 17px; font-weight: 800; letter-spacing: -.02em; }
+  .bell { margin-left: auto; width: 40px; height: 40px; border-radius: 14px; background: #fff; border: 1px solid var(--line); display: grid; place-items: center; position: relative; }
+  .bell::after { content: ""; position: absolute; top: 9px; right: 10px; width: 7px; height: 7px; border-radius: 50%; background: #f26b5b; border: 1.5px solid #fff; }
+  .appt {
+    position: relative; margin-top: 18px; border-radius: 28px; padding: 18px; color: #fff; overflow: hidden; isolation: isolate;
+    background:
+      radial-gradient(90% 90% at 0% 0%, var(--blue-2) 0%, transparent 60%),
+      radial-gradient(70% 80% at 100% 0%, var(--sky) 0%, transparent 55%),
+      var(--blue);
+    box-shadow: 0 18px 30px -16px var(--glow2);
+  }
+  .appt::after { content: ""; position: absolute; width: 180px; height: 180px; right: -70px; bottom: -90px; border-radius: 50%; border: 1px solid rgba(255,255,255,.22); z-index: -1; }
+  .appt .top { display: flex; justify-content: space-between; align-items: center; }
+  .appt small { font-size: 10.5px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; opacity: .85; }
+  .appt .day { font-size: 28px; font-weight: 800; letter-spacing: -.035em; margin-top: 10px; line-height: 1; }
+  .appt .time { display: inline-flex; align-items: center; gap: 6px; margin-top: 10px; font-size: 12.5px; font-weight: 600; }
+  .appt .doc { display: flex; align-items: center; gap: 10px; margin-top: 16px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,.22); }
+  .appt .doc i { width: 32px; height: 32px; border-radius: 11px; background: rgba(255,255,255,.95); color: var(--blue); display: grid; place-items: center; font-style: normal; font-weight: 800; font-size: 11px; }
+  .appt .doc b { display: block; font-size: 13px; font-weight: 700; }
+  .appt .doc span { display: block; font-size: 11.5px; opacity: .8; }
+  .code { margin-left: auto; text-align: right; }
+  .code span { font-size: 9.5px !important; letter-spacing: .1em; text-transform: uppercase; }
+  .code b { font-size: 15px !important; letter-spacing: .12em; font-variant-numeric: tabular-nums; }
+  .bento { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
+  .tile { border-radius: 22px; padding: 12px 13px; background: #fff; border: 1px solid var(--line); display: grid; gap: 10px; }
+  .tile .ic { width: 36px; height: 36px; border-radius: 12px; display: grid; place-items: center; background: var(--soft); color: var(--blue); }
+  .tile b { font-size: 13px; font-weight: 700; line-height: 1.25; }
+  .tile span { display: block; font-size: 11px; color: var(--sub); font-weight: 500; margin-top: 2px; }
+  .tile.ai { background: linear-gradient(160deg, var(--deep), #15428a); border: none; color: #fff; }
+  .tile.ai .ic { background: rgba(255,255,255,.14); color: #fff; }
+  .tile.ai span { color: rgba(255,255,255,.7); }
+  .dock {
+    position: absolute; left: 16px; right: 16px; bottom: 16px; height: 62px; border-radius: 999px;
+    background: rgba(15,31,54,.92); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    display: flex; align-items: center; justify-content: space-around; padding: 0 8px; color: rgba(255,255,255,.55);
+  }
+  .dock .on { display: inline-flex; align-items: center; gap: 7px; height: 44px; padding: 0 16px; border-radius: 999px; background: #fff; color: var(--ink); font-size: 12.5px; font-weight: 700; }
+  .dock .on .i { color: var(--blue); }
+
+  .note { background: var(--card); border: 1px solid var(--line); border-radius: 24px; padding: 22px 24px; display: grid; gap: 12px; }
+  .note h3 { font-size: 15px; font-weight: 800; }
+  .note ul { list-style: none; display: grid; gap: 8px; }
+  .note li { font-size: 13.5px; line-height: 1.55; color: var(--sub); padding-left: 16px; position: relative; max-width: 90ch; }
+  .note li::before { content: ""; position: absolute; left: 0; top: 8px; width: 6px; height: 6px; border-radius: 50%; background: var(--blue); }
+  .note li b { color: var(--ink); }
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="back" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></symbol>
+  <symbol id="arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  <symbol id="user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1"/></symbol>
+  <symbol id="lock" viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="10" rx="3"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></symbol>
+  <symbol id="mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="3.5"/><path d="M3.5 7.5l8.5 6 8.5-6"/></symbol>
+  <symbol id="eye" viewBox="0 0 24 24"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+  <symbol id="cal" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15.5" rx="3.5"/><path d="M8 3v4M16 3v4M3.5 10h17"/></symbol>
+  <symbol id="check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></symbol>
+  <symbol id="staff" viewBox="0 0 24 24"><rect x="3.5" y="7" width="17" height="13" rx="3.5"/><path d="M9 7V5.5A1.5 1.5 0 0 1 10.5 4h3A1.5 1.5 0 0 1 15 5.5V7M12 11v5M9.5 13.5h5"/></symbol>
+  <symbol id="home" viewBox="0 0 24 24"><path d="M4 11l8-7 8 7v8.5a1.5 1.5 0 0 1-1.5 1.5H15v-6H9v6H5.5A1.5 1.5 0 0 1 4 19.5z"/></symbol>
+  <symbol id="plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="bell" viewBox="0 0 24 24"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20a2 2 0 0 0 4 0"/></symbol>
+  <symbol id="chat" viewBox="0 0 24 24"><path d="M4 6.5A3.5 3.5 0 0 1 7.5 3h9A3.5 3.5 0 0 1 20 6.5v6a3.5 3.5 0 0 1-3.5 3.5H10l-5 4v-4.3A3.5 3.5 0 0 1 4 12.5z"/><path d="M9 9.5h.01M12 9.5h.01M15 9.5h.01"/></symbol>
+  <symbol id="file" viewBox="0 0 24 24"><path d="M7 3h7l5 5v11.5A1.5 1.5 0 0 1 17.5 21h-10A1.5 1.5 0 0 1 6 19.5v-15A1.5 1.5 0 0 1 7 3z"/><path d="M14 3v5h5M9.5 13h5M9.5 16.5h5"/></symbol>
+  <symbol id="loop" viewBox="0 0 24 24"><path d="M4 12a8 8 0 0 1 14-5.3L20 9"/><path d="M20 4v5h-5"/><path d="M20 12a8 8 0 0 1-14 5.3L4 15"/><path d="M4 20v-5h5"/></symbol>
+  <symbol id="pulse" viewBox="0 0 24 24"><path d="M12 20s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.2a4.3 4.3 0 0 1 7.5 2.6C19.5 15.4 12 20 12 20z"/><path d="M3.5 12.5h4l1.6-2.8 2.6 5 1.6-2.2h7.2"/></symbol>
+  <symbol id="clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></symbol>
+  <symbol id="phone" viewBox="0 0 24 24"><path d="M6.5 3.5h3l1.5 4-2 1.5a11 11 0 0 0 6 6l1.5-2 4 1.5v3a2 2 0 0 1-2 2A16 16 0 0 1 4.5 5.5a2 2 0 0 1 2-2z"/></symbol>
+  <symbol id="id" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="3"/><circle cx="9" cy="11" r="2.2"/><path d="M5.8 16a3.4 3.4 0 0 1 6.4 0M14.5 10h4M14.5 13.5h3"/></symbol>
+  <symbol id="send" viewBox="0 0 24 24"><path d="M21 3L10 14M21 3l-7 18-4-7-7-4z"/></symbol>
+</svg>
+
+<div class="wrap">
+  <header class="page-head">
+    <h1>SmartCare User Account, final UI design</h1>
+    <p>A fresher take on the same screens. Each login screen has a blue gradient header with a white sheet that slides up over it. Patient screens use bright medical blue and staff screens use navy, so it's always clear which side of the app you're on.</p>
+  </header>
+
+  <div class="label">Patient</div>
+  <div class="board">
+
+    <!-- 1 Role picker -->
+    <figure>
+      <div class="phone">
+        <div class="hero tall">
+          <div class="status"><span>9:30</span><span class="r"><s style="height:4px"></s><s style="height:7px"></s><s style="height:10px"></s><span class="bat"></span></span></div>
+          <div class="nav"><span class="brand"><i><svg class="i"><use href="#pulse"/></svg></i>SmartCare</span></div>
+          <div class="emblem"><div><svg class="i"><use href="#pulse"/></svg></div></div>
+          <h2>Your clinic, in your pocket</h2>
+          <p>Book visits, get reminders and follow-ups in one place.</p>
+        </div>
+        <div class="sheet">
+          <div class="choice on"><div class="ic"><svg class="i"><use href="#user"/></svg></div><div><b>I'm a patient</b><span>Book and manage visits</span></div><div class="radio"><svg class="i"><use href="#check"/></svg></div></div>
+          <div class="choice"><div class="ic"><svg class="i"><use href="#staff"/></svg></div><div><b>I'm clinic staff</b><span>Doctors, nurses, reception</span></div><div class="radio"></div></div>
+          <div class="grow"></div>
+          <div class="btn">Continue <svg class="i"><use href="#arrow"/></svg></div>
+        </div>
+      </div>
+      <figcaption><b>1. Role picker</b><span>Pick a side, then Continue. Patient is selected here.</span></figcaption>
+    </figure>
+
+    <!-- 2 Patient login -->
+    <figure>
+      <div class="phone">
+        <div class="hero">
+          <div class="status"><span>9:30</span><span class="r"><s style="height:4px"></s><s style="height:7px"></s><s style="height:10px"></s><span class="bat"></span></span></div>
+          <div class="nav"><span class="glass"><svg class="i"><use href="#back"/></svg></span><span class="brand"><i><svg class="i"><use href="#pulse"/></svg></i>SmartCare</span><span style="width:38px"></span></div>
+          <h2>Welcome back</h2>
+          <p>Log in to see your appointments.</p>
+        </div>
+        <div class="sheet">
+          <div class="inp focus"><svg class="i"><use href="#id"/></svg><div class="tx"><small>IC number</small><span>010203-14-5677<i class="caret"></i></span></div></div>
+          <div class="inp"><svg class="i"><use href="#lock"/></svg><div class="tx"><small>Password</small><span>••••••••••</span></div><svg class="i end"><use href="#eye"/></svg></div>
+          <div class="row"><span class="tog"><i></i>Remember me</span><a>Forgot password?</a></div>
+          <div class="btn">Log in <svg class="i"><use href="#arrow"/></svg></div>
+          <div class="grow"></div>
+          <div class="foot">New to SmartCare? <b>Create an account</b></div>
+        </div>
+      </div>
+      <figcaption><b>2. Patient login</b><span>Patients log in with their IC number (dashes optional) and password. The active field glows.</span></figcaption>
+    </figure>
+
+    <!-- 3a Sign up step 1 -->
+    <figure>
+      <div class="phone">
+        <div class="hero">
+          <div class="status"><span>9:30</span><span class="r"><s style="height:4px"></s><s style="height:7px"></s><s style="height:10px"></s><span class="bat"></span></span></div>
+          <div class="nav"><span class="glass"><svg class="i"><use href="#back"/></svg></span><span class="pill-glass">Step 1 of 2</span></div>
+          <h2>About you</h2>
+          <div class="progress"><s class="on"></s><s></s></div>
+        </div>
+        <div class="sheet">
+          <div class="inp"><svg class="i"><use href="#user"/></svg><div class="tx"><small>Full name</small><span>Ahmad Hafiz bin Rahman</span></div></div>
+          <div class="inp focus"><svg class="i"><use href="#id"/></svg><div class="tx"><small>IC number</small><span>010203-14-5677<i class="caret"></i></span></div></div>
+          <div class="auto-row">
+            <div class="auto"><small><svg class="i"><use href="#check"/></svg>From IC</small><b>3 Feb 2001</b></div>
+            <div class="auto"><small><svg class="i"><use href="#check"/></svg>From IC</small><b>Male</b></div>
+          </div>
+          <div class="inp"><svg class="i"><use href="#phone"/></svg><div class="tx"><small>Phone number</small><span class="ph">012-345 6789</span></div></div>
+          <div class="grow"></div>
+          <div class="btn">Next <svg class="i"><use href="#arrow"/></svg></div>
+        </div>
+      </div>
+      <figcaption><b>3a. Sign up, step 1</b><span>Date of birth and gender fill in by themselves once the IC number is complete.</span></figcaption>
+    </figure>
+
+    <!-- 3b Sign up step 2 -->
+    <figure>
+      <div class="phone">
+        <div class="hero">
+          <div class="status"><span>9:30</span><span class="r"><s style="height:4px"></s><s style="height:7px"></s><s style="height:10px"></s><span class="bat"></span></span></div>
+          <div class="nav"><span class="glass"><svg class="i"><use href="#back"/></svg></span><span class="pill-glass">Step 2 of 2</span></div>
+          <h2>Secure your account</h2>
+          <div class="progress"><s class="on"></s><s class="on"></s></div>
+        </div>
+        <div class="sheet">
+          <div class="inp"><svg class="i"><use href="#mail"/></svg><div class="tx"><small>Email</small><span>hafiz@gmail.com</span></div></div>
+          <div class="inp focus"><svg class="i"><use href="#lock"/></svg><div class="tx"><small>Password</small><span>••••••••••<i class="caret"></i></span></div><svg class="i end"><use href="#eye"/></svg></div>
+          <div class="meter"><s class="on"></s><s class="on"></s><s class="on"></s><s></s><em>Good</em></div>
+          <div class="inp"><svg class="i"><use href="#lock"/></svg><div class="tx"><small>Confirm password</small><span class="ph">Type it again</span></div></div>
+          <div class="box"><i><svg class="i"><use href="#check"/></svg></i><span>I agree to the clinic's <b>terms</b> and <b>privacy policy</b></span></div>
+          <div class="grow"></div>
+          <div class="btn">Create account</div>
+        </div>
+      </div>
+      <figcaption><b>3b. Sign up, step 2</b><span>Splitting sign up into two short steps feels lighter than one long form.</span></figcaption>
+    </figure>
+
+    <!-- 4 Forgot -->
+    <figure>
+      <div class="phone">
+        <div class="hero">
+          <div class="status"><span>9:30</span><span class="r"><s style="height:4px"></s><s style="height:7px"></s><s style="height:10px"></s><span class="bat"></span></span></div>
+          <div class="nav"><span class="glass"><svg class="i"><use href="#back"/></svg></span></div>
+          <h2>Forgot your password?</h2>
+          <p>We'll email you a link to set a new one.</p>
+        </div>
+        <div class="sheet">
+          <div class="inp focus"><svg class="i"><use href="#mail"/></svg><div class="tx"><small>Email</small><span>hafiz@gmail.com</span></div></div>
+          <div class="sent"><div class="ic"><svg class="i"><use href="#send"/></svg></div><div><b>Link sent</b><span>Check your inbox. The link works for one hour.</span></div></div>
+          <div class="btn">Resend link</div>
+          <div class="grow"></div>
+          <div class="foot">Remembered it? <b>Back to log in</b></div>
+        </div>
+      </div>
+      <figcaption><b>4. Forgot password</b><span>Shown after sending, so the user knows it worked. Shared by patients and staff.</span></figcaption>
+    </figure>
+
+    <!-- 7 Home -->
+    <figure>
+      <div class="phone">
+        <div class="home" style="flex:1">
+          <div class="status"><span>9:30</span><span class="r"><s style="height:4px"></s><s style="height:7px"></s><s style="height:10px"></s><span class="bat"></span></span></div>
+          <div class="hrow"><div class="av">AH</div><div><small>Good morning</small><b>Ahmad Hafiz</b></div><div class="bell"><svg class="i"><use href="#bell"/></svg></div></div>
+          <div class="appt">
+            <div class="top"><small>Next appointment</small><span class="pill-glass" style="height:26px">Confirmed</span></div>
+            <div class="day">Tue, 10 Nov</div>
+            <div class="time"><svg class="i" style="width:15px;height:15px"><use href="#clock"/></svg>9:30 AM · General check-up</div>
+            <div class="doc"><i>DA</i><div><b>Dr. Aisyah</b><span>General doctor</span></div><div class="code"><span>Check-in</span><b>4F7K</b></div></div>
+          </div>
+          <div class="bento">
+            <div class="tile"><div class="ic"><svg class="i"><use href="#plus"/></svg></div><div><b>Book visit</b><span>Pick a slot</span></div></div>
+            <div class="tile ai"><div class="ic"><svg class="i"><use href="#chat"/></svg></div><div><b>Ask SmartCare</b><span>Chat assistant</span></div></div>
+            <div class="tile"><div class="ic"><svg class="i"><use href="#loop"/></svg></div><div><b>Follow-ups</b><span>1 due this week</span></div></div>
+            <div class="tile"><div class="ic"><svg class="i"><use href="#file"/></svg></div><div><b>My records</b><span>Prescriptions, MC</span></div></div>
+          </div>
+        </div>
+        <div class="dock">
+          <span class="on"><svg class="i"><use href="#home"/></svg>Home</span>
+          <svg class="i"><use href="#cal"/></svg>
+          <svg class="i"><use href="#file"/></svg>
+          <svg class="i"><use href="#user"/></svg>
+        </div>
+      </div>
+      <figcaption><b>7. Home</b><span>Next visit with its check-in code, shortcuts to the other modules including the chatbot, and a floating tab bar. Sample data.</span></figcaption>
+    </figure>
+  </div>
+
+  <div class="label">Staff</div>
+  <div class="board">
+
+    <!-- 5 Staff login -->
+    <figure style="--blue:#0b2a5b;--blue-2:#3a86dc;--sky:#9fd0ff;--soft:#e5effd;--btn-top:#183f7f;--hero-dark:#061a3d;--glow:rgba(11,42,91,.7);--glow2:rgba(11,42,91,.8);--auto-b:#c8dbf6;--auto-bg:#eef5fe">
+      <div class="phone">
+        <div class="hero staff">
+          <div class="status"><span>9:30</span><span class="r"><s style="height:4px"></s><s style="height:7px"></s><s style="height:10px"></s><span class="bat"></span></span></div>
+          <div class="nav"><span class="glass"><svg class="i"><use href="#back"/></svg></span><span class="pill-glass"><svg class="i" style="width:13px;height:13px"><use href="#staff"/></svg>Staff portal</span></div>
+          <h2>Good to see you</h2>
+          <p>Use the email and password your Admin sent you.</p>
+        </div>
+        <div class="sheet">
+          <div class="inp"><svg class="i"><use href="#mail"/></svg><div class="tx"><small>Work email</small><span class="ph">name@clinic.com</span></div></div>
+          <div class="inp"><svg class="i"><use href="#lock"/></svg><div class="tx"><small>Password</small><span class="ph">Enter your password</span></div><svg class="i end"><use href="#eye"/></svg></div>
+          <div class="row"><span class="tog"><i style="background:var(--deep)"></i>Remember me</span><a style="color:var(--deep)">Forgot password?</a></div>
+          <div class="btn dark">Log in <svg class="i"><use href="#arrow"/></svg></div>
+          <div class="grow"></div>
+          <div class="foot dark">No account yet? <b>Ask your Admin</b></div>
+        </div>
+      </div>
+      <figcaption><b>5. Staff login</b><span>Navy tells staff they're on the clinic side. No sign up link.</span></figcaption>
+    </figure>
+
+    <!-- 6 Change password -->
+    <figure style="--blue:#0b2a5b;--blue-2:#3a86dc;--sky:#9fd0ff;--soft:#e5effd;--btn-top:#183f7f;--hero-dark:#061a3d;--glow:rgba(11,42,91,.7);--glow2:rgba(11,42,91,.8);--auto-b:#c8dbf6;--auto-bg:#eef5fe">
+      <div class="phone">
+        <div class="hero staff">
+          <div class="status"><span>9:30</span><span class="r"><s style="height:4px"></s><s style="height:7px"></s><s style="height:10px"></s><span class="bat"></span></span></div>
+          <div class="nav"><span class="brand"><i style="color:var(--deep)"><svg class="i"><use href="#pulse"/></svg></i>SmartCare</span><span class="pill-glass">First login</span></div>
+          <h2>Make it yours</h2>
+          <p>Your temporary password expires in 24 hours. Set your own now.</p>
+        </div>
+        <div class="sheet">
+          <div class="inp"><svg class="i"><use href="#lock"/></svg><div class="tx"><small>Temporary password</small><span>••••••••</span></div></div>
+          <div class="inp focus"><svg class="i"><use href="#lock"/></svg><div class="tx"><small>New password</small><span>••••••••••••<i class="caret"></i></span></div><svg class="i end"><use href="#eye"/></svg></div>
+          <div class="meter"><s class="on"></s><s class="on"></s><s class="on"></s><s class="on"></s><em>Strong</em></div>
+          <div class="chips">
+            <span class="chip ok"><svg class="i"><use href="#check"/></svg>8+ characters</span>
+            <span class="chip ok"><svg class="i"><use href="#check"/></svg>Uppercase</span>
+            <span class="chip ok"><svg class="i"><use href="#check"/></svg>Number</span>
+            <span class="chip">Passwords match</span>
+          </div>
+          <div class="inp"><svg class="i"><use href="#lock"/></svg><div class="tx"><small>Confirm new password</small><span class="ph">Type it again</span></div></div>
+          <div class="grow"></div>
+          <div class="btn dark">Save and continue</div>
+        </div>
+      </div>
+      <figcaption><b>6. Change password</b><span>Forced on a staff member's first login. Rules tick off as you type.</span></figcaption>
+    </figure>
+  </div>
+
+  <section class="note">
+    <h3>Design notes</h3>
+    <ul>
+      <li><b>Sheet layout:</b> each login screen has a blue gradient header, and the form sits on a white sheet that overlaps it.</li>
+      <li><b>Two shades:</b> Clinic Sky blue for patients, navy for staff.</li>
+      <li><b>Floating labels:</b> the field name sits inside the box, so the form is shorter.</li>
+      <li><b>Two-step sign up:</b> personal details first, then email and password. Date of birth and gender show as "From IC" cards.</li>
+      <li><b>Home:</b> a large next-appointment card with the check-in code, a chatbot shortcut, and a floating tab bar.</li>
+      <li><b>For Android:</b> every element here can be built with standard Material components (TextInputLayout, MaterialButton, BottomSheet-style CardView).</li>
+    </ul>
+  </section>
+</div>

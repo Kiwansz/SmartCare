@@ -1,183 +1,256 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!-- 3. Sign up in two steps. Step 1: name, IC (+ "From IC" cards), phone.
+     Step 2: email, password + strength, confirm, terms. RegisterActivity shows one at a time. -->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:paddingStart="24dp"
-    android:paddingEnd="24dp"
-    tools:context=".RegisterActivity">
+    android:fillViewport="true"
+    tools:context=".RegisterActivity"
+    tools:ignore="NestedWeights">
 
-    <include layout="@layout/view_top_bar" />
-
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:fillViewport="true">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <include layout="@layout/view_auth_header" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginTop="-28dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_sheet"
             android:orientation="vertical"
-            android:paddingBottom="24dp">
+            android:paddingStart="20dp"
+            android:paddingTop="9dp"
+            android:paddingEnd="20dp"
+            android:paddingBottom="22dp">
 
-            <TextView
-                style="@style/SmartCare.Title"
+            <View
+                android:layout_width="36dp"
+                android:layout_height="4dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="11dp"
+                android:background="@drawable/bg_grab_handle" />
+
+            <!-- ===== Step 1 ===== -->
+            <LinearLayout
+                android:id="@+id/step1"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="@string/register_title" />
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
 
-            <TextView
-                style="@style/SmartCare.Subtitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:text="@string/register_subtitle" />
-
-            <TextView
-                style="@style/SmartCare.Label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/label_full_name" />
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tilFullName"
-                style="@style/SmartCare.Input"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etFullName"
-                    style="@style/SmartCare.EditText"
+                <com.example.smartcare.ui.SmartField
+                    android:id="@+id/fieldFullName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/hint_full_name"
-                    android:imeOptions="actionNext"
-                    android:inputType="textPersonName|textCapWords" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:inputType="textPersonName|textCapWords"
+                    app:sfIcon="@drawable/ic_sc_user"
+                    app:sfLabel="@string/field_full_name"
+                    app:sfPlaceholder="@string/hint_full_name" />
 
-            <TextView
-                style="@style/SmartCare.Label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/label_ic_number" />
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tilIcNumber"
-                style="@style/SmartCare.Input"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etIcNumber"
-                    style="@style/SmartCare.EditText"
+                <com.example.smartcare.ui.SmartField
+                    android:id="@+id/fieldIc"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/hint_ic_number"
-                    android:imeOptions="actionNext"
-                    android:inputType="phone"
+                    android:layout_marginTop="4dp"
                     android:digits="0123456789-"
-                    android:maxLength="14" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:inputType="phone"
+                    android:maxLength="14"
+                    app:sfHelper="@string/helper_ic"
+                    app:sfIcon="@drawable/ic_sc_id"
+                    app:sfLabel="@string/field_ic"
+                    app:sfPlaceholder="@string/hint_ic_example" />
 
-            <TextView
-                style="@style/SmartCare.Label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/label_phone" />
+                <TextView
+                    android:id="@+id/linkIcLogin"
+                    style="@style/SmartCare.Text.Link"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:padding="4dp"
+                    android:text="@string/link_login_instead"
+                    android:visibility="gone" />
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tilPhone"
-                style="@style/SmartCare.Input"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etPhone"
-                    style="@style/SmartCare.EditText"
+                <!-- Read-only "From IC" date of birth -->
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/hint_phone"
-                    android:imeOptions="actionNext"
-                    android:inputType="phone" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:layout_marginTop="6dp"
+                    android:background="@drawable/bg_ic_card"
+                    android:orientation="vertical"
+                    android:paddingStart="13dp"
+                    android:paddingTop="10dp"
+                    android:paddingEnd="13dp"
+                    android:paddingBottom="11dp">
 
-            <TextView
-                style="@style/SmartCare.Label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/label_email" />
+                    <TextView
+                        style="@style/SmartCare.Text.FromIc"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/from_ic" />
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tilEmail"
-                style="@style/SmartCare.Input"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                    <TextView
+                        android:id="@+id/tvDob"
+                        style="@style/SmartCare.Text.FromIcValue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/from_ic_dob_placeholder" />
+                </LinearLayout>
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etEmail"
-                    style="@style/SmartCare.EditText"
+                <!-- Gender: optional, chosen by the user (tap again to clear) -->
+                <TextView
+                    style="@style/SmartCare.Text.Sub"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginTop="12dp"
+                    android:fontFamily="@font/figtree_semibold"
+                    android:text="@string/label_gender_optional" />
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/hint_email"
-                    android:imeOptions="actionNext"
-                    android:inputType="textEmailAddress" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:layout_marginTop="6dp"
+                    android:layout_marginBottom="8dp"
+                    android:orientation="horizontal">
 
-            <TextView
-                style="@style/SmartCare.Label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/label_password" />
+                    <TextView
+                        android:id="@+id/genderMale"
+                        style="@style/SmartCare.GenderOption"
+                        android:layout_marginEnd="8dp"
+                        android:text="@string/gender_male" />
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tilPassword"
-                style="@style/SmartCare.Input"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:endIconMode="password_toggle">
+                    <TextView
+                        android:id="@+id/genderFemale"
+                        style="@style/SmartCare.GenderOption"
+                        android:text="@string/gender_female" />
+                </LinearLayout>
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etPassword"
-                    style="@style/SmartCare.EditText"
+                <com.example.smartcare.ui.SmartField
+                    android:id="@+id/fieldPhone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/hint_password_new"
                     android:imeOptions="actionDone"
-                    android:inputType="textPassword" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:inputType="phone"
+                    app:sfIcon="@drawable/ic_sc_phone"
+                    app:sfLabel="@string/field_phone"
+                    app:sfPlaceholder="@string/hint_phone_example" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnRegister"
-                style="@style/SmartCare.Button"
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:minHeight="24dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnNext"
+                    style="@style/SmartCare.Button.Pill"
+                    android:layout_width="match_parent"
+                    android:text="@string/action_next"
+                    app:icon="@drawable/ic_sc_arrow" />
+            </LinearLayout>
+
+            <!-- ===== Step 2 ===== -->
+            <LinearLayout
+                android:id="@+id/step2"
                 android:layout_width="match_parent"
-                android:layout_marginTop="32dp"
-                android:text="@string/register_button" />
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <com.example.smartcare.ui.SmartField
+                    android:id="@+id/fieldEmail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textEmailAddress"
+                    app:sfIcon="@drawable/ic_sc_mail"
+                    app:sfLabel="@string/field_email"
+                    app:sfPlaceholder="@string/hint_email_example" />
+
+                <TextView
+                    android:id="@+id/linkEmailLogin"
+                    style="@style/SmartCare.Text.Link"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:padding="4dp"
+                    android:text="@string/link_login_instead"
+                    android:visibility="gone" />
+
+                <com.example.smartcare.ui.SmartField
+                    android:id="@+id/fieldPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    app:sfIcon="@drawable/ic_sc_lock"
+                    app:sfLabel="@string/field_password"
+                    app:sfPassword="true"
+                    app:sfPlaceholder="@string/hint_password_new" />
+
+                <include
+                    android:id="@+id/meter"
+                    layout="@layout/view_strength_meter" />
+
+                <com.example.smartcare.ui.SmartField
+                    android:id="@+id/fieldConfirm"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:imeOptions="actionDone"
+                    app:sfIcon="@drawable/ic_sc_lock"
+                    app:sfLabel="@string/field_confirm_password"
+                    app:sfPassword="true"
+                    app:sfPlaceholder="@string/hint_type_again" />
+
+                <com.google.android.material.checkbox.MaterialCheckBox
+                    android:id="@+id/cbTerms"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="-6dp"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/terms_text"
+                    android:textColor="@color/ink_sub"
+                    android:textSize="12.5sp"
+                    app:buttonTint="?attr/scMain" />
+
+                <TextView
+                    android:id="@+id/tvTermsError"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="14dp"
+                    android:text="@string/error_terms"
+                    android:textColor="@color/danger"
+                    android:textSize="11.5sp"
+                    android:visibility="gone" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:minHeight="24dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnCreate"
+                    style="@style/SmartCare.Button.Pill"
+                    android:layout_width="match_parent"
+                    android:text="@string/action_create_account" />
+            </LinearLayout>
 
             <ProgressBar
                 android:id="@+id/progress"
-                android:layout_width="28dp"
-                android:layout_height="28dp"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="12dp"
                 android:visibility="gone" />
         </LinearLayout>
-    </ScrollView>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/sc_silver_light" />
-
-    <TextView
-        android:id="@+id/tvFooter"
-        style="@style/SmartCare.Footer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:background="?attr/selectableItemBackground" />
-</LinearLayout>
+    </LinearLayout>
+</ScrollView>

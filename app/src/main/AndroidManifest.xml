@@ -12,7 +12,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.SmartCare">
+        android:theme="@style/Theme.SmartCare.Patient">
         <!-- 1. Role picker (first screen) -->
         <activity
             android:name=".RoleActivity"
@@ -38,19 +38,37 @@
             android:name=".ForgotPasswordActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
-        <!-- 6. Change password -->
+        <!-- 4b. Forgot password: enter the emailed code (theme follows the caller) -->
+        <activity
+            android:name=".ResetCodeActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <!-- 5. Staff login (navy) -->
+        <activity
+            android:name=".StaffLoginActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SmartCare.Staff"
+            android:windowSoftInputMode="adjustResize" />
+        <!-- 6. Change password (navy, staff first login) -->
         <activity
             android:name=".ChangePasswordActivity"
             android:exported="false"
+            android:theme="@style/Theme.SmartCare.Staff"
             android:windowSoftInputMode="adjustResize" />
-        <!-- 7. Home -->
+        <!-- 7. Patient home -->
         <activity
             android:name=".HomeActivity"
             android:exported="false" />
+        <!-- Patient profile -->
         <activity
-            android:name=".MainActivity"
+            android:name=".ProfileActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
+        <!-- 8. Staff home placeholder (navy) -->
+        <activity
+            android:name=".StaffHomeActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SmartCare.Staff" />
     </application>
 
 </manifest>

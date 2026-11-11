@@ -1,86 +1,157 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme: always light (design is white & silver). -->
+    <!-- Base theme: light only (the design has no dark mode). System bars are set up
+         by BaseActivity (edge-to-edge), so they are not configured here. -->
     <style name="Base.Theme.SmartCare" parent="Theme.Material3.Light.NoActionBar">
-        <item name="colorPrimary">@color/sc_text</item>
         <item name="colorOnPrimary">@color/white</item>
-        <item name="colorSecondary">@color/sc_text_secondary</item>
-        <item name="colorError">@color/sc_error</item>
-        <item name="colorSurface">@color/sc_background</item>
-        <item name="colorOnSurface">@color/sc_text</item>
-        <item name="android:colorBackground">@color/sc_background</item>
-        <item name="android:windowBackground">@color/sc_background</item>
-        <item name="android:statusBarColor">@color/sc_background</item>
-        <item name="android:navigationBarColor">@color/sc_background</item>
-        <item name="android:windowLightStatusBar">true</item>
-        <item name="android:textColorPrimary">@color/sc_text</item>
-        <item name="android:textColorSecondary">@color/sc_text_secondary</item>
+        <item name="colorError">@color/danger</item>
+        <item name="colorSurface">@color/white</item>
+        <item name="colorOnSurface">@color/ink</item>
+        <item name="android:colorBackground">@color/white</item>
+        <item name="android:windowBackground">@color/white</item>
+        <item name="android:textColorPrimary">@color/ink</item>
+        <item name="android:textColorSecondary">@color/ink_sub</item>
+        <!-- Only android:fontFamily here. A theme-level app:fontFamily would override every
+             view's android:fontFamily (e.g. @font/figtree_bold) in AppCompat text views. -->
+        <item name="android:fontFamily">@font/figtree</item>
     </style>
 
     <style name="Theme.SmartCare" parent="Base.Theme.SmartCare" />
 
-    <!-- Rounded silver-outlined input box -->
-    <style name="SmartCare.Input" parent="Widget.Material3.TextInputLayout.OutlinedBox">
-        <item name="boxCornerRadiusTopStart">12dp</item>
-        <item name="boxCornerRadiusTopEnd">12dp</item>
-        <item name="boxCornerRadiusBottomStart">12dp</item>
-        <item name="boxCornerRadiusBottomEnd">12dp</item>
-        <item name="boxStrokeColor">@color/sc_text_secondary</item>
-        <item name="boxStrokeWidth">1dp</item>
-        <item name="boxStrokeWidthFocused">1.5dp</item>
-        <item name="startIconTint">@color/sc_hint</item>
-        <item name="endIconTint">@color/sc_hint</item>
-        <item name="hintEnabled">false</item>
-        <item name="android:layout_marginTop">6dp</item>
+    <!-- Patient screens: Clinic Sky (application default) -->
+    <style name="Theme.SmartCare.Patient" parent="Theme.SmartCare">
+        <item name="colorPrimary">@color/sky_main</item>
+        <item name="colorSecondary">@color/sky_accent</item>
+        <item name="colorControlActivated">@color/sky_main</item>
+        <item name="scMain">@color/sky_main</item>
+        <item name="scAccent">@color/sky_accent</item>
+        <item name="scSoft">@color/sky_soft</item>
+        <item name="scBtnTop">@color/sky_btn_top</item>
+        <item name="scIcCardBg">@color/sky_ic_card_bg</item>
+        <item name="scIcCardBorder">@color/sky_ic_card_border</item>
+        <item name="scHeaderBackground">@drawable/bg_header_patient</item>
     </style>
 
-    <style name="SmartCare.EditText" parent="">
-        <item name="android:textSize">15sp</item>
-        <item name="android:textColor">@color/sc_text</item>
-        <item name="android:textColorHint">@color/sc_hint</item>
-        <item name="android:maxLines">1</item>
+    <!-- Staff screens: Navy (set per activity in the manifest) -->
+    <style name="Theme.SmartCare.Staff" parent="Theme.SmartCare.Patient">
+        <item name="colorPrimary">@color/navy_main</item>
+        <item name="colorSecondary">@color/navy_accent</item>
+        <item name="colorControlActivated">@color/navy_main</item>
+        <item name="scMain">@color/navy_main</item>
+        <item name="scAccent">@color/navy_accent</item>
+        <item name="scSoft">@color/navy_soft</item>
+        <item name="scBtnTop">@color/navy_btn_top</item>
+        <item name="scIcCardBg">@color/navy_ic_card_bg</item>
+        <item name="scIcCardBorder">@color/navy_ic_card_border</item>
+        <item name="scHeaderBackground">@drawable/bg_header_staff</item>
     </style>
 
-    <!-- Field label above each input -->
-    <style name="SmartCare.Label" parent="">
+    <!-- Header text -->
+    <style name="SmartCare.Text.Hero" parent="">
+        <item name="android:textSize">29sp</item>
+        <item name="android:fontFamily">@font/figtree_bold</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:letterSpacing">-0.03</item>
+        <item name="android:lineSpacingMultiplier">0.95</item>
+    </style>
+
+    <style name="SmartCare.Text.HeroSub" parent="">
+        <item name="android:textSize">13.5sp</item>
+        <item name="android:textColor">@color/hero_subtitle</item>
+        <item name="android:lineSpacingMultiplier">1.15</item>
+    </style>
+
+    <!-- Sheet text -->
+    <style name="SmartCare.Text.Sub" parent="">
+        <item name="android:textSize">12.5sp</item>
+        <item name="android:textColor">@color/ink_sub</item>
+    </style>
+
+    <style name="SmartCare.Text.Link" parent="">
+        <item name="android:textSize">12.5sp</item>
+        <item name="android:fontFamily">@font/figtree_bold</item>
+        <item name="android:textColor">?attr/scMain</item>
+    </style>
+
+    <!-- SmartField: floating label (collapsed hint) and value/placeholder -->
+    <style name="SmartCare.TextAppearance.FieldLabel" parent="TextAppearance.Material3.BodySmall">
+        <item name="android:textSize">11sp</item>
+        <item name="android:fontFamily">@font/figtree_semibold</item>
+        <item name="fontFamily">@font/figtree_semibold</item>
+    </style>
+
+    <style name="SmartCare.TextAppearance.FieldValue" parent="TextAppearance.Material3.BodyLarge">
         <item name="android:textSize">14sp</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@color/sc_text</item>
-        <item name="android:layout_marginTop">16dp</item>
+        <item name="android:fontFamily">@font/figtree_medium</item>
+        <item name="fontFamily">@font/figtree_medium</item>
     </style>
 
-    <!-- White button with silver border and soft shadow -->
-    <style name="SmartCare.Button" parent="Widget.Material3.Button">
-        <item name="android:layout_height">56dp</item>
-        <item name="backgroundTint">@color/white</item>
-        <item name="android:textColor">@color/sc_text</item>
-        <item name="android:textSize">16sp</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:letterSpacing">0.02</item>
-        <item name="strokeColor">@color/sc_silver</item>
-        <item name="strokeWidth">1dp</item>
-        <item name="cornerRadius">14dp</item>
-        <item name="elevation">3dp</item>
-        <item name="rippleColor">@color/sc_silver_light</item>
+    <!-- "From IC" card (sign up): small uppercase label with a check, then the value -->
+    <style name="SmartCare.Text.FromIc" parent="">
+        <item name="android:textSize">11sp</item>
+        <item name="android:fontFamily">@font/figtree_bold</item>
+        <item name="android:textColor">?attr/scMain</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:letterSpacing">0.08</item>
+        <item name="android:drawablePadding">5dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="drawableStartCompat">@drawable/ic_sc_check_small</item>
+        <item name="drawableTint">?attr/scMain</item>
     </style>
 
-    <style name="SmartCare.Title" parent="">
-        <item name="android:textSize">24sp</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@color/sc_text</item>
-        <item name="android:gravity">center</item>
-    </style>
-
-    <style name="SmartCare.Subtitle" parent="">
-        <item name="android:textSize">15sp</item>
-        <item name="android:textColor">@color/sc_text_secondary</item>
-        <item name="android:gravity">center</item>
-        <item name="android:layout_marginTop">6dp</item>
-    </style>
-
-    <style name="SmartCare.Footer" parent="">
+    <style name="SmartCare.Text.FromIcValue" parent="">
+        <item name="android:layout_marginTop">3dp</item>
         <item name="android:textSize">14sp</item>
-        <item name="android:textColor">@color/sc_text</item>
+        <item name="android:fontFamily">@font/figtree_bold</item>
+        <item name="android:textColor">@color/ink_placeholder</item>
+    </style>
+
+    <!-- Gender option on sign up step 1 (selectable pill, isSelected drives the look) -->
+    <style name="SmartCare.GenderOption" parent="">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">44dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:background">@drawable/bg_gender_option</item>
         <item name="android:gravity">center</item>
-        <item name="android:padding">12dp</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:fontFamily">@font/figtree_semibold</item>
+        <item name="android:textSize">13.5sp</item>
+        <item name="android:textColor">@color/gender_option_text</item>
+    </style>
+
+    <!-- Password rule chip (change password). ChangePasswordActivity swaps the
+         background, text colour and check icon when the rule passes. -->
+    <style name="SmartCare.RuleChip" parent="">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">28dp</item>
+        <item name="android:background">@drawable/bg_chip_off</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:paddingStart">11dp</item>
+        <item name="android:paddingEnd">11dp</item>
+        <item name="android:drawablePadding">5dp</item>
+        <item name="android:fontFamily">@font/figtree_semibold</item>
+        <item name="android:textSize">11.5sp</item>
+        <item name="android:textColor">@color/ink_sub</item>
+        <item name="drawableTint">?attr/scMain</item>
+    </style>
+
+    <!-- Pill button: 54dp, vertical gradient scBtnTop -> scMain, white bold text. -->
+    <style name="SmartCare.Button.Pill" parent="Widget.Material3.Button">
+        <item name="android:layout_height">54dp</item>
+        <item name="android:minHeight">54dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="backgroundTint">@null</item>
+        <item name="android:background">@drawable/bg_button_pill</item>
+        <item name="android:stateListAnimator">@null</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">14.5sp</item>
+        <item name="android:fontFamily">@font/figtree_bold</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:letterSpacing">0</item>
+        <item name="iconTint">@color/white</item>
+        <item name="iconGravity">textEnd</item>
+        <item name="iconSize">17dp</item>
+        <item name="iconPadding">8dp</item>
     </style>
 </resources>

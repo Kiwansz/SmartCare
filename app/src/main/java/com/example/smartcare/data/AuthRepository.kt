@@ -1,14 +1,20 @@
 package com.example.smartcare.data
 
-import com.example.smartcare.util.IcUtils
+import com.example.smartcare.util.parseIc
+import io.github.jan.supabase.auth.OtpType
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.auth.providers.builtin.Email
 import io.github.jan.supabase.auth.status.SessionStatus
+import io.github.jan.supabase.exceptions.RestException
 import io.github.jan.supabase.postgrest.postgrest
 import io.github.jan.supabase.postgrest.query.Columns
 import kotlinx.coroutines.flow.first
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonNull
 import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.boolean
 import kotlinx.serialization.json.booleanOrNull
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.contentOrNull
@@ -31,7 +37,33 @@ data class Account(
     val patientId: Int?             // only for PATIENT
 )
 
+/** The logged-in patient's own details for the profile screen. */
+data class PatientProfile(
+    val userId: Int,
+    val fullName: String,
+    val email: String,
+    val icNumber: String?,      // 12 digits
+    val phone: String?,
+    val dateOfBirth: String?,   // yyyy-MM-dd
+    val gender: String?         // MALE, FEMALE or null
+)
+
 data class NextAppointment(val slotStart: Date, val doctorName: String?, val reason: String?)
+
+/**
+ * Wrong IC/email or wrong password. One error for both, so the login screen
+ * never reveals whether an account exists.
+ */
+class InvalidLoginException : Exception("Invalid login")
+
+/** Forgot password: the emailed code is wrong or has expired. */
+class InvalidResetCodeException : Exception("Invalid reset code")
+
+/** Sign up: this IC number already has an account. */
+class IcAlreadyRegisteredException : Exception("IC already registered")
+
+/** Sign up: this email already has an account. */
+class EmailAlreadyRegisteredException : Exception("Email already registered")
 
 /** All Supabase calls for the User Account module. */
 object AuthRepository {
@@ -45,18 +77,40 @@ object AuthRepository {
     // ---------- 3. Sign up ----------
 
     /**
+     * True if a user_account already uses this IC number. Database function
+     * is_ic_registered (works before login without reading user_account directly).
+     */
+    suspend fun isIcRegistered(icNumber: String): Result<Boolean> = runCatching {
+        rpc("is_ic_registered", buildJsonObject { put("p_ic", icNumber) }).jsonPrimitive.boolean
+    }
+
+    /** True if a user_account already uses this email. Database function is_email_registered. */
+    suspend fun isEmailRegistered(email: String): Result<Boolean> = runCatching {
+        rpc("is_email_registered", buildJsonObject { put("p_email", email.trim()) }).jsonPrimitive.boolean
+    }
+
+    /**
      * Creates the Auth user, then the user_account + patient rows.
      * Returns true if the user is now logged in (email confirmation off),
      * false if they must confirm their email first.
+     * Fails with [IcAlreadyRegisteredException] / [EmailAlreadyRegisteredException]
+     * before anything is created if the IC or email is taken.
      */
     suspend fun signUpPatient(
         fullName: String,
         icNumber: String,   // 12 digits, no dashes
         email: String,
         phone: String,
-        password: String
+        password: String,
+        gender: String? // MALE, FEMALE, or null if the user skipped it
     ): Result<Boolean> = runCatching {
         val cleanEmail = email.trim().lowercase()
+
+        // Final check right before saving. Without it, the Auth login below would be
+        // created even though the user_account insert then fails on the unique IC,
+        // leaving an orphan login for this email.
+        if (isIcRegistered(icNumber).getOrThrow()) throw IcAlreadyRegisteredException()
+        if (isEmailRegistered(cleanEmail).getOrThrow()) throw EmailAlreadyRegisteredException()
 
         auth.signUpWith(Email) {
             this.email = cleanEmail
@@ -77,12 +131,13 @@ object AuthRepository {
             }
         ) { select() }.decodeSingle<JsonObject>()
 
+        val ic = parseIc(icNumber)
         db.from("patient").insert(
             buildJsonObject {
                 put("user_id", account.int("user_id"))
                 put("full_name", fullName)
-                put("date_of_birth", IcUtils.birthDate(icNumber))
-                put("gender", IcUtils.gender(icNumber))
+                put("date_of_birth", ic?.dateOfBirth?.toString()) // ISO yyyy-MM-dd for DATE
+                put("gender", gender) // chosen by the user, not taken from the IC
             }
         )
 
@@ -98,9 +153,17 @@ object AuthRepository {
     suspend fun signIn(username: String, password: String, allowedRoles: Set<String>): Result<Account> =
         runCatching {
             val email = resolveEmail(username)
-            auth.signInWith(Email) {
-                this.email = email
-                this.password = password
+            try {
+                auth.signInWith(Email) {
+                    this.email = email
+                    this.password = password
+                }
+            } catch (e: Exception) {
+                val msg = e.message.orEmpty()
+                if (msg.contains("invalid_credentials", true) || msg.contains("Invalid login credentials", true)) {
+                    throw InvalidLoginException()
+                }
+                throw e
             }
 
             val account = try {
@@ -110,9 +173,7 @@ object AuthRepository {
                 throw e
             }
 
-            db.from("user_account").update(
-                buildJsonObject { put("last_login_at", nowTimestamp()) }
-            ) { filter { eq("user_id", account.userId) } }
+            rpc("mark_login") // sets last_login_at on the user's own row
 
             account
         }
@@ -135,6 +196,25 @@ object AuthRepository {
         auth.resetPasswordForEmail(email.trim().lowercase())
     }
 
+    /**
+     * Finishes a reset with the emailed code: verifies it as a recovery email OTP
+     * (which signs the user in), sets the new password, then signs out again so
+     * they log in normally. A wrong or expired code fails with [InvalidResetCodeException].
+     */
+    suspend fun resetPasswordWithCode(email: String, code: String, newPassword: String): Result<Unit> =
+        runCatching {
+            try {
+                auth.verifyEmailOtp(type = OtpType.Email.RECOVERY, email = email.trim().lowercase(), token = code)
+            } catch (e: RestException) {
+                throw InvalidResetCodeException() // server rejected the code
+            }
+            try {
+                auth.updateUser { password = newPassword }
+            } finally {
+                signOut()
+            }
+        }
+
     // ---------- 6. Change password ----------
 
     /** Checks the temporary password, sets the new one, and clears the must-change flag. */
@@ -155,15 +235,48 @@ object AuthRepository {
 
             auth.updateUser { password = newPassword }
 
-            val userId = findAccountRowByEmail(email)?.int("user_id")
-                ?: error("No SmartCare account is linked to this login")
-            db.from("user_account").update(
-                buildJsonObject {
-                    put("must_change_password", false)
-                    put("temporary_password_expires_at", JsonNull)
-                }
-            ) { filter { eq("user_id", userId) } }
+            // Clears must_change_password and temporary_password_expires_at on the own row.
+            rpc("complete_password_change")
         }
+
+    // ---------- Profile ----------
+
+    /** The logged-in patient's own user_account + patient rows (allowed by RLS). */
+    suspend fun loadMyProfile(): Result<PatientProfile> = runCatching {
+        auth.sessionStatus.first { it !is SessionStatus.Initializing }
+        val email = auth.currentUserOrNull()?.email
+            ?: error("Your session has ended. Please log in again.")
+        val row = findAccountRowByEmail(email)
+            ?: error("No SmartCare account is linked to this login")
+        val userId = row.int("user_id")
+        val patient = db.from("patient").select {
+            filter { eq("user_id", userId) }
+        }.decodeSingleOrNull<JsonObject>()
+
+        PatientProfile(
+            userId = userId,
+            fullName = patient?.str("full_name") ?: email.substringBefore("@"),
+            email = row.str("email") ?: email,
+            icNumber = row.str("ic_number"),
+            phone = row.str("phone_number"),
+            dateOfBirth = patient?.str("date_of_birth"),
+            gender = patient?.str("gender")
+        )
+    }
+
+    /** Saves the phone number on the user's own account row (database function update_my_phone). */
+    suspend fun updateMyPhone(phone: String): Result<Unit> = runCatching {
+        rpc("update_my_phone", buildJsonObject { put("p_phone", phone) })
+        Unit
+    }
+
+    /** Saves gender (MALE, FEMALE or null) on the user's own patient row (RLS: own row only). */
+    suspend fun updateMyGender(userId: Int, gender: String?): Result<Unit> = runCatching {
+        db.from("patient").update(buildJsonObject { put("gender", gender) }) {
+            filter { eq("user_id", userId) }
+        }
+        Unit
+    }
 
     // ---------- 7. Home ----------
 
@@ -191,17 +304,27 @@ object AuthRepository {
 
     // ---------- helpers ----------
 
-    /** IC number -> email from user_account; anything with "@" is used as-is. */
+    /**
+     * IC number -> email through the database function get_login_email (patients only;
+     * returns null when not found). Anything with "@" is used as-is (staff login).
+     */
     private suspend fun resolveEmail(username: String): String {
         val input = username.trim()
         if (input.contains("@")) return input.lowercase()
 
         val ic = input.filter { it.isDigit() }
-        if (ic.length != 12) error("Enter your email or 12-digit IC number")
-        val row = db.from("user_account").select(Columns.list("email")) {
-            filter { eq("ic_number", ic) }
-        }.decodeSingleOrNull<JsonObject>()
-        return row?.str("email") ?: error("No account found for this IC number")
+        if (ic.length != 12) throw InvalidLoginException()
+        val email = rpc("get_login_email", buildJsonObject { put("p_ic", ic) })
+        return (email as? JsonPrimitive)?.contentOrNull ?: throw InvalidLoginException()
+    }
+
+    /**
+     * Calls a Postgres function (Supabase RPC) and returns its JSON result.
+     * Functions that return void give JsonNull.
+     */
+    private suspend fun rpc(name: String, params: JsonObject = buildJsonObject { }): JsonElement {
+        val body = db.rpc(name, params).data
+        return if (body.isBlank()) JsonNull else Json.parseToJsonElement(body)
     }
 
     private suspend fun loadAccount(email: String): Account {
@@ -217,7 +340,7 @@ object AuthRepository {
         val mustChange = row["must_change_password"]?.jsonPrimitive?.booleanOrNull ?: false
         val expiresAt = parseTimestamp(row.str("temporary_password_expires_at"), TimeZone.getTimeZone("UTC"))
         if (mustChange && expiresAt != null && expiresAt.before(Date())) {
-            error("Your temporary password has expired. Ask your Admin for a new one.")
+            error("Your temporary password has expired. Ask your Admin to issue a new one.")
         }
 
         val profileTable = when (role) {
@@ -253,7 +376,6 @@ object AuthRepository {
         val rows = db.from("user_account").select {
             filter { ilike("email", pattern) }
         }.decodeList<JsonObject>()
-        android.util.Log.d("SmartCareAuth", "findAccountRowByEmail('$email', pattern='$pattern') -> $rows")
         return rows.firstOrNull { it.str("email").equals(email, ignoreCase = true) }
     }
 
@@ -265,12 +387,6 @@ object AuthRepository {
             else "This is a staff account. Please use the Staff login."
         )
     }
-
-    /** Current time for TIMESTAMP columns (stored as UTC, same as Postgres NOW()). */
-    private fun nowTimestamp(): String =
-        SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US).apply {
-            timeZone = TimeZone.getTimeZone("UTC")
-        }.format(Date())
 
     /** Parses "2026-11-10T09:30:00" (fractions / offsets ignored). */
     private fun parseTimestamp(value: String?, zone: TimeZone): Date? {

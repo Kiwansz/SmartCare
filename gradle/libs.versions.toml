@@ -10,8 +10,10 @@ activityKtx = "1.13.0"
 constraintlayout = "2.2.2"
 supabase = "3.2.6"
 ktor = "3.2.3"
+desugarJdkLibs = "2.1.5"
 
 [libraries]
+desugar-jdk-libs = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "desugarJdkLibs" }
 supabase-bom = { group = "io.github.jan-tennert.supabase", name = "bom", version.ref = "supabase" }
 supabase-auth = { group = "io.github.jan-tennert.supabase", name = "auth-kt" }
 supabase-postgrest = { group = "io.github.jan-tennert.supabase", name = "postgrest-kt" }
