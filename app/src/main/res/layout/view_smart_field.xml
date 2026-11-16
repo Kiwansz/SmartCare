@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Inflated by SmartField (a vertical LinearLayout). The box has a 4dp transparent ring
+     for the focus glow, so it uses -4dp side margins to line up with other content. -->
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <FrameLayout
+        android:id="@+id/sfBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="-4dp"
+        android:layout_marginEnd="-4dp"
+        android:addStatesFromChildren="true"
+        android:background="@drawable/bg_field"
+        android:minHeight="62dp"
+        android:padding="4dp">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/sfLayout"
+            style="@style/Widget.Material3.TextInputLayout.FilledBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:paddingTop="7dp"
+            android:paddingBottom="1dp"
+            app:boxBackgroundMode="none"
+            app:endIconTint="@color/ink_sub"
+            app:expandedHintEnabled="false"
+            app:hintTextAppearance="@style/SmartCare.TextAppearance.FieldLabel"
+            app:hintTextColor="@color/ink_sub"
+            app:placeholderTextAppearance="@style/SmartCare.TextAppearance.FieldValue"
+            app:placeholderTextColor="@color/ink_placeholder"
+            app:startIconTint="@color/ink_sub">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/sfEdit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:fontFamily="@font/figtree_semibold"
+                android:maxLines="1"
+                android:paddingTop="0dp"
+                android:paddingBottom="0dp"
+                android:textColor="@color/ink"
+                android:textColorHint="@color/ink_sub"
+                android:textSize="14sp" />
+        </com.google.android.material.textfield.TextInputLayout>
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/sfMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="14dp"
+        android:layout_marginTop="1dp"
+        android:layout_marginBottom="2dp"
+        android:textSize="11.5sp"
+        android:visibility="gone" />
+</merge>

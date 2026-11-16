@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Patient profile (Clinic Sky): details, edit phone and gender, log out. -->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    tools:context=".ProfileActivity"
+    tools:ignore="NestedWeights">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <include layout="@layout/view_auth_header" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="-28dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_sheet"
+            android:orientation="vertical"
+            android:paddingStart="20dp"
+            android:paddingTop="9dp"
+            android:paddingEnd="20dp"
+            android:paddingBottom="22dp">
+
+            <View
+                android:layout_width="36dp"
+                android:layout_height="4dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/bg_grab_handle" />
+
+            <!-- Avatar, name, email -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tvInitials"
+                    android:layout_width="58dp"
+                    android:layout_height="58dp"
+                    android:background="@drawable/bg_avatar"
+                    android:fontFamily="@font/figtree_bold"
+                    android:gravity="center"
+                    android:textColor="@color/white"
+                    android:textSize="19sp"
+                    tools:text="AH" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="14dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tvName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/figtree_bold"
+                        android:letterSpacing="-0.01"
+                        android:textColor="@color/ink"
+                        android:textSize="18sp"
+                        tools:text="Ahmad Hafiz" />
+
+                    <TextView
+                        android:id="@+id/tvEmail"
+                        style="@style/SmartCare.Text.Sub"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        tools:text="hafiz@gmail.com" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Details card -->
+            <LinearLayout
+                android:id="@+id/cardDetails"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/bg_tile"
+                android:divider="@drawable/bg_profile_divider"
+                android:orientation="vertical"
+                android:showDividers="middle">
+
+                <include android:id="@+id/rowIc" layout="@layout/view_profile_row" />
+                <include android:id="@+id/rowDob" layout="@layout/view_profile_row" />
+                <include android:id="@+id/rowGender" layout="@layout/view_profile_row" />
+                <include android:id="@+id/rowPhone" layout="@layout/view_profile_row" />
+            </LinearLayout>
+
+            <ProgressBar
+                android:id="@+id/progress"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="16dp"
+                android:visibility="gone" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:minHeight="24dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnLogout"
+                style="@style/SmartCare.Button.Pill"
+                android:layout_width="match_parent"
+                android:text="@string/logout" />
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

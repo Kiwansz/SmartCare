@@ -42,10 +42,13 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
+        // minSdk 24: lets java.time (LocalDate) work on API 24-25
+        isCoreLibraryDesugaringEnabled = true
     }
 }
 
 dependencies {
+    coreLibraryDesugaring(libs.desugar.jdk.libs)
     implementation(libs.androidx.activity.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.constraintlayout)
@@ -55,6 +58,7 @@ dependencies {
     implementation(libs.supabase.auth)
     implementation(libs.supabase.postgrest)
     implementation(libs.ktor.client.android)
+    implementation(libs.ktor.client.logging)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.junit)

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- One role option. RoleActivity sets icon/title/description and toggles isSelected,
+     which the backgrounds and tints react to. The 4dp ring is for the selected glow. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="-4dp"
+    android:layout_marginEnd="-4dp"
+    android:background="@drawable/bg_choice"
+    android:clickable="true"
+    android:focusable="true"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:padding="18dp">
+
+    <ImageView
+        android:id="@+id/choiceIcon"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:background="@drawable/bg_choice_icon"
+        android:duplicateParentState="true"
+        android:importantForAccessibility="no"
+        android:padding="12dp"
+        app:tint="@color/choice_icon_tint"
+        tools:src="@drawable/ic_sc_user" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="14dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/choiceTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/figtree_bold"
+            android:letterSpacing="-0.01"
+            android:textColor="@color/ink"
+            android:textSize="16sp"
+            tools:text="I'm a patient" />
+
+        <TextView
+            android:id="@+id/choiceDesc"
+            style="@style/SmartCare.Text.Sub"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="1dp"
+            tools:text="Book and manage visits" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/choiceRadio"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:background="@drawable/bg_choice_radio"
+        android:duplicateParentState="true"
+        android:importantForAccessibility="no"
+        android:padding="5dp"
+        android:src="@drawable/ic_sc_check"
+        app:tint="@color/choice_radio_tint" />
+</LinearLayout>

@@ -2,90 +2,88 @@ package com.example.smartcare
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
+import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.widget.TextView
-import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.example.smartcare.data.SupabaseProvider
-import kotlinx.coroutines.launch
+import com.example.smartcare.data.AuthRepository
+import com.example.smartcare.data.InvalidLoginException
+import com.example.smartcare.data.SessionPrefs
+import com.example.smartcare.ui.SmartField
+import com.example.smartcare.util.icDigits
 import com.google.android.material.button.MaterialButton
-import com.google.android.material.textfield.TextInputEditText
-import com.google.android.material.textfield.TextInputLayout
+import com.google.android.material.materialswitch.MaterialSwitch
+import kotlinx.coroutines.launch
 
-class LoginActivity : AppCompatActivity() {
+/**
+ * 2. Patient login: IC number + password. Finds the account by IC, signs in with
+ * Supabase Auth using its email, then checks role = PATIENT and status = ACTIVE
+ * (AuthRepository.signIn, unchanged). Staff use StaffLoginActivity.
+ */
+class LoginActivity : BaseActivity() {
 
-    private lateinit var tilIcNumber: TextInputLayout
-    private lateinit var tilPassword: TextInputLayout
-    private lateinit var etIcNumber: TextInputEditText
-    private lateinit var etPassword: TextInputEditText
+    private lateinit var fieldIc: SmartField
+    private lateinit var fieldPassword: SmartField
+    private lateinit var switchRemember: MaterialSwitch
+    private lateinit var btnLogin: MaterialButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-
-        tilIcNumber = findViewById(R.id.tilIcNumber)
-        tilPassword = findViewById(R.id.tilPassword)
-        etIcNumber = findViewById(R.id.etIcNumber)
-        etPassword = findViewById(R.id.etPassword)
-
-        // Temporary: verify the Supabase connection on launch (debug builds only).
-        if (BuildConfig.DEBUG) testSupabaseConnection()
-
-        findViewById<MaterialButton>(R.id.btnLogin).setOnClickListener { attemptLogin() }
-
-        findViewById<TextView>(R.id.tvForgotPassword).setOnClickListener {
-            Toast.makeText(this, R.string.msg_forgot_password, Toast.LENGTH_SHORT).show()
-        }
-
-        findViewById<TextView>(R.id.tvRegister).setOnClickListener {
+        setupHeader(R.string.login_hero_title, R.string.login_hero_sub, showBrand = true)
+        setupFooterLink(R.string.footer_new_prefix, R.string.footer_create_account) {
             startActivity(Intent(this, RegisterActivity::class.java))
         }
-    }
 
-    private fun testSupabaseConnection() {
-        lifecycleScope.launch {
-            SupabaseProvider.testConnection()
-                .onSuccess {
-                    Log.d("SupabaseTest", it)
-                    Toast.makeText(this@LoginActivity, it, Toast.LENGTH_LONG).show()
-                }
-                .onFailure {
-                    Log.e("SupabaseTest", "Connection failed", it)
-                    Toast.makeText(
-                        this@LoginActivity,
-                        "Supabase connection failed: ${it.message}",
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
+        fieldIc = findViewById(R.id.fieldIc)
+        fieldPassword = findViewById(R.id.fieldPassword)
+        switchRemember = findViewById(R.id.switchRemember)
+        btnLogin = findViewById(R.id.btnLogin)
+
+        switchRemember.isChecked = SessionPrefs.rememberMe(this)
+        // Tapping the "Remember me" text toggles the switch as well.
+        findViewById<View>(R.id.labelRemember).setOnClickListener { switchRemember.toggle() }
+        if (savedInstanceState == null) {
+            SessionPrefs.savedIc(this)?.let { fieldIc.text = it }
         }
+
+        findViewById<TextView>(R.id.linkForgot).setOnClickListener {
+            startActivity(ForgotPasswordActivity.intent(this, staff = false))
+        }
+        fieldPassword.editText.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) { attemptLogin(); true } else false
+        }
+        btnLogin.setOnClickListener { attemptLogin() }
     }
 
     private fun attemptLogin() {
-        val icNumber = etIcNumber.text?.toString()?.trim().orEmpty()
-        val password = etPassword.text?.toString().orEmpty()
-
-        tilIcNumber.error = null
-        tilPassword.error = null
-
+        val ic = icDigits(fieldIc.text)
+        val password = fieldPassword.text
         var valid = true
 
-        if (icNumber.isEmpty()) {
-            tilIcNumber.error = getString(R.string.error_required)
-            valid = false
-        } else if (icNumber.length != 12 || !icNumber.all { it.isDigit() }) {
-            tilIcNumber.error = getString(R.string.error_invalid_ic)
-            valid = false
+        if (fieldIc.text.isBlank()) {
+            fieldIc.error = getString(R.string.error_required); valid = false
+        } else if (ic.length != 12) {
+            fieldIc.error = getString(R.string.error_ic_length); valid = false
         }
-
         if (password.isEmpty()) {
-            tilPassword.error = getString(R.string.error_required)
-            valid = false
+            fieldPassword.error = getString(R.string.error_required); valid = false
         }
-
         if (!valid) return
 
-        // TODO: Replace with real authentication once the backend exists.
-        Toast.makeText(this, R.string.msg_login_success, Toast.LENGTH_SHORT).show()
+        setLoading(true, btnLogin)
+        lifecycleScope.launch {
+            AuthRepository.signIn(ic, password, AuthRepository.PATIENT_ROLES)
+                .onSuccess { account ->
+                    val remember = switchRemember.isChecked
+                    SessionPrefs.setRememberMe(this@LoginActivity, remember)
+                    SessionPrefs.setSavedIc(this@LoginActivity, if (remember) ic else null)
+                    goAfterLogin(account)
+                }
+                .onFailure {
+                    setLoading(false, btnLogin)
+                    toast(if (it is InvalidLoginException) getString(R.string.error_login_ic) else it.friendly())
+                }
+        }
     }
 }

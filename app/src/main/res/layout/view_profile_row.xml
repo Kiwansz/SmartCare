@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- One label/value row on the profile card, with an optional action link on the right. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:minHeight="62dp"
+    android:orientation="horizontal"
+    android:paddingStart="16dp"
+    android:paddingEnd="8dp">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp">
+
+        <TextView
+            android:id="@+id/rowLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/figtree_semibold"
+            android:textColor="@color/ink_sub"
+            android:textSize="11.5sp"
+            tools:text="@string/profile_phone" />
+
+        <TextView
+            android:id="@+id/rowValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:fontFamily="@font/figtree_semibold"
+            android:textColor="@color/ink"
+            android:textSize="14.5sp"
+            tools:text="012-345 6789" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/rowAction"
+        style="@style/SmartCare.Text.Link"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:padding="8dp"
+        android:visibility="gone"
+        tools:text="@string/action_edit"
+        tools:visibility="visible" />
+</LinearLayout>

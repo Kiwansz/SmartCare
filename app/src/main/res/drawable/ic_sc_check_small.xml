@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 12dp check mark for "From IC" labels and rule chips. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="12dp" android:height="12dp"
+    android:viewportWidth="24" android:viewportHeight="24"
+    android:tint="?attr/colorControlNormal">
+    <path android:strokeColor="#FFFFFFFF" android:strokeWidth="2.8"
+        android:strokeLineCap="round" android:strokeLineJoin="round"
+        android:pathData="M5,12.5l4.5,4.5L19,7" />
+</vector>
