@@ -32,13 +32,28 @@ class HomeActivity : BaseActivity() {
         showName(getString(R.string.home_sample_name))
 
         setupTile(R.id.tileBook, R.drawable.ic_sc_plus, R.string.tile_book, R.string.tile_book_sub)
+        findViewById<View>(R.id.tileBook).setOnClickListener {
+            startActivity(Intent(this, PatientAppointmentsActivity::class.java))
+        }
         setupTile(R.id.tileChat, R.drawable.ic_sc_chat, R.string.tile_chat, R.string.tile_chat_sub, chat = true)
         setupTile(R.id.tileFollowups, R.drawable.ic_sc_loop, R.string.tile_followups, R.string.tile_followups_sub)
         setupTile(R.id.tileRecords, R.drawable.ic_sc_file, R.string.tile_records, R.string.tile_records_sub)
 
         // TODO(appointment module): open the real screens.
-        listOf(R.id.btnBell, R.id.cardAppointment, R.id.dockVisits, R.id.dockRecords).forEach { id ->
-            findViewById<View>(id).setOnClickListener { toast(R.string.coming_soon) }
+        listOf(
+            R.id.btnBell,
+            R.id.cardAppointment,
+            R.id.dockRecords
+        ).forEach { id ->
+            findViewById<View>(id).setOnClickListener {
+                toast("Coming soon")
+            }
+        }
+
+        findViewById<View>(R.id.dockVisits).setOnClickListener {
+            startActivity(
+                Intent(this, MyAppointmentsActivity::class.java)
+            )
         }
         findViewById<View>(R.id.dockProfile).setOnClickListener {
             startActivity(Intent(this, ProfileActivity::class.java))
