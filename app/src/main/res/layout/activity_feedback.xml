@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Patient feedback after a completed appointment: 1 to 5 stars and an optional comment
+     (Clinic Sky). -->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    tools:context=".FeedbackActivity"
+    tools:ignore="NestedWeights">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <include layout="@layout/view_auth_header" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="-28dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_sheet"
+            android:orientation="vertical"
+            android:paddingStart="20dp"
+            android:paddingTop="9dp"
+            android:paddingEnd="20dp"
+            android:paddingBottom="22dp">
+
+            <View
+                android:layout_width="36dp"
+                android:layout_height="4dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="14dp"
+                android:background="@drawable/bg_grab_handle" />
+
+            <TextView
+                android:id="@+id/tvVisit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/figtree_semibold"
+                android:gravity="center"
+                android:textColor="@color/ink"
+                android:textSize="15sp"
+                tools:text="Dr Ikhwan - Sat, 21 Nov 2026, 9:30 AM" />
+
+            <RatingBar
+                android:id="@+id/ratingBar"
+                style="?android:attr/ratingBarStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="18dp"
+                android:numStars="5"
+                android:progressBackgroundTint="@color/line"
+                android:progressTint="?attr/scMain"
+                android:rating="0"
+                android:secondaryProgressTint="?attr/scMain"
+                android:stepSize="1" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:hint="@string/clinic_feedback_comment_hint">
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etComment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="top|start"
+                android:inputType="textCapSentences|textMultiLine"
+                android:maxLength="500"
+                android:minLines="4" />
+
+            <TextView
+                android:id="@+id/tvInfo"
+                style="@style/SmartCare.Text.Sub"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:visibility="gone"
+                tools:text="Message"
+                tools:visibility="visible" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:minHeight="24dp" />
+
+            <ProgressBar
+                android:id="@+id/progress"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="12dp"
+                android:indeterminateTint="?attr/scMain"
+                android:visibility="gone" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSubmit"
+                style="@style/SmartCare.Button.Pill"
+                android:layout_width="match_parent"
+                android:text="@string/clinic_feedback_submit" />
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

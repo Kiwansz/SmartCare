@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Patient notifications screen. Plain light bar with a centred title, then one
+     row per sent reminder: round icon, date, bold lead + message, outlined button. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/clinic_notif_bar"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:background="@color/clinic_notif_bar">
+
+        <ImageButton
+            android:id="@+id/btnNotifBack"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_gravity="start|center_vertical"
+            android:layout_marginStart="12dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/back"
+            android:padding="11dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_sc_back"
+            app:tint="@color/ink" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="@font/figtree_bold"
+            android:text="@string/clinic_notif_title"
+            android:textColor="@color/ink"
+            android:textSize="20sp" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/clinic_notif_page">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true">
+
+            <LinearLayout
+                android:id="@+id/notifList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="24dp" />
+        </ScrollView>
+
+        <TextView
+            android:id="@+id/tvNotifStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:fontFamily="@font/figtree_medium"
+            android:gravity="center"
+            android:padding="32dp"
+            android:textColor="@color/ink_sub"
+            android:textSize="15sp"
+            android:visibility="gone"
+            tools:text="No notifications yet."
+            tools:visibility="visible" />
+
+        <ProgressBar
+            android:id="@+id/progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="48dp"
+            android:visibility="gone" />
+    </FrameLayout>
+</LinearLayout>
