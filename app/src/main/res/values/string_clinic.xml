@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Attendance, Reminder, Follow-up, Feedback.
+     Own file so it never conflicts with the shared strings.xml. -->
+<resources>
+    <!-- Staff home tile for Reminders (Attendance and Follow-ups tiles already exist) -->
+    <string name="feature_reminders">Reminders</string>
+    <string name="feature_reminders_sub">Before each visit</string>
+
+    <!-- Shared list screen -->
+    <string name="clinic_loading">Loading…</string>
+
+    <!-- Attendance (staff) -->
+    <string name="clinic_attendance_title">Attendance</string>
+    <string name="clinic_attendance_sub">Check-ins, late arrivals and no-shows.</string>
+    <string name="clinic_filter_today">Today</string>
+    <string name="clinic_filter_review">Needs review</string>
+    <string name="clinic_filter_all">All</string>
+    <string name="clinic_attendance_empty_today">No appointments today.</string>
+    <string name="clinic_attendance_empty_review">Nothing is waiting for your review.</string>
+    <string name="clinic_attendance_empty_all">No appointments yet.</string>
+    <plurals name="clinic_count_appointments">
+        <item quantity="one">%d appointment</item>
+        <item quantity="other">%d appointments</item>
+    </plurals>
+    <string name="clinic_not_arrived">Not arrived</string>
+    <string name="clinic_no_record">No check-in</string>
+    <string name="clinic_action_accept">Accept</string>
+    <string name="clinic_action_reject">Reject (no-show)</string>
+    <string name="clinic_action_complete">Mark visit completed</string>
+    <string name="clinic_action_no_show">Mark no-show</string>
+    <string name="clinic_cancel">Cancel</string>
+    <string name="clinic_confirm_no_show_title">Mark as no-show?</string>
+    <string name="clinic_confirm_no_show_body">%1$s will be recorded as a no-show for this appointment.</string>
+    <string name="clinic_confirm_accept_title">Accept late check-in?</string>
+    <string name="clinic_confirm_accept_body">%1$s arrived after the grace period. Accepting records them as checked in.</string>
+    <string name="clinic_confirm_reject_title">Reject late check-in?</string>
+    <string name="clinic_confirm_reject_body">%1$s will be recorded as a no-show.</string>
+    <string name="clinic_confirm_complete_title">Mark visit completed?</string>
+    <string name="clinic_confirm_complete_body">%1$s has been seen. They will then be able to rate the visit.</string>
+    <string name="clinic_done_no_show">Recorded as a no-show.</string>
+    <string name="clinic_done_accepted">Late check-in accepted.</string>
+    <string name="clinic_done_rejected">Late check-in rejected. Recorded as a no-show.</string>
+    <string name="clinic_done_completed">Visit marked as completed.</string>
+
+    <!-- Check-in (patient) -->
+    <string name="clinic_checkin_title">Check in</string>
+    <string name="clinic_checkin_sub">Enter the code from your booking when you arrive.</string>
+    <string name="clinic_checkin_field">Check-in code</string>
+    <string name="clinic_checkin_placeholder">Code from your booking</string>
+    <string name="clinic_checkin_button">Check in</string>
+    <string name="clinic_checkin_empty">Please enter your check-in code.</string>
+    <string name="clinic_checkin_ok_title">You\'re checked in</string>
+    <string name="clinic_checkin_ok_body">Please take a seat. The clinic will call you when it is your turn.</string>
+    <string name="clinic_checkin_late_title">Waiting for verification</string>
+    <string name="clinic_checkin_late_body">You arrived after the grace period, so reception will confirm your check-in. Please speak to the front desk.</string>
+
+    <!-- Reminders (staff) -->
+    <string name="clinic_reminders_title">Reminders</string>
+    <string name="clinic_reminders_sub">Reminders before each appointment.</string>
+    <string name="clinic_filter_pending">Pending</string>
+    <string name="clinic_filter_sent">Sent</string>
+    <string name="clinic_filter_failed">Failed</string>
+    <string name="clinic_reminders_empty">No reminders here yet. Tap Schedule reminders to create them for upcoming appointments.</string>
+    <plurals name="clinic_count_reminders">
+        <item quantity="one">%d reminder</item>
+        <item quantity="other">%d reminders</item>
+    </plurals>
+    <string name="clinic_schedule_button">Schedule reminders</string>
+    <string name="clinic_process_button">Process due reminders</string>
+    <string name="clinic_choose_channel">Send reminders by</string>
+    <string name="clinic_channel_push">Push notification</string>
+    <string name="clinic_channel_sms">SMS</string>
+    <string name="clinic_channel_email">Email</string>
+    <string name="clinic_choose_lead">Send how long before the appointment?</string>
+    <string name="clinic_lead_24">24 hours before</string>
+    <string name="clinic_lead_2">2 hours before</string>
+    <string name="clinic_lead_1">1 hour before</string>
+    <string name="clinic_process_title">Process due reminders?</string>
+    <string name="clinic_process_body">Every pending reminder whose time has come is marked as sent, or as failed with a reason (for example, the patient has no phone number for an SMS).</string>
+    <string name="clinic_process_confirm">Process</string>
+    <string name="clinic_scheduled_done">%1$d reminder(s) scheduled.</string>
+    <string name="clinic_scheduled_none">Every upcoming appointment already has a reminder.</string>
+    <string name="clinic_processed_done">%1$d sent, %2$d failed.</string>
+
+    <!-- Follow-ups (staff and doctors) -->
+    <string name="clinic_followups_title">Follow-ups</string>
+    <string name="clinic_followups_sub">Calls, messages and return visits after a visit.</string>
+    <string name="clinic_filter_open">Open</string>
+    <string name="clinic_filter_done">Done</string>
+    <string name="clinic_followups_empty">No follow-ups here.</string>
+    <plurals name="clinic_count_followups">
+        <item quantity="one">%d follow-up</item>
+        <item quantity="other">%d follow-ups</item>
+    </plurals>
+    <string name="clinic_new_followup">New follow-up</string>
+    <string name="clinic_overdue">Overdue</string>
+    <string name="clinic_action_record_result">Record result</string>
+    <string name="clinic_action_link">Link appointment</string>
+    <string name="clinic_result_title">How did it go?</string>
+    <string name="clinic_result_completed">Completed</string>
+    <string name="clinic_result_unsuccessful">Unsuccessful</string>
+    <string name="clinic_result_note_hint">Note (optional)</string>
+    <string name="clinic_save">Save</string>
+    <string name="clinic_result_saved">Result saved.</string>
+    <string name="clinic_link_title">Choose the new appointment</string>
+    <string name="clinic_link_none">This patient has no upcoming appointment to link yet. Book one first.</string>
+    <string name="clinic_link_no_patient">The patient for this follow-up could not be found.</string>
+    <string name="clinic_link_saved">Appointment linked.</string>
+
+    <!-- Create follow-up form -->
+    <string name="clinic_form_title">New follow-up</string>
+    <string name="clinic_form_sub">Choose the visit, how to follow up and who does it.</string>
+    <string name="clinic_form_visit">Visit</string>
+    <string name="clinic_form_type">Follow up by</string>
+    <string name="clinic_form_type_call">Call</string>
+    <string name="clinic_form_type_sms">SMS</string>
+    <string name="clinic_form_type_revisit">Revisit</string>
+    <string name="clinic_form_assign">Assign to</string>
+    <string name="clinic_form_due">Due date</string>
+    <string name="clinic_form_save">Create follow-up</string>
+    <string name="clinic_form_no_visits">There are no completed visits or no-shows yet. Mark a visit as completed or no-show in Attendance first.</string>
+    <string name="clinic_form_no_staff">No staff members were found to assign this to.</string>
+    <string name="clinic_form_created">Follow-up created.</string>
+
+    <!-- Feedback (patient) -->
+    <string name="clinic_feedback_title">Rate your visit</string>
+    <string name="clinic_feedback_sub">Your feedback helps the clinic improve.</string>
+    <string name="clinic_feedback_comment_hint">Comment (optional)</string>
+    <string name="clinic_feedback_submit">Send feedback</string>
+    <string name="clinic_feedback_pick_stars">Please tap a star rating first.</string>
+    <string name="clinic_feedback_thanks_title">Thank you</string>
+    <string name="clinic_feedback_thanks_body">Your feedback has been sent.</string>
+    <string name="clinic_feedback_already">You have already rated this visit. Thank you!</string>
+    <string name="clinic_ok">OK</string>
+    <string name="clinic_error_generic">Something went wrong. Please try again.</string>
+
+    <!-- Notifications (patient) -->
+    <string name="clinic_notif_title">Notifications</string>
+    <string name="clinic_notif_lead">Reminder</string>
+    <string name="clinic_notif_body">Your appointment with %1$s is on %2$s.</string>
+    <string name="clinic_notif_view">View appointment</string>
+    <string name="clinic_notif_empty">No notifications yet. Your appointment reminders will appear here.</string>
+    <string name="clinic_notif_error">Your notifications could not be loaded. Please try again.</string>
+
+    <!-- Follow-ups (patient) -->
+    <string name="clinic_pf_title">My follow-ups</string>
+    <string name="clinic_pf_sub">What the clinic asked for after your visit.</string>
+    <string name="clinic_pf_filter_upcoming">Upcoming</string>
+    <string name="clinic_pf_empty">No follow-ups here. If the clinic needs to follow up after a visit, it will show here.</string>
+    <string name="clinic_pf_type_call">Phone call from the clinic</string>
+    <string name="clinic_pf_type_sms">Message from the clinic</string>
+    <string name="clinic_pf_type_revisit">Return visit</string>
+    <string name="clinic_pf_status_open">Upcoming</string>
+    <string name="clinic_pf_status_done">Done</string>
+    <string name="clinic_pf_status_closed">Closed</string>
+    <string name="clinic_pf_msg_call">The clinic will call you. Please keep your phone nearby.</string>
+    <string name="clinic_pf_msg_sms">The clinic will send you a message.</string>
+    <string name="clinic_pf_msg_revisit">Please book a return visit.</string>
+    <string name="clinic_pf_msg_revisit_booked">Your return visit is booked.</string>
+    <string name="clinic_pf_book">Book a return visit</string>
+    <string name="clinic_home_followups_none">Nothing due</string>
+    <plurals name="clinic_home_followups_due">
+        <item quantity="one">%d due this week</item>
+        <item quantity="other">%d due this week</item>
+    </plurals>
+</resources>
