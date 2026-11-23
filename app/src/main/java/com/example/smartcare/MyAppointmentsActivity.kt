@@ -1,444 +1,315 @@
-
 package com.example.smartcare
 
-import android.graphics.Color
+import android.content.ActivityNotFoundException
+import android.content.Intent
 import android.os.Bundle
-import android.view.ViewGroup
-import android.widget.Button
+import android.provider.CalendarContract
+import android.view.View
 import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.lifecycleScope
 import com.example.smartcare.data.AppointmentRepository
+import com.example.smartcare.data.AuthRepository
 import com.example.smartcare.data.AvailableAppointmentSlot
 import com.example.smartcare.data.PatientAppointment
+import com.example.smartcare.ui.ApptKit
+import com.example.smartcare.ui.CardKit
+import com.example.smartcare.util.ApptReminders
+import com.example.smartcare.util.DateText
+import com.google.android.material.button.MaterialButton
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.Locale
 
+/** Patient: own bookings split into Upcoming and History, with check-in code, reschedule, cancel. */
 class MyAppointmentsActivity : BaseActivity() {
 
-    private lateinit var appointmentsContainer: LinearLayout
-    private lateinit var statusText: TextView
+    private lateinit var filterRow: LinearLayout
+    private lateinit var progress: View
+    private lateinit var list: LinearLayout
+
+    private var appointments: List<PatientAppointment> = emptyList()
+    private var showHistory = false
+    private var cancelCutoffHours: Int? = null   // clinic rule; null = no deadline known
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_my_appointments)
+        setupHeader(
+            title = R.string.mine_title,
+            subtitle = R.string.mine_subtitle,
+            pill = getString(R.string.appt_refresh),
+            pillIcon = R.drawable.ic_sc_loop
+        )
+        findViewById<View>(R.id.headerPill).setOnClickListener { loadAppointments() }
 
-        appointmentsContainer =
-            findViewById(R.id.myAppointmentsContainer)
+        filterRow = findViewById(R.id.filterRow)
+        progress = findViewById(R.id.progress)
+        list = findViewById(R.id.listContainer)
 
-        statusText =
-            findViewById(R.id.tvMyAppointmentsStatus)
-
-        findViewById<Button>(R.id.btnAppointmentsBack)
-            .setOnClickListener {
-                finish()
-            }
-
-        findViewById<Button>(R.id.btnRefreshAppointments)
-            .setOnClickListener {
-                loadAppointments()
-            }
-
+        drawFilters()
         loadAppointments()
     }
 
-    // Load appointments belonging to the logged-in patient.
+    private fun isUpcoming(a: PatientAppointment) = a.bookingStatus in ApptKit.ACTIVE_BOOKING
+
     private fun loadAppointments() {
-        statusText.text = "Loading your appointments..."
-        appointmentsContainer.removeAllViews()
+        progress.visibility = View.VISIBLE
+        list.removeAllViews()
 
         lifecycleScope.launch {
+            val settingsCall = async { AuthRepository.loadClinicSettings() }
             AppointmentRepository.getMyAppointments()
-                .onSuccess { appointments ->
-
-                    appointmentsContainer.removeAllViews()
-
-                    if (appointments.isEmpty()) {
-                        statusText.text =
-                            "You don't have any appointments yet."
-                        return@onSuccess
-                    }
-
-                    statusText.text =
-                        "${appointments.size} appointment(s) found"
-
-                    appointments.forEach { appointment ->
-                        addAppointmentCard(appointment)
-                    }
+                .onSuccess { result ->
+                    appointments = result
+                    cancelCutoffHours = settingsCall.await().getOrNull()?.cancelCutoffHours
+                    ApptReminders.sync(this@MyAppointmentsActivity, result)
+                    drawFilters()
+                    drawList()
                 }
                 .onFailure { error ->
-                    statusText.text = safeErrorMessage(
-                        error,
-                        "Could not load appointments. Please try again."
-                    )
+                    list.removeAllViews()
+                    list.addView(ApptKit.emptyState(this@MyAppointmentsActivity, R.drawable.ic_sc_calendar,
+                        getString(R.string.clinic_error_generic),
+                        safeErrorMessage(error, getString(R.string.clinic_error_generic))))
                 }
+            progress.visibility = View.GONE
         }
     }
 
-    // Display appointment details and available actions.
-    private fun addAppointmentCard(
-        appointment: PatientAppointment
-    ) {
-        val card = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            setBackgroundColor(Color.WHITE)
-            setPadding(dp(16), dp(16), dp(16), dp(16))
-
-            layoutParams = LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-            ).apply {
-                bottomMargin = dp(14)
+    private fun drawFilters() {
+        val upcoming = appointments.count { isUpcoming(it) }
+        val history = appointments.size - upcoming
+        filterRow.removeAllViews()
+        listOf(
+            false to "${getString(R.string.mine_upcoming)} ($upcoming)",
+            true to "${getString(R.string.mine_history)} ($history)"
+        ).forEachIndexed { i, (isHistory, label) ->
+            val chip = CardKit.filterChip(this, label, isHistory == showHistory) {
+                showHistory = isHistory
+                drawFilters()
+                drawList()
             }
+            filterRow.addView(chip, LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply { if (i > 0) marginStart = dp(8) })
         }
-
-        val details = TextView(this).apply {
-            text = buildString {
-                appendLine("Appointment ID: ${appointment.appointmentId}")
-                appendLine("Doctor: ${appointment.doctorName}")
-
-                appointment.specialization?.let {
-                    appendLine("Specialization: $it")
-                }
-
-                appendLine(
-                    "Date: ${formatDateTime(appointment.slotStart)}"
-                )
-
-                appendLine(
-                    "End: ${formatDateTime(appointment.slotEnd)}"
-                )
-
-                appendLine(
-                    "Status: ${appointment.bookingStatus.replace("_", " ")}"
-                )
-
-                appendLine(
-                    "Reason: ${appointment.visitReason ?: "Not specified"}"
-                )
-
-                appendLine()
-                append("Check-in code: ${appointment.checkinCode}")
-            }
-
-            textSize = 14f
-            setTextColor(Color.rgb(16, 43, 85))
-        }
-
-        card.addView(details)
-
-        // Only active appointments can be cancelled or rescheduled.
-        if (appointment.bookingStatus in listOf("BOOKED", "CONFIRMED")) {
-
-            val actions = LinearLayout(this).apply {
-                orientation = LinearLayout.HORIZONTAL
-
-                layoutParams = LinearLayout.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT
-                ).apply {
-                    topMargin = dp(12)
-                }
-            }
-
-            val rescheduleButton = Button(this).apply {
-                text = "Reschedule"
-
-                setOnClickListener {
-                    showRescheduleDialog(appointment, this)
-                }
-            }
-
-            val cancelButton = Button(this).apply {
-                text = "Cancel"
-
-                setOnClickListener {
-                    confirmCancel(appointment, this)
-                }
-            }
-
-            actions.addView(
-                rescheduleButton,
-                LinearLayout.LayoutParams(
-                    0,
-                    ViewGroup.LayoutParams.WRAP_CONTENT,
-                    1f
-                ).apply {
-                    marginEnd = dp(6)
-                }
-            )
-
-            actions.addView(
-                cancelButton,
-                LinearLayout.LayoutParams(
-                    0,
-                    ViewGroup.LayoutParams.WRAP_CONTENT,
-                    1f
-                ).apply {
-                    marginStart = dp(6)
-                }
-            )
-
-            card.addView(actions)
-        }
-
-        appointmentsContainer.addView(card)
     }
 
-    // Ask the patient to confirm cancellation.
-    private fun confirmCancel(
-        appointment: PatientAppointment,
-        button: Button
-    ) {
+    private fun drawList() {
+        list.removeAllViews()
+        // Upcoming: soonest first. History: most recent first.
+        val shown = if (showHistory) {
+            appointments.filterNot { isUpcoming(it) }.sortedByDescending { it.slotStart }
+        } else {
+            appointments.filter { isUpcoming(it) }.sortedBy { it.slotStart }
+        }
+
+        if (shown.isEmpty()) {
+            val empty = if (showHistory) {
+                ApptKit.emptyState(this, R.drawable.ic_sc_calendar,
+                    getString(R.string.mine_empty_history), getString(R.string.mine_empty_history_sub))
+            } else {
+                ApptKit.emptyState(this, R.drawable.ic_sc_calendar,
+                    getString(R.string.mine_empty_upcoming), getString(R.string.mine_empty_upcoming_sub))
+            }
+            list.addView(empty)
+            if (!showHistory) {
+                list.addView(buildBookButton(), LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT
+                ))
+            }
+            return
+        }
+
+        shown.forEach { addAppointmentCard(it) }
+    }
+
+    private fun buildBookButton(): View =
+        CardKit.button(this, getString(R.string.mine_book_new)) {
+            startActivity(Intent(this, PatientAppointmentsActivity::class.java))
+        }
+
+    private fun addAppointmentCard(a: PatientAppointment) {
+        val card = ApptKit.card(
+            this, a.slotStart, a.slotEnd,
+            title = a.doctorName,
+            subtitle = a.specialization,
+            chip = ApptKit.statusChip(this, a.bookingStatus, ApptKit.bookingTone(a.bookingStatus))
+        )
+
+        val active = isUpcoming(a)
+        if (!a.visitReason.isNullOrBlank() || !active) {
+            ApptKit.divider(card)
+            ApptKit.detail(card, R.drawable.ic_sc_file, getString(R.string.appt_reason), a.visitReason)
+            ApptKit.detail(card, R.drawable.ic_sc_calendar, getString(R.string.appt_booking_id), "#${a.appointmentId}")
+        }
+
+        // Only active appointments show the code and can be cancelled or rescheduled.
+        if (active) {
+            ApptKit.codeBox(card, getString(R.string.appt_check_in_code), a.checkinCode)
+
+            // Clinic rule: cancelling is only allowed until N hours before the visit.
+            val start = DateText.millis(a.slotStart)
+            val deadline = cancelCutoffHours?.let { hours -> start?.minus(hours * 60 * 60 * 1000L) }
+            val canCancel = deadline == null || System.currentTimeMillis() < deadline
+            if (deadline != null) {
+                val deadlineText = SimpleDateFormat("EEE, d MMM, h:mm a", Locale.getDefault()).format(Date(deadline))
+                if (canCancel) {
+                    ApptKit.note(card, R.drawable.ic_sc_clock, getString(R.string.mine_cancel_until, deadlineText))
+                } else {
+                    ApptKit.note(card, R.drawable.ic_sc_clock, getString(R.string.mine_cancel_late), warn = true)
+                }
+            }
+
+            card.addView(CardKit.buttonRow(this, listOf(
+                CardKit.button(this, getString(R.string.mine_add_calendar), CardKit.ButtonStyle.OUTLINED) {
+                    addToCalendar(a)
+                }
+            )))
+
+            lateinit var reschedule: MaterialButton
+            lateinit var cancel: MaterialButton
+            reschedule = CardKit.button(this, getString(R.string.mine_reschedule), CardKit.ButtonStyle.OUTLINED) {
+                showRescheduleDialog(a, reschedule)
+            }
+            cancel = CardKit.button(this, getString(R.string.mine_cancel), CardKit.ButtonStyle.DANGER) {
+                confirmCancel(a, cancel)
+            }
+            // Past the deadline the cancel button is not offered at all.
+            card.addView(CardKit.buttonRow(this, if (canCancel) listOf(reschedule, cancel) else listOf(reschedule)))
+        }
+
+        list.addView(card, LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT
+        ).apply { bottomMargin = dp(12) })
+    }
+
+    // ---------- calendar ----------
+
+    /** Opens the phone's calendar app with the appointment filled in (no permission needed). */
+    private fun addToCalendar(a: PatientAppointment) {
+        val begin = DateText.millis(a.slotStart) ?: return
+        val end = DateText.millis(a.slotEnd) ?: (begin + 30 * 60 * 1000L)
+        val intent = Intent(Intent.ACTION_INSERT)
+            .setData(CalendarContract.Events.CONTENT_URI)
+            .putExtra(CalendarContract.Events.TITLE, getString(R.string.cal_title, a.doctorName))
+            .putExtra(CalendarContract.Events.DESCRIPTION, getString(R.string.cal_desc, a.checkinCode))
+            .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, begin)
+            .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, end)
+        try {
+            startActivity(intent)
+        } catch (_: ActivityNotFoundException) {
+            toast(R.string.mine_no_calendar)
+        }
+    }
+
+    // ---------- cancel ----------
+
+    private fun confirmCancel(a: PatientAppointment, button: View) {
         AlertDialog.Builder(this)
-            .setTitle("Cancel appointment?")
-            .setMessage(
-                "Are you sure you want to cancel appointment " +
-                        "${appointment.appointmentId}?\n\n" +
-                        "The clinic's cancellation cut-off applies."
-            )
-            .setNegativeButton("Keep appointment", null)
-            .setPositiveButton("Cancel appointment") { _, _ ->
-
+            .setTitle(R.string.mine_cancel_title)
+            .setMessage(getString(R.string.mine_cancel_msg, a.doctorName, DateText.slotLine(a.slotStart, a.slotEnd)))
+            .setNegativeButton(R.string.mine_cancel_keep, null)
+            .setPositiveButton(R.string.mine_cancel_yes) { _, _ ->
                 button.isEnabled = false
-                statusText.text = "Cancelling appointment..."
-
+                progress.visibility = View.VISIBLE
                 lifecycleScope.launch {
-                    AppointmentRepository.cancelAppointment(
-                        appointmentId = appointment.appointmentId,
-                        reason = null
-                    )
+                    AppointmentRepository.cancelAppointment(appointmentId = a.appointmentId, reason = null)
                         .onSuccess {
-                            AlertDialog.Builder(
-                                this@MyAppointmentsActivity
-                            )
-                                .setTitle("Appointment cancelled")
-                                .setMessage(
-                                    "Your appointment has been cancelled successfully."
-                                )
-                                .setPositiveButton("OK") { _, _ ->
-                                    loadAppointments()
-                                }
-                                .show()
+                            toast(R.string.mine_cancelled)
+                            loadAppointments()
                         }
                         .onFailure { error ->
-
+                            progress.visibility = View.GONE
                             button.isEnabled = true
-
-                            val message = safeErrorMessage(
-                                error,
-                                "Cancellation failed. Please try again."
-                            )
-
-                            showErrorDialog(
-                                "Cancellation unsuccessful",
-                                message
-                            )
+                            showErrorDialog(getString(R.string.mine_cancel_failed),
+                                safeErrorMessage(error, getString(R.string.clinic_error_generic)))
                         }
                 }
             }
             .show()
     }
 
-    // Load alternative appointment slots.
-    private fun showRescheduleDialog(
-        appointment: PatientAppointment,
-        button: Button
-    ) {
+    // ---------- reschedule ----------
+
+    private fun showRescheduleDialog(a: PatientAppointment, button: View) {
         button.isEnabled = false
-        statusText.text = "Loading available appointment slots..."
+        progress.visibility = View.VISIBLE
 
         lifecycleScope.launch {
             AppointmentRepository.getAvailableSlots()
                 .onSuccess { slots ->
-
-                    button.isEnabled = true
-
-                    val alternatives = slots.filter {
-                        it.slotId != appointment.slotId
-                    }
-
+                    val alternatives = slots.filter { it.slotId != a.slotId }.sortedBy { it.slotStart }
                     if (alternatives.isEmpty()) {
-                        AlertDialog.Builder(this@MyAppointmentsActivity)
-                            .setTitle("No alternative slots")
-                            .setMessage(
-                                "There are currently no other available appointments."
-                            )
-                            .setPositiveButton("OK", null)
-                            .show()
-
+                        showErrorDialog(getString(R.string.mine_pick_slot), getString(R.string.mine_no_slots))
                         return@onSuccess
                     }
-
-                    val labels = alternatives.map { slot ->
-                        "${slot.doctorName} - " +
-                                "${formatDateTime(slot.slotStart)} to " +
-                                "${formatDateTime(slot.slotEnd)}"
+                    val labels = alternatives.map {
+                        "${it.doctorName}\n${DateText.slotLine(it.slotStart, it.slotEnd)}"
                     }
-
                     AlertDialog.Builder(this@MyAppointmentsActivity)
-                        .setTitle("Choose a new appointment")
+                        .setTitle(R.string.mine_pick_slot)
                         .setItems(labels.toTypedArray()) { _, position ->
-
-                            confirmReschedule(
-                                appointment,
-                                alternatives[position],
-                                button
-                            )
+                            confirmReschedule(a, alternatives[position], button)
                         }
-                        .setNegativeButton("Close", null)
+                        .setNegativeButton(R.string.mine_close, null)
                         .show()
                 }
                 .onFailure { error ->
-
-                    button.isEnabled = true
-
-                    statusText.text = safeErrorMessage(
-                        error,
-                        "Could not load available slots. Please try again."
-                    )
+                    showErrorDialog(getString(R.string.mine_resched_failed),
+                        safeErrorMessage(error, getString(R.string.clinic_error_generic)))
                 }
+            progress.visibility = View.GONE
+            button.isEnabled = true
         }
     }
 
-    // Ask the patient to confirm the replacement appointment.
-    private fun confirmReschedule(
-        appointment: PatientAppointment,
-        newSlot: AvailableAppointmentSlot,
-        button: Button
-    ) {
+    private fun confirmReschedule(a: PatientAppointment, newSlot: AvailableAppointmentSlot, button: View) {
         AlertDialog.Builder(this)
-            .setTitle("Confirm rescheduling")
-            .setMessage(
-                "Your current appointment will be replaced with:\n\n" +
-                        "${newSlot.doctorName}\n" +
-                        "${formatDateTime(newSlot.slotStart)}\n\n" +
-                        "A new check-in code will be generated."
-            )
-            .setNegativeButton("Go back", null)
-            .setPositiveButton("Confirm") { _, _ ->
-
+            .setTitle(R.string.mine_resched_title)
+            .setMessage(getString(R.string.mine_resched_msg, newSlot.doctorName,
+                DateText.slotLine(newSlot.slotStart, newSlot.slotEnd)))
+            .setNegativeButton(R.string.mine_resched_back, null)
+            .setPositiveButton(R.string.mine_resched_yes) { _, _ ->
                 button.isEnabled = false
-                statusText.text = "Rescheduling appointment..."
-
+                progress.visibility = View.VISIBLE
                 lifecycleScope.launch {
                     AppointmentRepository.rescheduleAppointment(
-                        appointmentId = appointment.appointmentId,
+                        appointmentId = a.appointmentId,
                         newSlotId = newSlot.slotId
                     )
                         .onSuccess { confirmation ->
-
-                            AlertDialog.Builder(
-                                this@MyAppointmentsActivity
-                            )
-                                .setTitle("Rescheduled successfully")
-                                .setMessage(
-                                    "Original appointment ID: " +
-                                            "${confirmation.oldAppointmentId}\n\n" +
-                                            "New appointment ID: " +
-                                            "${confirmation.newAppointmentId}\n\n" +
-                                            "New check-in code:\n" +
-                                            confirmation.checkinCode
-                                )
-                                .setPositiveButton("OK") { _, _ ->
-                                    loadAppointments()
-                                }
+                            progress.visibility = View.GONE
+                            AlertDialog.Builder(this@MyAppointmentsActivity)
+                                .setTitle(R.string.mine_resched_done_title)
+                                .setMessage(getString(R.string.mine_resched_done_msg, confirmation.checkinCode))
+                                .setPositiveButton(R.string.mine_ok) { _, _ -> loadAppointments() }
                                 .setCancelable(false)
                                 .show()
                         }
                         .onFailure { error ->
-
+                            progress.visibility = View.GONE
                             button.isEnabled = true
-
-                            val message = safeErrorMessage(
-                                error,
-                                "Rescheduling failed. Please try again."
-                            )
-
-                            showErrorDialog(
-                                "Rescheduling unsuccessful",
-                                message
-                            )
+                            showErrorDialog(getString(R.string.mine_resched_failed),
+                                safeErrorMessage(error, getString(R.string.clinic_error_generic)))
                         }
                 }
             }
             .show()
     }
 
-    // Display a safe, user-friendly error dialog.
-    private fun showErrorDialog(
-        title: String,
-        message: String
-    ) {
+    // ---------- helpers ----------
+
+    private fun showErrorDialog(title: String, message: String) {
         AlertDialog.Builder(this)
             .setTitle(title)
             .setMessage(message)
-            .setPositiveButton("OK", null)
+            .setPositiveButton(R.string.mine_ok, null)
             .show()
     }
 
-    // Remove technical request details from Supabase errors.
-    private fun safeErrorMessage(
-        error: Throwable,
-        fallback: String
-    ): String {
-
-        val raw = error.localizedMessage
-            ?.takeIf { it.isNotBlank() }
-            ?: return fallback
-
-        val technicalDetails = Regex(
-            "(?i)\\b(Code|Hint|Details|URL|Headers):"
-        )
-
-        val marker = technicalDetails.find(raw)
-
-        val message = if (marker != null) {
-            raw.substring(0, marker.range.first).trim()
-        } else {
-            raw.trim()
-        }
-
-        if (message.isBlank()) return fallback
-
-        // Never display a message containing sensitive request details.
-        val sensitiveContent = Regex(
-            "(?i)authorization|bearer\\s|https?://|supabase\\.co|postgrest"
-        )
-
-        if (sensitiveContent.containsMatchIn(message)) {
-            return fallback
-        }
-
-        return message
-    }
-
-    // Format database timestamps for display.
-    private fun formatDateTime(value: String): String {
-        val formats = listOf(
-            "yyyy-MM-dd'T'HH:mm:ss",
-            "yyyy-MM-dd HH:mm:ss"
-        )
-
-        for (pattern in formats) {
-            try {
-                val input = SimpleDateFormat(pattern, Locale.US)
-                val date = input.parse(value) ?: continue
-
-                val output = SimpleDateFormat(
-                    "EEE, dd MMM yyyy  hh:mm a",
-                    Locale.getDefault()
-                )
-
-                return output.format(date)
-
-            } catch (_: Exception) {
-                // Try the next supported timestamp format.
-            }
-        }
-
-        return value.replace('T', ' ')
-    }
+    private fun safeErrorMessage(error: Throwable, fallback: String) = ApptKit.errorMessage(error, fallback)
 }

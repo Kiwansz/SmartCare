@@ -5,13 +5,19 @@ import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.example.smartcare.data.Account
+import com.example.smartcare.data.AppointmentRepository
 import com.example.smartcare.data.AuthRepository
+import com.example.smartcare.data.PatientAppointment
 import com.example.smartcare.data.PatientFollowUpRepository
+import com.example.smartcare.ui.ApptKit
+import com.example.smartcare.util.ApptReminders
+import com.example.smartcare.util.DateText
 import kotlinx.coroutines.launch
 import java.util.Calendar
 
@@ -22,6 +28,10 @@ import java.util.Calendar
 class HomeActivity : BaseActivity() {
 
     private var account: Account? = null
+
+    // Android 13+: notifications must be allowed for appointment reminders to show.
+    private val notificationPermission =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,14 +54,8 @@ class HomeActivity : BaseActivity() {
             startActivity(Intent(this, NotificationsActivity::class.java))
         }
 
-        // TODO(appointment module): open the real screens.
-        listOf(
-            R.id.cardAppointment,
-            R.id.dockRecords
-        ).forEach { id ->
-            findViewById<View>(id).setOnClickListener {
-                toast(R.string.coming_soon)
-            }
+        findViewById<View>(R.id.dockRecords).setOnClickListener {
+            toast(R.string.coming_soon)
         }
 
         findViewById<View>(R.id.dockVisits).setOnClickListener {
@@ -67,10 +71,83 @@ class HomeActivity : BaseActivity() {
 
     override fun onResume() {
         super.onResume()
+        // Bookings may have changed on another screen (booked, cancelled, rescheduled).
+        loadNextAppointment()
         // The name and follow-up count may have changed while on another screen.
         if (account != null) {
             loadAccount()
             refreshFollowUpSubtitle()
+        }
+    }
+
+    /** Fills the "Next appointment" card with the earliest upcoming active booking. */
+    private fun loadNextAppointment() {
+        lifecycleScope.launch {
+            AppointmentRepository.getMyAppointments()
+                .onSuccess { list ->
+                    val next = list
+                        .filter { it.bookingStatus in ApptKit.ACTIVE_BOOKING && !DateText.hasStarted(it.slotEnd) }
+                        .minByOrNull { it.slotStart }
+                    showNextAppointment(next)
+
+                    // Phone reminders (day before, one hour before) follow the real bookings.
+                    ApptReminders.sync(this@HomeActivity, list)
+                    if (next != null && ApptReminders.shouldAskPermission(this@HomeActivity)) {
+                        notificationPermission.launch(android.Manifest.permission.POST_NOTIFICATIONS)
+                    }
+                }
+                .onFailure {
+                    showNoAppointment(R.string.home_appt_error, R.string.home_appt_error_sub, MyAppointmentsActivity::class.java)
+                }
+        }
+    }
+
+    private fun showNextAppointment(a: PatientAppointment?) {
+        if (a == null) {
+            showNoAppointment(R.string.home_appt_none, R.string.home_appt_none_sub, PatientAppointmentsActivity::class.java)
+            return
+        }
+        findViewById<TextView>(R.id.apptStatus).apply {
+            text = DateText.pretty(a.bookingStatus)
+            visibility = View.VISIBLE
+        }
+        // "Today" / "Tomorrow", otherwise "Tue, 10 Nov".
+        val day = DateText.relativeDay(a.slotStart)
+        findViewById<TextView>(R.id.apptDay).text =
+            if (day == DateText.dayLabel(a.slotStart)) DateText.shortDay(a.slotStart) else day
+        val reason = a.visitReason?.takeIf { it.isNotBlank() }
+        findViewById<TextView>(R.id.apptTime).apply {
+            text = if (reason != null) getString(R.string.home_appt_time, DateText.time(a.slotStart), reason)
+            else DateText.time(a.slotStart)
+            setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_sc_clock, 0, 0, 0)
+            visibility = View.VISIBLE
+        }
+        findViewById<View>(R.id.apptDivider).visibility = View.VISIBLE
+        findViewById<View>(R.id.apptDoctorRow).visibility = View.VISIBLE
+        findViewById<TextView>(R.id.apptDocInitials).text = initials(a.doctorName.removePrefix("Dr.").removePrefix("Dr "))
+        findViewById<TextView>(R.id.apptDoctor).text = a.doctorName
+        findViewById<TextView>(R.id.apptDoctorRole).apply {
+            text = a.specialization
+            visibility = if (a.specialization.isNullOrBlank()) View.GONE else View.VISIBLE
+        }
+        findViewById<TextView>(R.id.apptCode).text = a.checkinCode
+        findViewById<View>(R.id.cardAppointment).setOnClickListener {
+            startActivity(Intent(this, MyAppointmentsActivity::class.java))
+        }
+    }
+
+    private fun showNoAppointment(@StringRes title: Int, @StringRes sub: Int, target: Class<*>) {
+        findViewById<View>(R.id.apptStatus).visibility = View.INVISIBLE
+        findViewById<TextView>(R.id.apptDay).setText(title)
+        findViewById<TextView>(R.id.apptTime).apply {
+            setText(sub)
+            setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, 0, 0)
+            visibility = View.VISIBLE
+        }
+        findViewById<View>(R.id.apptDivider).visibility = View.GONE
+        findViewById<View>(R.id.apptDoctorRow).visibility = View.GONE
+        findViewById<View>(R.id.cardAppointment).setOnClickListener {
+            startActivity(Intent(this, target))
         }
     }
 

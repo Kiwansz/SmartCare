@@ -193,5 +193,7 @@ fun Activity.goAfterLogin(account: Account) {
 
 /** Back to the role picker with a clean back stack (used on logout). */
 fun Activity.goToRolePicker() {
+    // Reminders belong to the patient who just left; the next person on this phone gets none.
+    com.example.smartcare.util.ApptReminders.clear(this)
     startActivity(Intent(this, RoleActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK))
 }

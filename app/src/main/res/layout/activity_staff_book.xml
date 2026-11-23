@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Staff: book an appointment for a walk-in or phone patient.
+     Steps: find the patient, add a reason, choose an open time. The Book button stays
+     at the bottom of the screen. StaffBookActivity fills the lists. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    tools:ignore="NestedWeights">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <include layout="@layout/view_auth_header" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="-28dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_sheet"
+                android:orientation="vertical"
+                android:paddingStart="20dp"
+                android:paddingTop="9dp"
+                android:paddingEnd="20dp"
+                android:paddingBottom="16dp">
+
+                <View
+                    android:layout_width="36dp"
+                    android:layout_height="4dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="16dp"
+                    android:background="@drawable/bg_grab_handle" />
+
+                <!-- 1 · Patient -->
+                <TextView
+                    style="@style/SmartCare.Appt.Section"
+                    android:text="@string/walkin_step_patient" />
+
+                <LinearLayout
+                    android:id="@+id/searchArea"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <com.example.smartcare.ui.SmartField
+                        android:id="@+id/fieldSearch"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:imeOptions="actionSearch"
+                        android:inputType="textPersonName|textCapWords"
+                        app:sfIcon="@drawable/ic_sc_user"
+                        app:sfLabel="@string/walkin_search_label"
+                        app:sfPlaceholder="@string/walkin_search_hint" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnSearch"
+                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:minHeight="48dp"
+                        android:text="@string/walkin_search"
+                        android:textColor="?attr/scMain"
+                        app:strokeColor="?attr/scMain" />
+
+                    <LinearLayout
+                        android:id="@+id/patientResults"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:orientation="vertical" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/selectedPatient"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone" />
+
+                <!-- 2 · Reason -->
+                <TextView
+                    style="@style/SmartCare.Appt.Section"
+                    android:layout_marginTop="22dp"
+                    android:text="@string/walkin_step_reason" />
+
+                <com.example.smartcare.ui.SmartField
+                    android:id="@+id/fieldReason"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:imeOptions="actionDone"
+                    android:inputType="textCapSentences"
+                    android:maxLength="255"
+                    app:sfIcon="@drawable/ic_sc_file"
+                    app:sfLabel="@string/book_reason_label"
+                    app:sfPlaceholder="@string/walkin_reason_hint" />
+
+                <!-- 3 · Time -->
+                <TextView
+                    style="@style/SmartCare.Appt.Section"
+                    android:layout_marginTop="14dp"
+                    android:text="@string/walkin_step_time" />
+
+                <HorizontalScrollView
+                    android:id="@+id/filterScroll"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="14dp"
+                    android:scrollbars="none"
+                    android:visibility="gone">
+
+                    <LinearLayout
+                        android:id="@+id/filterRow"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal" />
+                </HorizontalScrollView>
+
+                <ProgressBar
+                    android:id="@+id/progress"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:indeterminateTint="?attr/scMain"
+                    android:visibility="gone" />
+
+                <LinearLayout
+                    android:id="@+id/listContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Book button, always visible -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:elevation="8dp"
+        android:orientation="vertical"
+        android:paddingStart="20dp"
+        android:paddingTop="12dp"
+        android:paddingEnd="20dp"
+        android:paddingBottom="12dp">
+
+        <TextView
+            android:id="@+id/tvSelection"
+            style="@style/SmartCare.Text.Sub"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:visibility="gone"
+            tools:text="Aisyah Rahman · Tue, 24 Nov · 9:00 AM"
+            tools:visibility="visible" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnBook"
+            style="@style/SmartCare.Button.Pill"
+            android:layout_width="match_parent"
+            android:text="@string/walkin_book" />
+    </LinearLayout>
+</LinearLayout>
