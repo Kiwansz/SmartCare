@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Appointment and slot screens (own file so it doesn't conflict with teammates' strings). -->
+<resources>
+    <!-- Shared -->
+    <string name="appt_refresh">Refresh</string>
+    <string name="appt_check_in_code">Check-in code</string>
+    <string name="appt_reason">Reason</string>
+    <string name="appt_booking_id">Booking</string>
+    <string name="appt_not_specified">Not specified</string>
+    <string name="appt_filter_all">All</string>
+    <string name="appt_section_count">%1$s · %2$d</string>
+
+    <!-- Staff: Appointments -->
+    <string name="appt_staff_title">Appointments</string>
+    <string name="appt_staff_subtitle">Patient bookings and doctor slots.</string>
+    <string name="appt_stat_today">Today</string>
+    <string name="appt_stat_upcoming">Upcoming</string>
+    <string name="appt_stat_total">Total</string>
+    <string name="appt_manage_slots">Manage doctor slots</string>
+    <string name="appt_manage_slots_sub">Create and review appointment times</string>
+    <string name="appt_filter_today">Today</string>
+    <string name="appt_filter_upcoming">Upcoming</string>
+    <string name="appt_patient_id">Patient ID</string>
+    <string name="appt_staff_empty">No appointments here</string>
+    <string name="appt_staff_empty_sub">Bookings made by patients will show up in this list.</string>
+
+    <!-- Staff: Manage slots -->
+    <string name="slot_title">Doctor slots</string>
+    <string name="slot_subtitle">Open appointment times for clinic doctors.</string>
+    <string name="slot_new">New slot</string>
+    <string name="slot_doctor">Doctor</string>
+    <string name="slot_doctor_choose">Choose a doctor</string>
+    <string name="slot_doctor_loading">Loading doctors…</string>
+    <string name="slot_doctor_none">No active doctors</string>
+    <string name="slot_date">Date</string>
+    <string name="slot_date_choose">Choose a date</string>
+    <string name="slot_start">Starts</string>
+    <string name="slot_end">Ends</string>
+    <string name="slot_time_choose">--:--</string>
+    <string name="slot_capacity">Patients per slot</string>
+    <string name="slot_capacity_sub">How many patients can book this time</string>
+    <string name="slot_capacity_less">Fewer patients</string>
+    <string name="slot_capacity_more">More patients</string>
+    <string name="slot_create">Create slot</string>
+    <string name="slot_creating">Creating slot…</string>
+    <string name="slot_created">Slot created for %1$s.</string>
+    <string name="slot_saved">Saved slots</string>
+    <string name="slot_capacity_value">Capacity</string>
+    <string name="slot_empty">No slots yet</string>
+    <string name="slot_empty_sub">Slots you create appear here for patients to book.</string>
+    <string name="slot_err_doctor">Choose a doctor first.</string>
+    <string name="slot_err_date">Choose the date of the slot.</string>
+    <string name="slot_err_times">Choose a start and end time.</string>
+    <string name="slot_err_future">The slot must start in the future.</string>
+    <string name="slot_err_order">The end time must be after the start time.</string>
+    <string name="slot_pick_doctor">Choose a doctor</string>
+
+    <!-- Patient: Book appointment -->
+    <string name="book_title">Book an appointment</string>
+    <string name="book_subtitle">Pick a doctor and a time that suits you.</string>
+    <string name="book_reason_label">Reason for visit (optional)</string>
+    <string name="book_reason_hint">e.g. fever, follow-up, check-up</string>
+    <string name="book_available">Available times</string>
+    <string name="book_all_doctors">All doctors</string>
+    <string name="book_button">Book this time</string>
+    <string name="book_confirm_title">Book this appointment?</string>
+    <string name="book_confirm_msg">%1$s\n%2$s</string>
+    <string name="book_confirm_yes">Book</string>
+    <string name="book_done_title">You\'re booked!</string>
+    <string name="book_done_msg">Show this check-in code at the clinic counter:\n\n%1$s</string>
+    <string name="book_failed">Booking unsuccessful</string>
+    <string name="book_view_mine">My appointments</string>
+    <string name="book_done">Done</string>
+    <string name="book_empty">No times available</string>
+    <string name="book_empty_sub">New appointment times are added by the clinic. Please check again later.</string>
+
+    <!-- Patient: booking limit, spots, date strip, reason chips -->
+    <plurals name="book_limit_info">
+        <item quantity="one">You have %1$d of %2$d active appointment.</item>
+        <item quantity="other">You have %1$d of %2$d active appointments.</item>
+    </plurals>
+    <string name="book_limit_reached">Cancel or finish one to book another. Tap to see them.</string>
+    <string name="book_limit_button">Limit reached</string>
+    <plurals name="book_spots">
+        <item quantity="one">%d spot left</item>
+        <item quantity="other">%d spots left</item>
+    </plurals>
+    <string name="book_day_all">All</string>
+    <string name="book_day_any">Any day</string>
+    <string name="book_empty_day">No times on this day</string>
+    <string name="book_empty_day_sub">Pick another date above, or choose All.</string>
+    <string name="reason_fever">Fever</string>
+    <string name="reason_cough">Cough / flu</string>
+    <string name="reason_checkup">Check-up</string>
+    <string name="reason_followup">Follow-up</string>
+    <string name="reason_refill">Medicine refill</string>
+
+    <!-- Patient: cancellation deadline, calendar, reminders -->
+    <string name="mine_cancel_until">Free to cancel until %1$s</string>
+    <string name="mine_cancel_late">Too late to cancel online. Please call the clinic.</string>
+    <string name="mine_add_calendar">Add to calendar</string>
+    <string name="mine_no_calendar">No calendar app found on this phone.</string>
+    <string name="cal_title">Appointment with %1$s</string>
+    <string name="cal_desc">SmartCare check-in code: %1$s</string>
+    <string name="notif_channel_name">Appointment reminders</string>
+    <string name="notif_channel_desc">A reminder the day before and one hour before your appointment.</string>
+    <string name="notif_title_day">Appointment tomorrow</string>
+    <string name="notif_title_hour">Appointment in 1 hour</string>
+    <string name="notif_body">%1$s · %2$s. Check-in code: %3$s</string>
+
+    <!-- Staff: bulk slots, remove slot -->
+    <string name="slot_len_label">Slot length</string>
+    <string name="slot_len_whole">Whole window</string>
+    <string name="slot_len_min">%d min</string>
+    <string name="slot_repeat_label">Repeat</string>
+    <string name="slot_repeat_once">Once</string>
+    <string name="slot_repeat_weekdays">Mon–Fri</string>
+    <string name="slot_repeat_daily">Every day</string>
+    <string name="slot_weeks_label">For how many weeks</string>
+    <string name="slot_weeks_less">Fewer weeks</string>
+    <string name="slot_weeks_more">More weeks</string>
+    <string name="slot_summary_one">Creates 1 slot.</string>
+    <string name="slot_summary_many">Creates %1$d slots on %2$d days.</string>
+    <string name="slot_create_many">Create %1$d slots</string>
+    <string name="slot_err_none">No slot fits between the start and end time.</string>
+    <string name="slot_err_too_many">That would create %1$d slots. The most at once is %2$d.</string>
+    <string name="slot_bulk_title">Create %1$d slots?</string>
+    <string name="slot_bulk_msg">%1$s\n%2$s\n%3$s to %4$s · %5$s\n\nTimes that have already passed are skipped.</string>
+    <string name="slot_len_one">one slot per day</string>
+    <string name="slot_len_each">%d-minute slots</string>
+    <string name="slot_bulk_progress">Creating %1$d of %2$d…</string>
+    <string name="slot_bulk_done">%1$d slots created.</string>
+    <string name="slot_bulk_partial">%1$d created, %2$d skipped. Reason: %3$s</string>
+    <string name="slot_remove">Remove slot</string>
+    <string name="slot_remove_title">Remove this slot?</string>
+    <string name="slot_remove_msg">%1$s\n%2$s\n\nPatients will no longer see this time.</string>
+    <string name="slot_removed">Slot removed.</string>
+    <string name="slot_remove_failed">Could not remove slot</string>
+    <string name="slot_booked_count">%1$d booked</string>
+
+    <!-- Staff: book for a walk-in patient -->
+    <string name="walkin_button">Book for a patient</string>
+    <string name="walkin_button_sub">Walk-in or phone booking</string>
+    <string name="walkin_title">Book for a patient</string>
+    <string name="walkin_subtitle">For walk-in and phone bookings.</string>
+    <string name="walkin_step_patient">1 · Patient</string>
+    <string name="walkin_step_time">2 · Time</string>
+    <string name="walkin_step_reason">3 · Reason</string>
+    <string name="walkin_search_label">Patient name</string>
+    <string name="walkin_search_hint">Type at least 2 letters</string>
+    <string name="walkin_search">Search</string>
+    <string name="walkin_none">No patient found</string>
+    <string name="walkin_none_sub">Check the spelling, or ask the patient to sign up first.</string>
+    <string name="walkin_born">Born</string>
+    <string name="walkin_change">Change</string>
+    <string name="walkin_reason_hint">Optional</string>
+    <string name="walkin_book">Book appointment</string>
+    <string name="walkin_pick_patient">Choose a patient first.</string>
+    <string name="walkin_pick_time">Choose a time first.</string>
+    <string name="walkin_confirm_title">Book for %1$s?</string>
+    <string name="walkin_confirm_msg">%1$s\n%2$s</string>
+    <string name="walkin_failed">Booking unsuccessful</string>
+    <string name="walkin_done_title">Booked</string>
+    <string name="walkin_done_msg">Check-in code for %1$s:\n\n%2$s</string>
+    <string name="walkin_no_times">No open times</string>
+    <string name="walkin_no_times_sub">Create a slot in Manage Slots first.</string>
+
+    <!-- Patient home: next appointment card -->
+    <string name="home_appt_loading">Loading…</string>
+    <string name="home_appt_none">No upcoming visit</string>
+    <string name="home_appt_none_sub">Tap here to book an appointment</string>
+    <string name="home_appt_error">Couldn\'t load your visit</string>
+    <string name="home_appt_error_sub">Tap here to see your appointments</string>
+    <string name="home_appt_time">%1$s · %2$s</string>
+
+    <!-- Patient: My appointments -->
+    <string name="mine_title">My appointments</string>
+    <string name="mine_subtitle">Your bookings and check-in codes.</string>
+    <string name="mine_upcoming">Upcoming</string>
+    <string name="mine_history">History</string>
+    <string name="mine_reschedule">Reschedule</string>
+    <string name="mine_cancel">Cancel</string>
+    <string name="mine_book_new">Book an appointment</string>
+    <string name="mine_empty_upcoming">No upcoming appointments</string>
+    <string name="mine_empty_upcoming_sub">Book a time with a doctor and it will show up here.</string>
+    <string name="mine_empty_history">No past appointments</string>
+    <string name="mine_empty_history_sub">Completed and cancelled bookings will be listed here.</string>
+    <string name="mine_cancel_title">Cancel this appointment?</string>
+    <string name="mine_cancel_msg">%1$s\n%2$s\n\nThe clinic\'s cancellation cut-off applies.</string>
+    <string name="mine_cancel_keep">Keep it</string>
+    <string name="mine_cancel_yes">Cancel appointment</string>
+    <string name="mine_cancelled">Your appointment has been cancelled.</string>
+    <string name="mine_cancel_failed">Cancellation unsuccessful</string>
+    <string name="mine_pick_slot">Choose a new time</string>
+    <string name="mine_no_slots">No other times are available right now.</string>
+    <string name="mine_resched_title">Move your appointment?</string>
+    <string name="mine_resched_msg">New time:\n%1$s\n%2$s\n\nYou will get a new check-in code.</string>
+    <string name="mine_resched_yes">Confirm</string>
+    <string name="mine_resched_back">Go back</string>
+    <string name="mine_resched_done_title">Appointment moved</string>
+    <string name="mine_resched_done_msg">Your new check-in code:\n\n%1$s</string>
+    <string name="mine_resched_failed">Rescheduling unsuccessful</string>
+    <string name="mine_close">Close</string>
+    <string name="mine_ok">OK</string>
+</resources>

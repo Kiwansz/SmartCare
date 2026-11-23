@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Notice above the slot list when the patient has hit the active-appointment limit. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="@color/clinic_warn_bg" />
+    <corners android:radius="14dp" />
+</shape>

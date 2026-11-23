@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- A slot or patient card the staff member has picked: theme-coloured outline. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="?attr/scSoft" />
+    <corners android:radius="16dp" />
+    <stroke android:width="2dp" android:color="?attr/scMain" />
+</shape>

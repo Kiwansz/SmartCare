@@ -129,6 +129,7 @@
                         android:textSize="11sp" />
 
                     <TextView
+                        android:id="@+id/apptStatus"
                         android:layout_width="wrap_content"
                         android:layout_height="28dp"
                         android:background="@drawable/bg_glass_pill"
@@ -136,41 +137,54 @@
                         android:gravity="center"
                         android:paddingStart="12dp"
                         android:paddingEnd="12dp"
-                        android:text="@string/home_sample_status"
+                        android:visibility="invisible"
+                        tools:visibility="visible"
+                        tools:text="@string/home_sample_status"
                         android:textColor="@color/white"
                         android:textSize="11.5sp" />
                 </LinearLayout>
 
                 <TextView
+                    android:id="@+id/apptDay"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:fontFamily="@font/figtree_bold"
                     android:letterSpacing="-0.035"
-                    android:text="@string/home_sample_day"
+                    android:text="@string/home_appt_loading"
+                    tools:text="@string/home_sample_day"
                     android:textColor="@color/white"
                     android:textSize="29sp" />
 
                 <TextView
+                    android:id="@+id/apptTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:drawablePadding="6dp"
                     android:fontFamily="@font/figtree_semibold"
                     android:gravity="center_vertical"
-                    android:text="@string/home_sample_time"
+                    android:visibility="invisible"
+                    tools:visibility="visible"
+                    tools:text="@string/home_sample_time"
                     android:textColor="@color/white"
                     android:textSize="13sp"
                     app:drawableStartCompat="@drawable/ic_sc_clock"
                     app:drawableTint="@color/white" />
 
                 <View
+                    android:id="@+id/apptDivider"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_marginTop="16dp"
-                    android:background="@drawable/bg_appt_divider" />
+                    android:background="@drawable/bg_appt_divider"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
 
                 <LinearLayout
+                    android:id="@+id/apptDoctorRow"
+                    android:visibility="gone"
+                    tools:visibility="visible"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="14dp"
@@ -182,8 +196,9 @@
                         android:layout_height="34dp"
                         android:background="@drawable/bg_doc_tile"
                         android:fontFamily="@font/figtree_bold"
+                        android:id="@+id/apptDocInitials"
                         android:gravity="center"
-                        android:text="@string/home_sample_doctor_initials"
+                        tools:text="@string/home_sample_doctor_initials"
                         android:textColor="@color/sky_main"
                         android:textSize="11.5sp" />
 
@@ -197,16 +212,18 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:id="@+id/apptDoctor"
                             android:fontFamily="@font/figtree_bold"
-                            android:text="@string/home_sample_doctor"
+                            tools:text="@string/home_sample_doctor"
                             android:textColor="@color/white"
                             android:textSize="13.5sp" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:id="@+id/apptDoctorRole"
                             android:alpha="0.8"
-                            android:text="@string/home_sample_doctor_role"
+                            tools:text="@string/home_sample_doctor_role"
                             android:textColor="@color/white"
                             android:textSize="12sp" />
                     </LinearLayout>
@@ -231,8 +248,9 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/figtree_bold"
                             android:fontFeatureSettings="tnum"
+                            android:id="@+id/apptCode"
                             android:letterSpacing="0.12"
-                            android:text="@string/home_sample_code"
+                            tools:text="@string/home_sample_code"
                             android:textColor="@color/white"
                             android:textSize="16sp" />
                     </LinearLayout>

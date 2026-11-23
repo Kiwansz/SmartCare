@@ -437,5 +437,80 @@ object AppointmentRepository {
         )
     }
 
+    // ---------- extras (supabase/appointment_extras.sql) ----------
 
+    // How many live bookings each slot has (slot id -> count). Fails until the SQL is installed;
+    // callers treat a failure as "unknown" and simply hide the spots-left numbers.
+    suspend fun getSlotBookedCounts(): Result<Map<Int, Int>> = runCatching {
+        Json.parseToJsonElement(db.rpc("get_slot_booked_counts").data)
+            .let { it as? kotlinx.serialization.json.JsonArray ?: return@runCatching emptyMap() }
+            .mapNotNull { element ->
+                val row = element.jsonObject
+                val id = row["slot_id"]?.jsonPrimitive?.intOrNull ?: return@mapNotNull null
+                id to (row["booked_count"]?.jsonPrimitive?.intOrNull ?: 0)
+            }
+            .toMap()
+    }
+
+    // Staff: remove a slot that nobody has booked.
+    suspend fun closeSlot(slotId: Int): Result<Unit> = runCatching {
+        require(slotId > 0) { "Invalid slot." }
+        db.rpc("close_appointment_slot", buildJsonObject { put("p_slot_id", slotId) })
+        Unit
+    }
+
+    // Staff: find patients by name (staff may read the patient table).
+    suspend fun searchPatients(query: String): Result<List<PatientLite>> = runCatching {
+        val text = query.trim().replace("%", "").replace(",", " ")
+        require(text.length >= 2) { "Type at least 2 letters of the patient's name." }
+        db.from("patient")
+            .select {
+                filter { ilike("full_name", "%$text%") }
+                limit(20)
+            }
+            .decodeList<JsonObject>()
+            .mapNotNull { row ->
+                val id = row["patient_id"]?.jsonPrimitive?.intOrNull ?: return@mapNotNull null
+                PatientLite(
+                    patientId = id,
+                    fullName = row["full_name"]?.jsonPrimitive?.contentOrNull ?: "Patient $id",
+                    dateOfBirth = row["date_of_birth"]?.jsonPrimitive?.contentOrNull
+                )
+            }
+            .sortedBy { it.fullName }
+    }
+
+    // Staff: book a slot for a walk-in patient.
+    suspend fun staffBookAppointment(
+        patientId: Int,
+        slotId: Int,
+        visitReason: String?
+    ): Result<BookingConfirmation> = runCatching {
+        require(patientId > 0) { "Please choose a patient." }
+        require(slotId > 0) { "Please choose a time." }
+
+        val result = Json.parseToJsonElement(
+            db.rpc(
+                "staff_book_appointment",
+                buildJsonObject {
+                    put("p_patient_id", patientId)
+                    put("p_slot_id", slotId)
+                    put("p_visit_reason", visitReason?.trim().orEmpty())
+                }
+            ).data
+        ).jsonObject
+
+        BookingConfirmation(
+            appointmentId = result["appointment_id"]?.jsonPrimitive?.intOrNull
+                ?: error("Appointment ID was not returned."),
+            checkinCode = result["checkin_code"]?.jsonPrimitive?.contentOrNull
+                ?: error("Check-in code was not returned.")
+        )
+    }
 }
+
+data class PatientLite(
+    val patientId: Int,
+    val fullName: String,
+    val dateOfBirth: String?
+)
