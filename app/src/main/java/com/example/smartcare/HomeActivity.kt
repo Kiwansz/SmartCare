@@ -37,8 +37,13 @@ class HomeActivity : BaseActivity() {
         setupTile(R.id.tileRecords, R.drawable.ic_sc_file, R.string.tile_records, R.string.tile_records_sub)
 
         // TODO(appointment module): open the real screens.
-        listOf(R.id.btnBell, R.id.cardAppointment, R.id.dockVisits, R.id.dockRecords).forEach { id ->
+        listOf(R.id.btnBell, R.id.cardAppointment, R.id.dockVisits).forEach { id ->
             findViewById<View>(id).setOnClickListener { toast(R.string.coming_soon) }
+        }
+        listOf(R.id.tileRecords, R.id.dockRecords).forEach { id ->
+            findViewById<View>(id).setOnClickListener {
+                startActivity(Intent(this, MedicalRecordsActivity::class.java))
+            }
         }
         findViewById<View>(R.id.dockProfile).setOnClickListener {
             startActivity(Intent(this, ProfileActivity::class.java))

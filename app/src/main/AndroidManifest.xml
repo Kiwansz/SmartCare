@@ -77,6 +77,22 @@
             android:name=".ComingSoonActivity"
             android:exported="false"
             android:theme="@style/Theme.SmartCare.Staff" />
+        <activity
+            android:name=".MedicalRecordsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".DoctorMedicalRecordsActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SmartCare.Staff"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".MedicalDocumentActivity"
+            android:exported="false" />
+        <activity
+            android:name=".DoctorMedicalDocumentActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SmartCare.Staff"
+            android:windowSoftInputMode="adjustResize" />
     </application>
 
 </manifest>

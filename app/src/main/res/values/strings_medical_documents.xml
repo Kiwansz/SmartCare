@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="document_prescription">Prescription</string>
+    <string name="document_certificate">Medical Certificate (MC)</string>
+    <string name="document_editor_notice">Preview only. Use fictional details. Drafts are cleared when you leave.</string>
+    <string name="document_preview">Preview document</string>
+    <string name="document_preview_heading">Preview only</string>
+    <string name="document_preview_notice">This document has not been saved or issued.</string>
+    <string name="document_edit">Edit draft</string>
+    <string name="document_medication_number">Medication %1$d</string>
+    <string name="document_add_medication">Add medication</string>
+    <string name="document_remove_medication">Remove medication</string>
+    <string name="document_medicine_name">Medicine name</string>
+    <string name="document_dosage">Dosage</string>
+    <string name="document_frequency">Frequency</string>
+    <string name="document_duration">Duration</string>
+    <string name="document_instructions">Instructions</string>
+    <string name="document_doctor_name">Doctor name</string>
+    <string name="document_issue_date">Issue date</string>
+    <string name="document_leave_start">Medical leave start date</string>
+    <string name="document_leave_end">Medical leave end date</string>
+    <string name="document_date_format">dd/MM/yyyy</string>
+    <string name="document_required">This field is required.</string>
+    <string name="document_invalid_date">Enter a valid date in dd/MM/yyyy format.</string>
+    <string name="document_patient_name">Patient name</string>
+    <string name="document_days">Number of medical leave days</string>
+    <string name="document_return_date">Expected return to work</string>
+    <string name="document_calculated_dates">Medical leave ends: %1$s\nExpected return to work: %2$s</string>
+    <string name="document_invalid_days">Enter a positive whole number of days.</string>
+    <string name="document_future_issue">The issue date cannot be in the future in Malaysia.</string>
+    <string name="document_invalid_range">The leave and return dates must fit within dd/MM/yyyy.</string>
+    <string name="document_demo_label">Fictional demo only. This document was not issued.</string>
+    <string name="document_hide_sample">Hide sample document</string>
+    <string name="document_pdf_preview">Preview sample PDF</string>
+    <string name="document_pdf_download">Download sample PDF</string>
+    <string name="document_pdf_failed">Could not open or export the sample PDF. Try again.</string>
+    <string name="document_pdf_exported">Sample PDF exported.</string>
+    <string name="document_demo_picker">Choose demo medication</string>
+    <string name="document_search_medications">Search demo medications</string>
+    <string name="document_no_medication_matches">No matching demo medications.</string>
+    <string-array name="document_demo_medications">
+        <item>Demo Antacid</item>
+        <item>Demo Cold Relief</item>
+        <item>Demo Oral Rehydration</item>
+        <item>Demo Skin Cream</item>
+        <item>Demo Throat Lozenge</item>
+        <item>Demo Vitamin Supplement</item>
+    </string-array>
+    <string name="document_no_prescriptions">No prescriptions for this consultation.</string>
+    <string name="document_no_certificates">No issued medical certificate for this consultation.</string>
+    <string name="document_show_sample">Show sample document</string>
+    <string name="document_sample_name_one">Fictional medicine A</string>
+    <string name="document_sample_dosage_one">Sample dose A</string>
+    <string name="document_sample_frequency_one">Sample schedule A</string>
+    <string name="document_sample_duration_one">Sample duration A</string>
+    <string name="document_sample_instructions_one">Fictional instructions for item A.</string>
+    <string name="document_sample_name_two">Fictional medicine B</string>
+    <string name="document_sample_dosage_two">Sample dose B</string>
+    <string name="document_sample_frequency_two">Sample schedule B</string>
+    <string name="document_sample_duration_two">Sample duration B</string>
+    <string name="document_sample_instructions_two">Fictional instructions for item B.</string>
+</resources>

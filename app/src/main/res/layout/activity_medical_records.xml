@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <include layout="@layout/view_auth_header" />
+
+        <LinearLayout android:layout_width="match_parent" android:layout_height="0dp"
+            android:layout_weight="1" android:layout_marginTop="-28dp"
+            android:background="@drawable/bg_sheet" android:orientation="vertical"
+            android:paddingStart="20dp" android:paddingTop="9dp"
+            android:paddingEnd="20dp" android:paddingBottom="24dp">
+
+            <View android:layout_width="36dp" android:layout_height="4dp"
+                android:layout_gravity="center_horizontal" android:layout_marginBottom="16dp"
+                android:background="@drawable/bg_grab_handle" />
+
+            <ProgressBar android:id="@+id/progress" android:layout_width="24dp"
+                android:layout_height="24dp" android:layout_gravity="center_horizontal" />
+
+            <LinearLayout android:id="@+id/medicalError" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:orientation="vertical" android:visibility="gone">
+                <TextView style="@style/SmartCare.Text.Sub"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:text="@string/medical_error" />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/medicalRetry" style="@style/SmartCare.Button.Pill"
+                    android:layout_width="match_parent" android:layout_marginTop="12dp"
+                    android:text="@string/medical_retry" />
+            </LinearLayout>
+
+            <LinearLayout android:id="@+id/medicalContent" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:orientation="vertical" android:visibility="gone">
+                <include android:id="@+id/medicalRecordTile" layout="@layout/view_home_tile"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:visibility="gone" />
+
+                <TextView android:id="@+id/medicalEmpty" style="@style/SmartCare.Text.Sub"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:text="@string/medical_empty" android:visibility="gone" />
+
+                <TextView android:id="@+id/medicalToggleEmpty" style="@style/SmartCare.Text.Link"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:minHeight="48dp" android:gravity="center_vertical"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:focusable="true" android:visibility="gone" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/medicalSampleAppointment" style="@style/SmartCare.Button.Pill"
+                    android:layout_width="match_parent" android:layout_marginTop="12dp"
+                    android:visibility="gone" android:text="@string/medical_sample_appointment" />
+
+                <LinearLayout android:id="@+id/medicalDetails" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:orientation="vertical" android:visibility="gone"
+                android:background="@drawable/bg_tile" android:divider="@drawable/bg_profile_divider"
+                android:showDividers="middle">
+                    <include android:id="@+id/medicalDate" layout="@layout/view_profile_row" />
+                    <include android:id="@+id/medicalDoctor" layout="@layout/view_profile_row" />
+                    <include android:id="@+id/medicalDiagnosis" layout="@layout/view_profile_row" />
+                    <include android:id="@+id/medicalTreatment" layout="@layout/view_profile_row" />
+                    <include android:id="@+id/medicalNotes" layout="@layout/view_profile_row" />
+                </LinearLayout>
+
+                <include
+                    android:id="@+id/medicalDocumentOptions"
+                    layout="@layout/view_medical_document_options" />
+
+                <LinearLayout android:id="@+id/medicalAppointment" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:orientation="vertical" android:visibility="gone">
+                    <TextView style="@style/SmartCare.Text.Sub"
+                        android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:text="@string/medical_appointment_context" />
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/medicalOpenPreview" style="@style/SmartCare.Button.Pill"
+                        android:layout_width="match_parent" android:layout_marginTop="12dp"
+                        android:text="@string/medical_open_preview" />
+                </LinearLayout>
+
+                <LinearLayout android:id="@+id/medicalForm" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:orientation="vertical" android:visibility="gone">
+                    <TextView style="@style/SmartCare.Text.Sub"
+                        android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:text="@string/medical_preview_notice" />
+
+                    <com.example.smartcare.ui.SmartField
+                        android:id="@+id/medicalFieldDiagnosis"
+                        android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp" android:inputType="textCapSentences|textMultiLine"
+                        android:importantForAutofill="noExcludeDescendants"
+                        android:saveEnabled="false" app:sfLabel="@string/medical_diagnosis" />
+
+                    <com.example.smartcare.ui.SmartField
+                        android:id="@+id/medicalFieldTreatment"
+                        android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp" android:inputType="textCapSentences|textMultiLine"
+                        android:importantForAutofill="noExcludeDescendants"
+                        android:saveEnabled="false" app:sfLabel="@string/medical_treatment" />
+
+                    <com.example.smartcare.ui.SmartField
+                        android:id="@+id/medicalFieldNotes"
+                        android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp" android:inputType="textCapSentences|textMultiLine"
+                        android:importantForAutofill="noExcludeDescendants"
+                        android:saveEnabled="false" app:sfLabel="@string/medical_notes" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

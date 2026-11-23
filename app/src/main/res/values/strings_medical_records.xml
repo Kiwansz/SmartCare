@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="medical_records_title">Medical Records</string>
+    <string name="medical_records_sample">Sample data only</string>
+    <string name="medical_details_title">Consultation details</string>
+    <string name="medical_sample_visit">Sample consultation</string>
+    <string name="medical_sample_date">12 November 2026</string>
+    <string name="medical_sample_doctor">Dr. Sample</string>
+    <string name="medical_sample_diagnosis">Sample diagnosis for this consultation.</string>
+    <string name="medical_sample_treatment">Sample treatment recorded during the visit.</string>
+    <string name="medical_sample_notes">Fictional follow-up notes for this preview.</string>
+    <string name="medical_date">Consultation date</string>
+    <string name="medical_doctor">Doctor</string>
+    <string name="medical_diagnosis">Diagnosis</string>
+    <string name="medical_treatment">Treatment</string>
+    <string name="medical_notes">Medical notes</string>
+    <string name="medical_empty">No consultations to display.</string>
+    <string name="medical_show_history">Show sample history</string>
+    <string name="medical_show_empty">Show empty state</string>
+    <string name="medical_error">Could not load your account. Please try again.</string>
+    <string name="medical_retry">Try again</string>
+    <string name="medical_sample_appointment">Sample appointment</string>
+    <string name="medical_appointment_context">Sample consultation • 12 November 2026\nThis fictional appointment is eligible in the preview only.</string>
+    <string name="medical_open_preview">Open record preview</string>
+    <string name="medical_create_preview">Create record preview</string>
+    <string name="medical_preview_notice">Preview only. Use fictional text. Entries are discarded when you leave.</string>
+</resources>

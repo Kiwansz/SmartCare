@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingStart="20dp"
+    android:paddingEnd="20dp">
+    <com.example.smartcare.ui.SmartField
+        android:id="@+id/documentMedicationSearch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:inputType="text"
+        android:maxLength="80"
+        android:importantForAutofill="noExcludeDescendants"
+        app:sfLabel="@string/document_search_medications" />
+
+    <TextView
+        android:id="@+id/documentNoMedicationMatches"
+        style="@style/SmartCare.Text.Sub"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/document_no_medication_matches"
+        android:visibility="gone" />
+
+    <ListView
+        android:id="@+id/documentMedicationChoices"
+        android:layout_width="match_parent"
+        android:layout_height="144dp" />
+</LinearLayout>

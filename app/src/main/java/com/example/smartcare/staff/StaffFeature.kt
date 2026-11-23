@@ -3,6 +3,7 @@ package com.example.smartcare.staff
 import android.app.Activity
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import com.example.smartcare.DoctorMedicalRecordsActivity
 import com.example.smartcare.R
 
 /**
@@ -28,7 +29,7 @@ enum class StaffFeature(
     PATIENTS(R.string.feature_patients, R.string.feature_patients_sub, R.drawable.ic_sc_user, setOf(STAFF)),
     TODAYS_PATIENTS(R.string.feature_todays_patients, R.string.feature_todays_patients_sub, R.drawable.ic_sc_clock, setOf(DOCTOR)),
     FOLLOW_UPS(R.string.feature_follow_ups, R.string.feature_follow_ups_sub, R.drawable.ic_sc_loop, setOf(STAFF, DOCTOR)),
-    MEDICAL_RECORDS(R.string.feature_medical_records, R.string.feature_medical_records_sub, R.drawable.ic_sc_file, setOf(DOCTOR));
+    MEDICAL_RECORDS(R.string.feature_medical_records, R.string.feature_medical_records_sub, R.drawable.ic_sc_file, setOf(DOCTOR), screen = DoctorMedicalRecordsActivity::class.java);
 
     companion object {
         /** Tiles for a role, in registry order. Unknown roles (or ADMIN/PATIENT) get none. */

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="12dp"
+    android:background="@drawable/bg_tile"
+    android:divider="@drawable/bg_profile_divider"
+    android:orientation="vertical"
+    android:showDividers="middle">
+    <TextView
+        android:id="@+id/documentCardTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/figtree_bold"
+        android:textColor="@color/ink"
+        android:textSize="16sp"
+        android:padding="16dp"
+        android:visibility="gone" />
+</LinearLayout>
