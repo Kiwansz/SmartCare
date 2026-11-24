@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
         android:allowBackup="true"
@@ -13,6 +14,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SmartCare.Patient">
+
         <!-- 1. Role picker (first screen) -->
         <activity
             android:name=".RoleActivity"
@@ -74,6 +76,14 @@
             android:exported="false"
             android:theme="@style/Theme.SmartCare.Staff" />
         <activity
+            android:name=".AppointmentsActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SmartCare.Staff" />
+        <activity
+            android:name=".ManageSlotsActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SmartCare.Staff" />
+        <activity
             android:name=".ComingSoonActivity"
             android:exported="false"
             android:theme="@style/Theme.SmartCare.Staff" />
@@ -92,6 +102,60 @@
             android:name=".DoctorMedicalDocumentActivity"
             android:exported="false"
             android:theme="@style/Theme.SmartCare.Staff"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".PatientAppointmentsActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SmartCare.Patient"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".MyAppointmentsActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SmartCare.Patient" />
+        <activity
+            android:name=".StaffBookActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SmartCare.Staff"
+            android:windowSoftInputMode="adjustResize" />
+
+        <receiver
+            android:name=".util.ApptReminderReceiver"
+            android:exported="false" />
+        <activity
+            android:name=".FeedbackActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".RemindersActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".ClinicListActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".AttendanceActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".CheckInActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".CreateFollowUpActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".FollowUpsActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".NotificationsActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".PatientFollowUpsActivity"
+            android:exported="false"
             android:windowSoftInputMode="adjustResize" />
     </application>
 

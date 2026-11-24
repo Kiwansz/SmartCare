@@ -18,9 +18,8 @@ import kotlinx.coroutines.launch
 import java.util.Calendar
 
 /**
- * Staff home (Module 1 shell), navy theme. Shows only data Module 1 owns: the user's own
- * account (name, role) and the clinic_setting row. Clinic features belong to other
- * modules and open a "Coming soon" screen until they exist.
+ * Staff home, navy theme. Shows the user's own account (name, role) and the
+ * clinic_setting row, and routes clinic feature tiles to their respective screens.
  */
 class StaffHomeActivity : BaseActivity() {
 
@@ -48,16 +47,15 @@ class StaffHomeActivity : BaseActivity() {
     private fun load() {
         showState(loading = true)
         lifecycleScope.launch {
-            // Both reads in parallel; the clinic row is optional for showing the home.
             val clinicJob = async { AuthRepository.loadClinicSettings() }
             val accountResult = AuthRepository.loadCurrentAccount()
 
             accountResult
                 .onSuccess { acc ->
                     when {
-                        acc == null -> goToRolePicker() // session ended
+                        acc == null -> goToRolePicker()
                         acc.role == "ADMIN" -> blockAdmin()
-                        acc.role == "PATIENT" -> goAfterLogin(acc) // wrong home: send patients to theirs
+                        acc.role == "PATIENT" -> goAfterLogin(acc)
                         else -> {
                             showAccount(acc)
                             showClinic(clinicJob.await().getOrNull())
@@ -81,7 +79,7 @@ class StaffHomeActivity : BaseActivity() {
         showTiles(StaffFeature.forRole(acc.role))
     }
 
-    /** Two tiles per row, in registry order; each opens its screen or "Coming soon". */
+    /** Two tiles per row, in registry order; routes implemented modules or opens "Coming soon". */
     private fun showTiles(features: List<StaffFeature>) {
         val grid = findViewById<LinearLayout>(R.id.tilesGrid)
         grid.removeAllViews()
@@ -98,18 +96,32 @@ class StaffHomeActivity : BaseActivity() {
                     if (i == 0) marginEnd = dp(5) else marginStart = dp(5)
                 }
                 if (feature == null) {
-                    tile.visibility = View.INVISIBLE // keeps the last odd tile half width
+                    tile.visibility = View.INVISIBLE
                 } else {
                     tile.findViewById<ImageView>(R.id.tileIcon).setImageResource(feature.icon)
                     tile.findViewById<TextView>(R.id.tileTitle).setText(feature.title)
                     tile.findViewById<TextView>(R.id.tileSub).setText(feature.subtitle)
-                    tile.setOnClickListener { ComingSoonActivity.open(this, feature) }
+                    tile.setOnClickListener { openFeature(feature) }
                 }
                 row.addView(tile)
             }
             grid.addView(row, LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT
             ).apply { if (rowIndex > 0) topMargin = dp(10) })
+        }
+    }
+
+    private fun openFeature(feature: StaffFeature) {
+        val destination: Class<*>? = when (feature.title) {
+            R.string.feature_attendance -> AttendanceActivity::class.java   // add this line
+            R.string.feature_reminders -> RemindersActivity::class.java
+            R.string.feature_follow_ups -> FollowUpsActivity::class.java
+            else -> null
+        }
+        if (destination != null) {
+            startActivity(Intent(this, destination))
+        } else {
+            ComingSoonActivity.open(this, feature)
         }
     }
 
@@ -122,7 +134,6 @@ class StaffHomeActivity : BaseActivity() {
         showRules(settings)
     }
 
-    /** Clinic rules card: the values the Admin saved, or a friendly empty state. */
     private fun showRules(s: ClinicSettings?) {
         val card = findViewById<View>(R.id.cardRules)
         val empty = findViewById<View>(R.id.tvRulesEmpty)
@@ -143,7 +154,6 @@ class StaffHomeActivity : BaseActivity() {
         setRow(R.id.rowClinicAddress, R.string.rule_clinic_address, s.address)
     }
 
-    /** Fills one label/value row; a row with no value is hidden. */
     private fun setRow(id: Int, @StringRes label: Int, value: String?) {
         val row = findViewById<View>(id)
         row.visibility = if (value.isNullOrBlank()) View.GONE else View.VISIBLE
@@ -151,7 +161,6 @@ class StaffHomeActivity : BaseActivity() {
         row.findViewById<TextView>(R.id.rowValue).text = value
     }
 
-    /** Admins manage the clinic in the web panel; the app is for patients and clinic staff. */
     private fun blockAdmin() {
         toast(R.string.admin_use_web_panel)
         logOut()
@@ -159,7 +168,7 @@ class StaffHomeActivity : BaseActivity() {
 
     private fun logOut() {
         lifecycleScope.launch {
-            AuthRepository.signOut() // ends the session; the Remember me choice is kept
+            AuthRepository.signOut()
             goToRolePicker()
         }
     }

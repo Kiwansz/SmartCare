@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingStart="16dp"
+    android:paddingTop="20dp"
+    android:paddingEnd="16dp"
+    android:paddingBottom="4dp">
+
+    <ImageView
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:background="@drawable/notif_avatar"
+        android:importantForAccessibility="no"
+        android:padding="15dp"
+        android:src="@drawable/ic_sc_bell"
+        app:tint="?attr/scMain" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="14dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvNotifDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/figtree_medium"
+            android:textColor="@color/ink"
+            android:textSize="14sp"
+            tools:text="25 June 2025" />
+
+        <TextView
+            android:id="@+id/tvNotifBody"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/figtree_medium"
+            android:lineSpacingExtra="3dp"
+            android:textColor="@color/ink"
+            android:textSize="17sp"
+            tools:text="Reminder: Your appointment with Dr Aisyah is on 25 Nov 2026." />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnNotifView"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:fontFamily="@font/figtree_semibold"
+            android:minHeight="48dp"
+            android:text="@string/clinic_notif_view"
+            android:textAllCaps="false"
+            android:textColor="?attr/scMain"
+            android:textSize="16sp"
+            app:cornerRadius="12dp"
+            app:strokeColor="?attr/scMain"
+            app:strokeWidth="2dp" />
+    </LinearLayout>
+</LinearLayout>

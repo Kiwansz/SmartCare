@@ -5,6 +5,7 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.example.smartcare.DoctorMedicalRecordsActivity
 import com.example.smartcare.R
+import com.example.smartcare.AppointmentsActivity
 
 /**
  * The one registry of staff home tiles. Each entry says who sees it and which screen it
@@ -24,7 +25,14 @@ enum class StaffFeature(
     val owner: String? = null,
     val screen: Class<out Activity>? = null,
 ) {
-    APPOINTMENTS(R.string.feature_appointments, R.string.feature_appointments_sub, R.drawable.ic_sc_calendar, setOf(STAFF)),
+    APPOINTMENTS(
+        R.string.feature_appointments,
+        R.string.feature_appointments_sub,
+        R.drawable.ic_sc_calendar,
+        setOf(STAFF),
+        owner = "Module 2",
+        screen = AppointmentsActivity::class.java
+    ),
     ATTENDANCE(R.string.feature_attendance, R.string.feature_attendance_sub, R.drawable.ic_sc_check, setOf(STAFF)),
     PATIENTS(R.string.feature_patients, R.string.feature_patients_sub, R.drawable.ic_sc_user, setOf(STAFF)),
     TODAYS_PATIENTS(R.string.feature_todays_patients, R.string.feature_todays_patients_sub, R.drawable.ic_sc_clock, setOf(DOCTOR)),
