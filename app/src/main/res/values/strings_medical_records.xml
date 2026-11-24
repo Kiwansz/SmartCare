@@ -24,4 +24,9 @@
     <string name="medical_open_preview">Open record preview</string>
     <string name="medical_create_preview">Create record preview</string>
     <string name="medical_preview_notice">Preview only. Use fictional text. Entries are discarded when you leave.</string>
+    <string name="medical_scoped_appointment">Sample appointment %1$d • COMPLETED\nPatient: %2$s\nAssigned doctor: %3$s\nScheduled date: %4$s</string>
+    <string name="medical_appointment_missing">No matching demo appointment. Live appointment access is disabled.</string>
+    <string name="medical_appointment_ineligible">This appointment must be completed before you can create a medical entry.</string>
+    <string name="medical_appointment_wrong_doctor">This appointment is assigned to another doctor.</string>
+    <string name="medical_appointment_duplicate">This demo appointment already has an entry of this type.</string>
 </resources>

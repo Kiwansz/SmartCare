@@ -71,9 +71,16 @@
                     android:id="@+id/medicalDocumentOptions"
                     layout="@layout/view_medical_document_options" />
 
+                <TextView
+                    android:id="@+id/medicalAppointmentMessage"
+                    style="@style/SmartCare.Text.Sub"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone" />
+
                 <LinearLayout android:id="@+id/medicalAppointment" android:layout_width="match_parent"
                 android:layout_height="wrap_content" android:orientation="vertical" android:visibility="gone">
-                    <TextView style="@style/SmartCare.Text.Sub"
+                    <TextView android:id="@+id/medicalAppointmentSummary" style="@style/SmartCare.Text.Sub"
                         android:layout_width="match_parent" android:layout_height="wrap_content"
                         android:text="@string/medical_appointment_context" />
                     <com.google.android.material.button.MaterialButton

@@ -55,6 +55,13 @@
                                             android:text="@string/medical_retry" />
                         </LinearLayout>
 
+                        <TextView
+                            android:id="@+id/documentAppointmentMessage"
+                            style="@style/SmartCare.Text.Sub"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:visibility="gone" />
+
                         <LinearLayout
                             android:id="@+id/documentEditor"
                             android:layout_width="match_parent"

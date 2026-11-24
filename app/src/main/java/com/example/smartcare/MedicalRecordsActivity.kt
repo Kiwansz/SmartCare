@@ -1,5 +1,6 @@
 package com.example.smartcare
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -47,11 +48,71 @@ open class MedicalRecordsActivity : BaseActivity() {
 
             progress.isVisible = false
             content.isVisible = true
+            if (intent.hasExtra(DoctorMedicalRecordsActivity.EXTRA_APPOINTMENT_ID)) {
+                if (doctor) showAppointmentEntry(account.userId) else finish()
+                return@launch
+            }
             when (intent.getStringExtra(EXTRA_SCREEN)) {
                 DETAILS -> showDetails()
                 SAMPLE_APPOINTMENT -> if (doctor) showSampleAppointment() else finish()
                 PREVIEW -> if (doctor) showPreview() else finish()
                 else -> showHistory()
+            }
+        }
+    }
+
+    private fun showAppointmentEntry(userId: Int) {
+        val appointmentId = intent.getIntExtra(DoctorMedicalRecordsActivity.EXTRA_APPOINTMENT_ID, 0)
+        val appointment = MedicalAppointmentSamples.find(appointmentId)
+        val identity = MedicalAppointmentSamples.doctorFor(userId)
+        val block = appointmentBlock(appointment, identity)
+        if (block != null || appointment == null) {
+            findViewById<TextView>(R.id.medicalAppointmentMessage).apply {
+                setText((block ?: MedicalAppointmentBlock.MISSING).messageId())
+                isVisible = true
+            }
+            return
+        }
+
+        setupHeader(R.string.medical_details_title, R.string.medical_records_sample)
+        findViewById<View>(R.id.medicalAppointment).isVisible = true
+        findViewById<TextView>(R.id.medicalAppointmentSummary).text = getString(
+            R.string.medical_scoped_appointment,
+            appointment.appointmentId,
+            appointment.patientName,
+            appointment.assignedDoctorName,
+            appointment.scheduledDate.format(SampleMedicalCertificate.dateFormat),
+        )
+
+        bindAppointmentAction(R.id.medicalOpenPreview, appointment, identity, MedicalEntryType.HISTORY) {
+            showPreview()
+        }
+        findViewById<View>(R.id.medicalDocumentOptions).isVisible = true
+        bindAppointmentAction(
+            R.id.documentOpenPrescription, appointment, identity, MedicalEntryType.PRESCRIPTION
+        ) {
+            startActivity(MedicalDocumentActivity.intent(this, true, prescription = true, appointmentId = appointmentId))
+        }
+        bindAppointmentAction(
+            R.id.documentOpenCertificate, appointment, identity, MedicalEntryType.CERTIFICATE
+        ) {
+            startActivity(MedicalDocumentActivity.intent(this, true, prescription = false, appointmentId = appointmentId))
+        }
+    }
+
+    private fun bindAppointmentAction(
+        viewId: Int,
+        appointment: MedicalAppointmentContext,
+        identity: MedicalDoctorIdentity,
+        entry: MedicalEntryType,
+        open: () -> Unit,
+    ) {
+        findViewById<View>(viewId).setOnClickListener {
+            val block = appointmentBlock(appointment, identity, entry)
+            if (block == null) {
+                open()
+            } else {
+                toast(block.messageId())
             }
         }
     }
@@ -134,4 +195,13 @@ open class MedicalRecordsActivity : BaseActivity() {
 
 class DoctorMedicalRecordsActivity : MedicalRecordsActivity() {
     override val doctor = true
+
+    companion object {
+        const val EXTRA_APPOINTMENT_ID = "appointment_id"
+
+        /** Launch from a doctor appointment detail screen with the selected appointment's ID. */
+        fun forAppointment(context: Context, appointmentId: Int): Intent =
+            Intent(context, DoctorMedicalRecordsActivity::class.java)
+                .putExtra(EXTRA_APPOINTMENT_ID, appointmentId)
+    }
 }

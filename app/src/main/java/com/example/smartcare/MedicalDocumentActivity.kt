@@ -78,7 +78,32 @@ open class MedicalDocumentActivity : BaseActivity() {
                 return@launch
             }
             progress.isVisible = false
-            if (doctor) setupEditor() else setupPatientView()
+            val key = DoctorMedicalRecordsActivity.EXTRA_APPOINTMENT_ID
+            if (intent.hasExtra(key)) {
+                if (!doctor) {
+                    finish()
+                    return@launch
+                }
+                val appointment = MedicalAppointmentSamples.find(intent.getIntExtra(key, 0))
+                val entry = if (prescription) MedicalEntryType.PRESCRIPTION else MedicalEntryType.CERTIFICATE
+                val block = appointmentBlock(appointment, MedicalAppointmentSamples.doctorFor(account.userId), entry)
+                if (block != null || appointment == null) {
+                    findViewById<TextView>(R.id.documentAppointmentMessage).apply {
+                        setText((block ?: MedicalAppointmentBlock.MISSING).messageId())
+                        isVisible = true
+                    }
+                    return@launch
+                }
+                setupEditor()
+                if (!prescription) {
+                    findViewById<SmartField>(R.id.documentPatientName).text = appointment.patientName
+                    findViewById<SmartField>(R.id.documentDoctorName).text = appointment.assignedDoctorName
+                }
+            } else if (doctor) {
+                setupEditor()
+            } else {
+                setupPatientView()
+            }
         }
     }
 
@@ -394,9 +419,18 @@ open class MedicalDocumentActivity : BaseActivity() {
             R.id.documentInstructions to R.string.document_instructions,
         )
 
-        internal fun intent(context: Context, doctor: Boolean, prescription: Boolean): Intent {
+        internal fun intent(
+            context: Context,
+            doctor: Boolean,
+            prescription: Boolean,
+            appointmentId: Int? = null,
+        ): Intent {
             val target = if (doctor) DoctorMedicalDocumentActivity::class.java else MedicalDocumentActivity::class.java
-            return Intent(context, target).putExtra(EXTRA_PRESCRIPTION, prescription)
+            return Intent(context, target).putExtra(EXTRA_PRESCRIPTION, prescription).apply {
+                if (appointmentId != null) {
+                    putExtra(DoctorMedicalRecordsActivity.EXTRA_APPOINTMENT_ID, appointmentId)
+                }
+            }
         }
     }
 }
