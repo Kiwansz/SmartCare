@@ -65,7 +65,7 @@
             android:name=".ProfileActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
-        <!-- 8. Staff home placeholder (navy) -->
+        <!-- 8. Staff home (navy) -->
         <activity
             android:name=".StaffHomeActivity"
             android:exported="false"
@@ -94,41 +94,45 @@
             android:name=".MyAppointmentsActivity"
             android:exported="false"
             android:theme="@style/Theme.SmartCare.Staff" />
-        <activity
-            android:name=".FeedbackActivity"
-            android:exported="false"
-            android:windowSoftInputMode="adjustResize" />
-        <activity
-            android:name=".RemindersActivity"
-            android:exported="false"
-            android:windowSoftInputMode="adjustResize" />
-        <activity
-            android:name=".ClinicListActivity"
-            android:exported="false"
-            android:windowSoftInputMode="adjustResize" />
+
+        <!-- Attendance, Reminder, Follow-up: STAFF screens (navy) -->
         <activity
             android:name=".AttendanceActivity"
             android:exported="false"
-            android:windowSoftInputMode="adjustResize" />
+            android:theme="@style/Theme.SmartCare.Staff" />
         <activity
-            android:name=".CheckInActivity"
+            android:name=".RemindersActivity"
             android:exported="false"
-            android:windowSoftInputMode="adjustResize" />
-        <activity
-            android:name=".CreateFollowUpActivity"
-            android:exported="false"
-            android:windowSoftInputMode="adjustResize" />
+            android:theme="@style/Theme.SmartCare.Staff" />
         <activity
             android:name=".FollowUpsActivity"
             android:exported="false"
-            android:windowSoftInputMode="adjustResize" />
+            android:theme="@style/Theme.SmartCare.Staff" />
         <activity
-            android:name=".NotificationsActivity"
+            android:name=".CreateFollowUpActivity"
             android:exported="false"
+            android:theme="@style/Theme.SmartCare.Staff"
+            android:windowSoftInputMode="adjustResize" />
+
+
+        <!-- Check-in, Follow-up, Notifications, Feedback: PATIENT screens (sky blue) -->
+        <activity
+            android:name=".CheckInActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SmartCare.Patient"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".PatientFollowUpsActivity"
             android:exported="false"
+            android:theme="@style/Theme.SmartCare.Patient" />
+        <activity
+            android:name=".NotificationsActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SmartCare.Patient" />
+        <activity
+            android:name=".FeedbackActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SmartCare.Patient"
             android:windowSoftInputMode="adjustResize" />
     </application>
 

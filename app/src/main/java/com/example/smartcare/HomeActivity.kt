@@ -7,7 +7,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.example.smartcare.data.Account
 import com.example.smartcare.data.AuthRepository
@@ -34,7 +33,8 @@ class HomeActivity : BaseActivity() {
         setupTile(R.id.tileBook, R.drawable.ic_sc_plus, R.string.tile_book, R.string.tile_book_sub) {
             startActivity(Intent(this, PatientAppointmentsActivity::class.java))
         }
-        setupTile(R.id.tileChat, R.drawable.ic_sc_chat, R.string.tile_chat, R.string.tile_chat_sub, chat = true)
+        // Chatbot tile: same look as the other tiles (no navy style).
+        setupTile(R.id.tileChat, R.drawable.ic_sc_chat, R.string.tile_chat, R.string.tile_chat_sub)
         setupTile(R.id.tileFollowups, R.drawable.ic_sc_loop, R.string.tile_followups, R.string.tile_followups_sub) {
             startActivity(Intent(this, PatientFollowUpsActivity::class.java))
         }
@@ -115,22 +115,12 @@ class HomeActivity : BaseActivity() {
         @DrawableRes icon: Int,
         @StringRes title: Int,
         @StringRes sub: Int,
-        chat: Boolean = false,
         onClick: (() -> Unit)? = null
     ) {
         val tile = findViewById<View>(id)
-        val iconView = tile.findViewById<ImageView>(R.id.tileIcon)
-        iconView.setImageResource(icon)
+        tile.findViewById<ImageView>(R.id.tileIcon).setImageResource(icon)
         tile.findViewById<TextView>(R.id.tileTitle).setText(title)
         tile.findViewById<TextView>(R.id.tileSub).setText(sub)
-        if (chat) {
-            // Chatbot tile is navy in both themes.
-            tile.setBackgroundResource(R.drawable.bg_tile_ai)
-            iconView.setBackgroundResource(R.drawable.bg_tile_ai_icon)
-            iconView.imageTintList = ContextCompat.getColorStateList(this, R.color.white)
-            tile.findViewById<TextView>(R.id.tileTitle).setTextColor(getColor(R.color.white))
-            tile.findViewById<TextView>(R.id.tileSub).setTextColor(getColor(R.color.hero_subtitle))
-        }
         tile.setOnClickListener {
             if (onClick != null) onClick() else toast(R.string.coming_soon)
         }
