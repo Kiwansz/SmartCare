@@ -111,6 +111,8 @@ abstract class ClinicListActivity : BaseActivity() {
 
     /** A failed load: clears the list and shows a friendly message. */
     protected fun showLoadError(error: Throwable) {
+        // The screen only shows a friendly message; the real reason goes to Logcat (tag: SmartCareLoad).
+        android.util.Log.e("SmartCareLoad", "Load failed in ${javaClass.simpleName}", error)
         showLoading(false)
         clearCards()
         showMessage(error.userMessage(getString(R.string.clinic_error_generic)))
