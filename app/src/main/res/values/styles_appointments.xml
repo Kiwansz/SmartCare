@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Styles for the appointment and slot screens. -->
+<resources>
+    <!-- Small uppercase heading above a group (e.g. "NEW SLOT", "AVAILABLE TIMES"). -->
+    <style name="SmartCare.Appt.Section" parent="">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">10dp</item>
+        <item name="android:textSize">11.5sp</item>
+        <item name="android:letterSpacing">0.08</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:fontFamily">@font/figtree_bold</item>
+        <item name="android:textColor">@color/ink_sub</item>
+    </style>
+
+    <!-- Stat tile on the staff Appointments screen. -->
+    <style name="SmartCare.Appt.Stat" parent="">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:background">@drawable/appt_date_badge</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:paddingStart">14dp</item>
+        <item name="android:paddingTop">12dp</item>
+        <item name="android:paddingEnd">14dp</item>
+        <item name="android:paddingBottom">12dp</item>
+    </style>
+
+    <style name="SmartCare.Appt.StatValue" parent="">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:text">–</item>
+        <item name="android:textSize">22sp</item>
+        <item name="android:fontFamily">@font/figtree_bold</item>
+        <item name="android:textColor">?attr/scMain</item>
+    </style>
+
+    <style name="SmartCare.Appt.StatLabel" parent="">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">1dp</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:fontFamily">@font/figtree_semibold</item>
+        <item name="android:textColor">@color/ink_sub</item>
+    </style>
+</resources>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Tappable picker tile (doctor, date, time) on the slot form. -->
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="#1A0F1F36">
+    <item>
+        <shape>
+            <solid android:color="@color/field_fill" />
+            <corners android:radius="16dp" />
+        </shape>
+    </item>
+</ripple>

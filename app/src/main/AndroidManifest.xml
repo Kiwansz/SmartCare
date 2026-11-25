@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
         android:allowBackup="true"
@@ -65,7 +66,7 @@
             android:name=".ProfileActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
-        <!-- 8. Staff home (navy) -->
+        <!-- 8. Staff home placeholder (navy) -->
         <activity
             android:name=".StaffHomeActivity"
             android:exported="false"
@@ -89,50 +90,56 @@
         <activity
             android:name=".PatientAppointmentsActivity"
             android:exported="false"
-            android:theme="@style/Theme.SmartCare.Staff" />
+            android:theme="@style/Theme.SmartCare.Patient"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".MyAppointmentsActivity"
             android:exported="false"
-            android:theme="@style/Theme.SmartCare.Staff" />
-
-        <!-- Attendance, Reminder, Follow-up: STAFF screens (navy) -->
+            android:theme="@style/Theme.SmartCare.Patient" />
         <activity
-            android:name=".AttendanceActivity"
-            android:exported="false"
-            android:theme="@style/Theme.SmartCare.Staff" />
-        <activity
-            android:name=".RemindersActivity"
-            android:exported="false"
-            android:theme="@style/Theme.SmartCare.Staff" />
-        <activity
-            android:name=".FollowUpsActivity"
-            android:exported="false"
-            android:theme="@style/Theme.SmartCare.Staff" />
-        <activity
-            android:name=".CreateFollowUpActivity"
+            android:name=".StaffBookActivity"
             android:exported="false"
             android:theme="@style/Theme.SmartCare.Staff"
             android:windowSoftInputMode="adjustResize" />
 
-
-        <!-- Check-in, Follow-up, Notifications, Feedback: PATIENT screens (sky blue) -->
+        <receiver
+            android:name=".util.ApptReminderReceiver"
+            android:exported="false" />
+        <activity
+            android:name=".FeedbackActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".RemindersActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".ClinicListActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".AttendanceActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".CheckInActivity"
             android:exported="false"
-            android:theme="@style/Theme.SmartCare.Patient"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".CreateFollowUpActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".FollowUpsActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".NotificationsActivity"
+            android:exported="false"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".PatientFollowUpsActivity"
             android:exported="false"
-            android:theme="@style/Theme.SmartCare.Patient" />
-        <activity
-            android:name=".NotificationsActivity"
-            android:exported="false"
-            android:theme="@style/Theme.SmartCare.Patient" />
-        <activity
-            android:name=".FeedbackActivity"
-            android:exported="false"
-            android:theme="@style/Theme.SmartCare.Patient"
             android:windowSoftInputMode="adjustResize" />
     </application>
 

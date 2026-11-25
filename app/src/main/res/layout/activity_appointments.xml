@@ -2,70 +2,34 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F5F7FA"
-    android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="20dp">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Appointments"
-            android:textColor="#102B55"
-            android:textSize="26sp"
-            android:textStyle="bold" />
+
+        <TextView
+            android:layout_height="wrap_content"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:layout_height="wrap_content"
+
+        <TextView
+            android:layout_height="wrap_content"
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:text="Manage clinic appointments and doctor time slots"
-            android:textColor="#68758A"
-            android:textSize="14sp" />
-
-        <Button
-            android:id="@+id/btnManageSlots"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:text="Manage Doctor Slots" />
-
-        <Button
-            android:id="@+id/btnViewAppointments"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:text="View Appointments" />
-
-        <TextView
-            android:id="@+id/tvAppointmentStatus"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:text="Appointment management"
-            android:textColor="#102B55"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/tvAppointmentEmpty"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:text="Tap View Appointments to load patient bookings."
-            android:textColor="#68758A"
-            android:textSize="14sp" />
 
         <LinearLayout
-            android:id="@+id/staffAppointmentsContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
             android:orientation="vertical" />
-
     </LinearLayout>
 </ScrollView>
